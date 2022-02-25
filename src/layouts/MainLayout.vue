@@ -2,9 +2,9 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title>{{ $t('appTitle') }}</q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>{{ t('version', { version: $q.version }) }}</div>
       </q-toolbar>
     </q-header>
 
@@ -16,6 +16,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-export default defineComponent({})
+export default defineComponent({
+  setup() {
+    const { t } = useI18n()
+    return { t }
+  },
+})
 </script>
