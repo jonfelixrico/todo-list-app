@@ -3,8 +3,19 @@
     <q-card class="q-dialog-plugin">
       <q-card-section> dummy </q-card-section>
       <q-card-actions align="right">
-        <q-btn color="primary" label="OK" @click="onDialogOk" />
-        <q-btn color="primary" label="Cancel" @click="onDialogCancel" />
+        <q-btn
+          color="primary"
+          noCaps
+          unelevated
+          :label="t('common.ok')"
+          @click="onDialogOk"
+        />
+        <q-btn
+          noCaps
+          flat
+          :label="t('common.cancel')"
+          @click="onDialogCancel"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -12,11 +23,13 @@
 
 <script>
 import { useDialogPluginComponent } from 'quasar'
+import { useI18n } from 'vue-i18n'
 
 export default {
   emits: [...useDialogPluginComponent.emits],
 
   setup() {
+    const { t } = useI18n()
     const {
       dialogRef,
       onDialogHide,
@@ -29,6 +42,7 @@ export default {
       onDialogHide,
       onDialogOk,
       onDialogCancel,
+      t,
     }
   },
 }
