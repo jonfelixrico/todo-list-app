@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { uid, useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 import { defineComponent } from 'vue'
 import CWriteTaskDialogVue, {
   TaskDraft,
@@ -28,7 +28,13 @@ import { Task } from 'src/typings/task.interface'
 export default defineComponent({
   setup() {
     const $q = useQuasar()
+
     const store = useStore()
+    const createTask = async (task: TaskDraft) => {
+      const { id } = (await store.dispatch('tasks/createTask', task)) as Task
+      console.debug('Created task %s.', id)
+    }
+
     const onWriteBtnClick = () => {
       $q.dialog({
         component: CWriteTaskDialogVue,
@@ -36,15 +42,7 @@ export default defineComponent({
           persistent: true,
         },
       }).onOk((task: TaskDraft) => {
-        const createDt = new Date()
-        const id = uid()
-        store.commit('tasks/addTask', {
-          ...task,
-          createDt,
-          lastUpdateDt: createDt,
-          id,
-        } as Task)
-        console.log('Task %s created.', id)
+        void createTask(task)
       })
     }
 
