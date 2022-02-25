@@ -1,4 +1,4 @@
-import { date, uid } from 'quasar'
+import { uid } from 'quasar'
 import { EditableTaskAttrs, Task } from 'src/typings/task.interface'
 import { ActionTree } from 'vuex'
 import { StateInterface } from '../index'
@@ -12,7 +12,6 @@ const actions: ActionTree<ITasksState, StateInterface> = {
       ...toCreate,
       createDt,
       lastUpdateDt: createDt,
-      targetDt: date.startOfDate(createDt, 'day'),
       id: uid(),
     }
 
