@@ -13,7 +13,7 @@
       />
     </q-toolbar>
     <q-toolbar class="bg-secondary"> </q-toolbar>
-    <div class="col">list goes here</div>
+    <div class="col"><router-view /></div>
   </q-page>
 </template>
 
