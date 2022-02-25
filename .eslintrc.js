@@ -81,6 +81,9 @@ module.exports = {
     quotes: ['warn', 'single', { avoidEscape: true }],
     '@typescript-eslint/explicit-function-return-type': 'off',
 
+    // turned off because this appears when using composition version of the i18n API
+    '@typescript-eslint/unbound-method': 'off',
+
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
