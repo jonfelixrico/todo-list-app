@@ -1,6 +1,6 @@
 import { date } from 'quasar'
 import { CarryOver } from 'src/typings/task.interface'
-import { Ref, computed, ref } from 'vue'
+import { Ref, computed, ref, reactive } from 'vue'
 
 export type TransformedCarryOver = 'NO_CARRY_OVER' | 'INDEFINITE' | 'DEFINITE'
 
@@ -21,7 +21,7 @@ export function useCarryOverRadioHelper(
     },
 
     set: (newDate: Date) => {
-      carryOver.value = definiteDate.value = newDate = newDate
+      carryOver.value = definiteDate.value = newDate
     },
   })
 
@@ -57,8 +57,8 @@ export function useCarryOverRadioHelper(
     },
   })
 
-  return {
+  return reactive({
     dateModel,
     radioModel,
-  }
+  })
 }
