@@ -3,6 +3,7 @@
     <q-card class="q-dialog-plugin">
       <q-card-section>
         <h6 class="text-h6 q-my-none">Add To-do</h6>
+        <div class="text-caption">For {{ formattedTargetDt }}</div>
       </q-card-section>
       <q-separator />
       <q-card-section class="q-gutter-y-md">
@@ -36,8 +37,6 @@
           dense
           hint="The priority of what you want to do, raging from 1 to 10."
         />
-
-        <div class="text-caption">To-do for {{ formattedTargetDt }}</div>
       </q-card-section>
       <q-separator />
       <q-card-actions align="right">
