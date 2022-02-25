@@ -17,12 +17,23 @@
 </template>
 
 <script lang="ts">
+import { useQuasar } from 'quasar'
 import { defineComponent } from 'vue'
+import CWriteTaskDialogVue from 'src/components/dialogs/CTaskWriteDialog.vue'
 
 export default defineComponent({
   setup() {
-    function onWriteBtnClick() {
-      console.debug('noop')
+    const $q = useQuasar()
+    const onWriteBtnClick = () => {
+      $q.dialog({
+        component: CWriteTaskDialogVue,
+      })
+        .onOk(() => {
+          console.debug('ogey')
+        })
+        .onCancel(() => {
+          console.debug('rrat')
+        })
     }
 
     return {
