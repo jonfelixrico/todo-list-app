@@ -17,7 +17,7 @@ export function useTaskListDateNavigation() {
   async function setRouteDate(toDate: Date) {
     const formatted = date.formatDate(toDate, 'DD-MM-YYYY')
     await router.push({
-      name: 'tasksFiltered',
+      name: 'filteredTasks',
       params: { date: formatted },
     })
   }

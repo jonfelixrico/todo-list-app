@@ -22,10 +22,10 @@ export default defineComponent({
 
     if (!isValid) {
       console.log(
-        'FilteredTasks: %s is an invalid date. Navigation prevented.',
+        'FilteredTasks: %s is an invalid date. Redirected to tasks instead.',
         dateStr
       )
-      next(false)
+      next({ name: 'tasks' })
       return
     }
 

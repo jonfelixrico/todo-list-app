@@ -4,7 +4,25 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('src/layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Tasks.vue') }],
+    children: [
+      {
+        path: 'tasks',
+        name: 'tasks',
+        component: () => import('pages/Tasks.vue'),
+        children: [
+          {
+            path: ':date',
+            name: 'filteredTasks',
+            component: () => import('pages/FilteredTasks.vue'),
+          },
+          {
+            path: '',
+            name: 'emptyFilteredTasks',
+            component: () => import('pages/EmptyFilteredTasks.vue'),
+          },
+        ],
+      },
+    ],
   },
 
   // Always leave this as last one,
