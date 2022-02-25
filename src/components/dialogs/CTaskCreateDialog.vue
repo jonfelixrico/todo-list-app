@@ -37,9 +37,17 @@
           dense
           hint="The priority of what you want to do, raging from 1 to 10."
         />
-        <q-radio v-model="carryOver" val="NO_CARRY_OVER" label="No" />
-        <q-radio v-model="carryOver" val="INDEFINITE" label="Indefinite" />
-        <q-radio v-model="carryOver" val="DEFINITE" label="Until" />
+        <q-radio
+          v-model="carryOver.radioModel"
+          val="NO_CARRY_OVER"
+          label="No"
+        />
+        <q-radio
+          v-model="carryOver.radioModel"
+          val="INDEFINITE"
+          label="Indefinite"
+        />
+        <q-radio v-model="carryOver.radioModel" val="DEFINITE" label="Until" />
       </q-card-section>
       <q-separator />
       <q-card-actions align="right">
@@ -64,8 +72,9 @@
 <script lang="ts">
 import { date, useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
-import { computed, defineComponent, reactive, Ref, toRef } from 'vue'
+import { computed, defineComponent, reactive, toRef } from 'vue'
 import { CarryOver } from 'src/typings/task.interface'
+import { useCarryOverRadioHelper } from './carry-over-radio-helper'
 
 interface TaskDraftModel {
   title: string | null
@@ -77,41 +86,6 @@ interface TaskDraftModel {
 export interface TaskDraft extends TaskDraftModel {
   title: string
   priority: number
-}
-
-type TransformedCarryOver = 'NO_CARRY_OVER' | 'INDEFINITE' | 'DEFINITE'
-
-function useCarryOverModel(carryOver: Ref<CarryOver>) {
-  return computed({
-    get: () => {
-      if (!carryOver.value) {
-        return 'NO_CARRY_OVER'
-      } else if (carryOver.value === 'INDEFINITE') {
-        return 'INDEFINITE'
-      } else {
-        // carryOver as date
-        return 'DEFINITE'
-      }
-    },
-    set: (val: TransformedCarryOver) => {
-      switch (val) {
-        case 'NO_CARRY_OVER': {
-          carryOver.value = null
-          break
-        }
-
-        case 'DEFINITE': {
-          carryOver.value = new Date()
-          break
-        }
-
-        case 'INDEFINITE': {
-          carryOver.value = 'INDEFINITE'
-          break
-        }
-      }
-    },
-  })
 }
 
 export default defineComponent({
@@ -149,7 +123,10 @@ export default defineComponent({
       t,
       task,
       formattedTargetDt,
-      carryOver: useCarryOverModel(toRef(task, 'carryOverUntil')),
+      carryOver: useCarryOverRadioHelper(
+        toRef(task, 'carryOverUntil'),
+        toRef(props, 'targetDt')
+      ),
     }
   },
 })
