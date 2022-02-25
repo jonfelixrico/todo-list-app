@@ -32,10 +32,12 @@ declare module '@vue/runtime-core' {
 export const storeKey: InjectionKey<VuexStore<StateInterface>> =
   Symbol('vuex-key')
 
+import tasks from './tasks'
+
 export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
-      // example
+      tasks,
     },
 
     // enable strict mode (adds overhead!)
