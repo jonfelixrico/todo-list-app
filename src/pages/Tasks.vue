@@ -17,32 +17,37 @@
 </template>
 
 <script lang="ts">
-import { useQuasar } from 'quasar'
+import { date, useQuasar } from 'quasar'
 import { defineComponent } from 'vue'
-import CWriteTaskDialogVue, {
-  TaskDraft,
-} from 'src/components/dialogs/CTaskCreateDialog.vue'
 import { useStore } from 'src/store'
 import { Task } from 'src/typings/task.interface'
+import { CreateTaskInput } from 'src/store/tasks/actions'
+import CTaskCreateDialog, {
+  TaskDraft,
+} from 'src/components/dialogs/CTaskCreateDialog.vue'
 
 export default defineComponent({
   setup() {
     const $q = useQuasar()
 
     const store = useStore()
-    const createTask = async (task: TaskDraft) => {
-      const { id } = (await store.dispatch('tasks/createTask', task)) as Task
+    const createTask = (toCreate: CreateTaskInput) =>
+      store.dispatch('tasks/createTask', toCreate) as Promise<Task>
+
+    const doCreate = async (task: TaskDraft, targetDt: Date) => {
+      const { id } = await createTask({ targetDt, ...task } as CreateTaskInput)
       console.debug('Created task %s.', id)
     }
 
     const onWriteBtnClick = () => {
+      const targetDt = date.startOfDate(new Date(), 'day')
       $q.dialog({
-        component: CWriteTaskDialogVue,
+        component: CTaskCreateDialog,
         componentProps: {
           persistent: true,
         },
       }).onOk((task: TaskDraft) => {
-        void createTask(task)
+        void doCreate(task, targetDt)
       })
     }
 
