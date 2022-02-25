@@ -37,17 +37,54 @@
           dense
           hint="The priority of what you want to do, raging from 1 to 10."
         />
-        <q-radio
-          v-model="carryOver.radioModel"
-          val="NO_CARRY_OVER"
-          label="No"
-        />
-        <q-radio
-          v-model="carryOver.radioModel"
-          val="INDEFINITE"
-          label="Indefinite"
-        />
-        <q-radio v-model="carryOver.radioModel" val="DEFINITE" label="Until" />
+        <div class="column">
+          <q-radio
+            v-model="carryOver.radioModel"
+            val="NO_CARRY_OVER"
+            label="No carry over"
+          />
+          <q-radio
+            v-model="carryOver.radioModel"
+            val="INDEFINITE"
+            label="Carry over until completed"
+          />
+          <q-radio v-model="carryOver.radioModel" val="DEFINITE">
+            <div class="row items-center">
+              Carry over until
+              <q-input
+                outlined
+                dense
+                v-model="carryOver.dateModel"
+                :disable="carryOver.radioModel !== 'DEFINITE'"
+                :bottom-slots="false"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                      mask="date"
+                      :rules="['date']"
+                    >
+                      <q-date v-model="carryOver.dateModel">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+          </q-radio>
+        </div>
       </q-card-section>
       <q-separator />
       <q-card-actions align="right">

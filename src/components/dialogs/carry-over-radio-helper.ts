@@ -11,17 +11,13 @@ export function useCarryOverRadioHelper(
   const definiteDate = ref(date.addToDate(targetDt.value, { day: 1 }))
 
   const dateModel = computed({
-    get: () => {
-      const clamped = Math.max(
-        definiteDate.value.getTime(),
-        targetDt.value.getTime()
+    get: () => date.formatDate(definiteDate.value, 'YYYY/MM/DD'),
+
+    set: (dateStr: string) => {
+      carryOver.value = definiteDate.value = date.extractDate(
+        dateStr,
+        'YYYY/MM/DD'
       )
-
-      return new Date(clamped)
-    },
-
-    set: (newDate: Date) => {
-      carryOver.value = definiteDate.value = newDate
     },
   })
 
@@ -45,7 +41,7 @@ export function useCarryOverRadioHelper(
         }
 
         case 'DEFINITE': {
-          carryOver.value = dateModel.value
+          carryOver.value = definiteDate.value
           break
         }
 
@@ -58,7 +54,7 @@ export function useCarryOverRadioHelper(
   })
 
   return reactive({
-    dateModel,
     radioModel,
+    dateModel,
   })
 }
