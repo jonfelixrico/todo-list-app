@@ -4,14 +4,17 @@ import { ActionTree } from 'vuex'
 import { StateInterface } from '../index'
 import { ITasksState } from './state'
 
+export type CreateTaskInput = Omit<EditableTaskAttrs, 'completeDt'>
+
 const actions: ActionTree<ITasksState, StateInterface> = {
-  createTask({ commit }, toCreate: EditableTaskAttrs) {
+  createTask({ commit }, toCreate: CreateTaskInput) {
     const createDt = new Date()
 
     const task: Task = {
       ...toCreate,
       createDt,
       lastUpdateDt: createDt,
+      completeDt: null,
       id: uid(),
     }
 
