@@ -3,8 +3,8 @@ import { RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('src/layouts/QuasarMainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Index.vue') }],
+    component: () => import('src/layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Tasks.vue') }],
   },
 
   // Always leave this as last one,
