@@ -19,7 +19,7 @@
 <script lang="ts">
 import { useQuasar } from 'quasar'
 import { defineComponent } from 'vue'
-import CWriteTaskDialogVue from 'src/components/dialogs/CTaskWriteDialog.vue'
+import CWriteTaskDialogVue from 'src/components/dialogs/CTaskCreateDialog.vue'
 
 export default defineComponent({
   setup() {
@@ -27,6 +27,9 @@ export default defineComponent({
     const onWriteBtnClick = () => {
       $q.dialog({
         component: CWriteTaskDialogVue,
+        componentProps: {
+          persistent: true,
+        },
       })
         .onOk(() => {
           console.debug('ogey')
