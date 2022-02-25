@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-toolbar-title>{{ $t('appTitle') }}</q-toolbar-title>
 
-        <div>{{ t('version', { version: $q.version }) }}</div>
+        <div>{{ t('version', { version: appVersion }) }}</div>
       </q-toolbar>
     </q-header>
 
@@ -21,7 +21,10 @@ import { useI18n } from 'vue-i18n'
 export default defineComponent({
   setup() {
     const { t } = useI18n()
-    return { t }
+    return {
+      t,
+      appVersion: process.env.APP_VERSION,
+    }
   },
 })
 </script>

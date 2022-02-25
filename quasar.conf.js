@@ -9,6 +9,7 @@
 /* eslint-env node */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers')
+const { version } = require('./package.json')
 
 module.exports = configure(function (ctx) {
   return {
@@ -72,6 +73,10 @@ module.exports = configure(function (ctx) {
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
       chainWebpack(/* chain */) {
         //
+      },
+
+      env: {
+        APP_VERSION: version,
       },
     },
 
