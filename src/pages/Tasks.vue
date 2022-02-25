@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="column">
     <q-toolbar class="bg-secondary">
       <q-space />
       <q-btn
@@ -12,6 +12,7 @@
         @click="onWriteBtnClick"
       />
     </q-toolbar>
+    <div class="col">list goes here</div>
   </q-page>
 </template>
 
