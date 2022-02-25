@@ -61,11 +61,18 @@
 import { useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
+import { CarryOver } from 'src/typings/task.interface'
 
-export interface TaskDraft {
+interface TaskDraftModel {
   title: string | null
   notes: string | null
   priority: number | null
+  carryOverUntil: CarryOver
+}
+
+export interface TaskDraft extends TaskDraftModel {
+  title: string
+  priority: number
 }
 
 export default {
@@ -73,6 +80,10 @@ export default {
 
   props: {
     persistent: Boolean,
+    targetDt: {
+      type: Date,
+      required: true,
+    },
   },
 
   setup() {
@@ -80,10 +91,11 @@ export default {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent()
 
-    const task = ref<TaskDraft>({
+    const task = ref<TaskDraftModel>({
       title: null,
       notes: null,
       priority: null,
+      carryOverUntil: null,
     })
 
     return {
