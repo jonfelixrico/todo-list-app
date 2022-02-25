@@ -26,7 +26,7 @@
           hint="Optional. Place additional details of your task here."
         />
         <q-input
-          v-model.number="task.priorty"
+          v-model.number="task.priority"
           type="number"
           outlined
           label="Priority"
@@ -89,7 +89,7 @@ export default {
     return {
       dialogRef,
       onDialogHide,
-      onDialogOk: () => onDialogOK(task),
+      onDialogOk: () => onDialogOK(task.value),
       onDialogCancel,
       t,
       task,
