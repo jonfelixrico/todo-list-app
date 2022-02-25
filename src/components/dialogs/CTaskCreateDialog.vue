@@ -7,6 +7,7 @@
       <q-separator />
       <q-card-section class="q-gutter-y-md">
         <q-input
+          v-model="task.title"
           type="textarea"
           outlined
           autogrow
@@ -15,6 +16,7 @@
           hint="Description or title of what you want to do."
         />
         <q-input
+          v-model="task.notes"
           type="textarea"
           outlined
           autogrow
@@ -24,6 +26,7 @@
           hint="Optional. Place additional details of your task here."
         />
         <q-input
+          v-model.number="task.priorty"
           type="number"
           outlined
           label="Priority"
@@ -57,6 +60,13 @@
 <script lang="ts">
 import { useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
+
+export interface TaskDraft {
+  title: string | null
+  notes: string | null
+  priority: number | null
+}
 
 export default {
   emits: [...useDialogPluginComponent.emits],
@@ -67,19 +77,22 @@ export default {
 
   setup() {
     const { t } = useI18n()
-    const {
-      dialogRef,
-      onDialogHide,
-      onDialogOK: onDialogOk,
-      onDialogCancel,
-    } = useDialogPluginComponent()
+    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
+      useDialogPluginComponent()
+
+    const task = ref<TaskDraft>({
+      title: null,
+      notes: null,
+      priority: null,
+    })
 
     return {
       dialogRef,
       onDialogHide,
-      onDialogOk,
+      onDialogOk: () => onDialogOK(task),
       onDialogCancel,
       t,
+      task,
     }
   },
 }
