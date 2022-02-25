@@ -7,8 +7,3 @@ export interface Task {
   lastUpdateDt: Date
   targetDt: Date
 }
-
-export type TaskDraft = Omit<
-  Task,
-  'createDt' | 'lastUpdateDt' | 'targetDt' | 'id'
->
