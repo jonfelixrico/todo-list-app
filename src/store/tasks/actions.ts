@@ -1,15 +1,21 @@
 import { date, uid } from 'quasar'
-import { Task, TaskDraft } from 'src/typings/task.interface'
+import { Task } from 'src/typings/task.interface'
 import { ActionTree } from 'vuex'
 import { StateInterface } from '../index'
 import { ITasksState } from './state'
 
+export interface TaskToCreate {
+  title: string
+  notes: string | null
+  priority: number
+}
+
 const actions: ActionTree<ITasksState, StateInterface> = {
-  createTask({ commit }, draft: TaskDraft) {
+  createTask({ commit }, toCreate: TaskToCreate) {
     const createDt = new Date()
 
     const task: Task = {
-      ...draft,
+      ...toCreate,
       createDt,
       lastUpdateDt: createDt,
       targetDt: date.startOfDate(createDt, 'day'),
