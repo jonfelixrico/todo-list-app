@@ -36,6 +36,8 @@
           dense
           hint="The priority of what you want to do, raging from 1 to 10."
         />
+
+        <div class="text-caption">To-do for {{ formattedTargetDt }}</div>
       </q-card-section>
       <q-separator />
       <q-card-actions align="right">
@@ -58,9 +60,9 @@
 </template>
 
 <script lang="ts">
-import { useDialogPluginComponent } from 'quasar'
+import { date, useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { CarryOver } from 'src/typings/task.interface'
 
 interface TaskDraftModel {
@@ -75,7 +77,7 @@ export interface TaskDraft extends TaskDraftModel {
   priority: number
 }
 
-export default {
+export default defineComponent({
   emits: [...useDialogPluginComponent.emits],
 
   props: {
@@ -86,7 +88,7 @@ export default {
     },
   },
 
-  setup() {
+  setup(props) {
     const { t } = useI18n()
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent()
@@ -98,6 +100,10 @@ export default {
       carryOverUntil: null,
     })
 
+    const formattedTargetDt = computed(() =>
+      date.formatDate(props.targetDt, 'MMM D, YYYY')
+    )
+
     return {
       dialogRef,
       onDialogHide,
@@ -105,9 +111,10 @@ export default {
       onDialogCancel,
       t,
       task,
+      formattedTargetDt,
     }
   },
-}
+})
 </script>
 
 <style lang="scss" scoped>

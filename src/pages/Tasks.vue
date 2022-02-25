@@ -46,6 +46,7 @@ function useTaskCreate() {
       component: CTaskCreateDialog,
       componentProps: {
         persistent: true,
+        targetDt,
       },
     }).onOk((task: TaskDraft) => {
       void doCreate(task, targetDt)
