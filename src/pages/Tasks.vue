@@ -1,9 +1,32 @@
 <template>
-  <q-page>hi</q-page>
+  <q-page>
+    <q-toolbar class="bg-secondary">
+      <q-space />
+      <q-btn
+        dense
+        round
+        unelevated
+        color="white"
+        text-color="black"
+        icon="create"
+        @click="onWriteBtnClick"
+      />
+    </q-toolbar>
+  </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-export default defineComponent({})
+export default defineComponent({
+  setup() {
+    function onWriteBtnClick() {
+      console.debug('noop')
+    }
+
+    return {
+      onWriteBtnClick,
+    }
+  },
+})
 </script>
