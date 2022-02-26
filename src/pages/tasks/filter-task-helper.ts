@@ -1,4 +1,3 @@
-import { date } from 'quasar'
 import { useStore } from 'src/store'
 import { Task } from 'src/typings/task.interface'
 import { computed, Ref } from 'vue'
@@ -57,11 +56,7 @@ export function useTaskFilter(targetDt: Ref<Date>) {
    */
   const inTarget = computed(() => {
     return store.state.tasks.tasks
-      .filter(
-        (task) =>
-          date.startOfDate(targetDt.value, 'day') ===
-          date.startOfDate(task.targetDt, 'day')
-      )
+      .filter((task) => targetDt.value === task.targetDt)
       .sort(sortByTargetDt)
   })
 
@@ -72,10 +67,7 @@ export function useTaskFilter(targetDt: Ref<Date>) {
   const carriedOver = computed(() => {
     return store.state.tasks.tasks
       .filter((task) => {
-        const madeBeforeTargetDt =
-          date.startOfDate(targetDt.value, 'day') <
-          date.startOfDate(task.targetDt, 'day')
-
+        const madeBeforeTargetDt = task.targetDt < targetDt.value
         return madeBeforeTargetDt && shouldCarryOver(task, targetDt.value)
       })
       .sort(sortByTargetDt)
