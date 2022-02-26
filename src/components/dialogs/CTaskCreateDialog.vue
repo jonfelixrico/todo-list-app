@@ -8,126 +8,132 @@
         </div>
       </q-card-section>
       <q-separator />
-      <q-card-section class="q-gutter-y-lg">
-        <!-- Title -->
-        <div class="q-gutter-y-sm">
-          <!-- TODO do proper a11y support for labels -->
-          <div class="text-weight-bold">
-            {{ t('dialogs.taskCreate.inputs.title.label') }}
-          </div>
-          <q-input
-            v-model="task.title"
-            type="textarea"
-            outlined
-            autogrow
-            dense
-            :hint="t('dialogs.taskCreate.inputs.title.hint')"
-          />
-        </div>
+      <q-card-section>
+        <q-scroll-area style="height: 70vh">
+          <div class="q-gutter-y-lg">
+            <!-- Title -->
+            <div class="q-gutter-y-sm">
+              <!-- TODO do proper a11y support for labels -->
+              <div class="text-weight-bold">
+                {{ t('dialogs.taskCreate.inputs.title.label') }}
+              </div>
+              <q-input
+                v-model="task.title"
+                type="textarea"
+                outlined
+                autogrow
+                dense
+                :hint="t('dialogs.taskCreate.inputs.title.hint')"
+              />
+            </div>
 
-        <!-- Notes -->
-        <div class="q-gutter-y-sm">
-          <div class="text-weight-bold">
-            {{ t('dialogs.taskCreate.inputs.notes.label') }}
-          </div>
-          <q-input
-            v-model="task.notes"
-            type="textarea"
-            outlined
-            autogrow
-            dense
-            class="notes-input"
-            :hint="t('dialogs.taskCreate.inputs.notes.hint')"
-          />
-        </div>
+            <!-- Notes -->
+            <div class="q-gutter-y-sm">
+              <div class="text-weight-bold">
+                {{ t('dialogs.taskCreate.inputs.notes.label') }}
+              </div>
+              <q-input
+                v-model="task.notes"
+                type="textarea"
+                outlined
+                autogrow
+                dense
+                class="notes-input"
+                :hint="t('dialogs.taskCreate.inputs.notes.hint')"
+              />
+            </div>
 
-        <!-- Priority -->
-        <div class="q-gutter-y-sm">
-          <div class="text-weight-bold">
-            {{ t('dialogs.taskCreate.inputs.priority.label') }}
-          </div>
-          <q-input
-            v-model.number="task.priority"
-            type="number"
-            outlined
-            min="1"
-            max="10"
-            step="0.1"
-            dense
-            :hint="t('dialogs.taskCreate.inputs.priority.hint')"
-          />
-        </div>
+            <!-- Priority -->
+            <div class="q-gutter-y-sm">
+              <div class="text-weight-bold">
+                {{ t('dialogs.taskCreate.inputs.priority.label') }}
+              </div>
+              <q-input
+                v-model.number="task.priority"
+                type="number"
+                outlined
+                min="1"
+                max="10"
+                step="0.1"
+                dense
+                :hint="t('dialogs.taskCreate.inputs.priority.hint')"
+              />
+            </div>
 
-        <!-- Carry-over -->
-        <div class="q-gutter-y-sm">
-          <div class="text-weight-bold">
-            {{ t('dialogs.taskCreate.inputs.carryOver.label') }}
-          </div>
-          <div class="column">
-            <!-- No carry over -->
-            <q-radio
-              v-model="carryOver.radioModel"
-              val="NO_CARRY_OVER"
-              :label="t('dialogs.taskCreate.inputs.carryOver.options.no')"
-            />
+            <!-- Carry-over -->
+            <div class="q-gutter-y-sm">
+              <div class="text-weight-bold">
+                {{ t('dialogs.taskCreate.inputs.carryOver.label') }}
+              </div>
+              <div class="column">
+                <!-- No carry over -->
+                <q-radio
+                  v-model="carryOver.radioModel"
+                  val="NO_CARRY_OVER"
+                  :label="t('dialogs.taskCreate.inputs.carryOver.options.no')"
+                />
 
-            <!-- Carry over until completed -->
-            <q-radio
-              v-model="carryOver.radioModel"
-              val="INDEFINITE"
-              :label="
-                t('dialogs.taskCreate.inputs.carryOver.options.untilCompleted')
-              "
-            />
+                <!-- Carry over until completed -->
+                <q-radio
+                  v-model="carryOver.radioModel"
+                  val="INDEFINITE"
+                  :label="
+                    t(
+                      'dialogs.taskCreate.inputs.carryOver.options.untilCompleted'
+                    )
+                  "
+                />
 
-            <!-- Carry over until date (if not yet completed) -->
-            <q-radio v-model="carryOver.radioModel" val="DEFINITE">
-              <!--
-              The use of `preformatted` here is requried for HTML to honor the space between
-              "...over until {date}"
-            -->
-              <i18n-t
-                keypath="dialogs.taskCreate.inputs.carryOver.options.untilDate"
-                tag="div"
-                class="row items-center preformatted"
-              >
-                <template #date>
-                  <q-input
-                    outlined
-                    dense
-                    v-model="carryOver.dateModel"
-                    :disable="carryOver.radioModel !== 'DEFINITE'"
-                    :bottom-slots="false"
+                <!-- Carry over until date (if not yet completed) -->
+                <q-radio v-model="carryOver.radioModel" val="DEFINITE">
+                  <!--
+                    The use of `preformatted` here is requried for HTML to honor the space between
+                    "...over until {date}"
+                  -->
+                  <i18n-t
+                    keypath="dialogs.taskCreate.inputs.carryOver.options.untilDate"
+                    tag="div"
+                    class="row items-center preformatted"
                   >
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy
-                          ref="qDateProxy"
-                          cover
-                          transition-show="scale"
-                          transition-hide="scale"
-                          mask="date"
-                          :rules="['date']"
-                        >
-                          <q-date v-model="carryOver.dateModel">
-                            <div class="row items-center justify-end">
-                              <q-btn
-                                v-close-popup
-                                label="Close"
-                                color="primary"
-                                flat
-                              />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
+                    <template #date>
+                      <q-input
+                        outlined
+                        dense
+                        v-model="carryOver.dateModel"
+                        :disable="carryOver.radioModel !== 'DEFINITE'"
+                        :bottom-slots="false"
+                      >
+                        <template v-slot:append>
+                          <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy
+                              ref="qDateProxy"
+                              cover
+                              transition-show="scale"
+                              transition-hide="scale"
+                              mask="date"
+                              :rules="['date']"
+                            >
+                              <q-date v-model="carryOver.dateModel">
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Close"
+                                    color="primary"
+                                    flat
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
                     </template>
-                  </q-input>
-                </template>
-              </i18n-t>
-            </q-radio>
+                  </i18n-t>
+                </q-radio>
+              </div>
+            </div>
           </div>
-        </div>
+        </q-scroll-area>
       </q-card-section>
       <q-separator />
       <q-card-actions align="right">
