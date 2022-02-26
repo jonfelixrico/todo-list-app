@@ -1,5 +1,5 @@
 export default {
-  title: 'Add-to do',
+  title: 'Add to-do task',
   targetDtLbl: 'For {targetDate}',
   inputs: {
     title: {
