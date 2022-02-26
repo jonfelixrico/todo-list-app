@@ -135,8 +135,8 @@
 <script lang="ts">
 import { date, useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
-import { computed, defineComponent, reactive, toRef } from 'vue'
-import { CarryOver } from 'src/typings/task.interface'
+import { computed, defineComponent, reactive, toRef, PropType } from 'vue'
+import { CarryOver, DraftTaskData } from 'src/typings/task.interface'
 import { useCarryOverRadioHelper } from './carry-over-radio-helper'
 
 interface TaskDraftModel {
@@ -151,6 +151,16 @@ export interface TaskDraft extends TaskDraftModel {
   priority: number
 }
 
+export type TaskCreateInitialData = Omit<DraftTaskData, 'targetDt'>
+function createTaskData(initialData?: TaskCreateInitialData) {
+  return reactive({
+    title: initialData?.title ?? null,
+    notes: initialData?.notes ?? null,
+    priority: initialData?.priority ?? null,
+    carryOverUntil: initialData?.carryOverUntil ?? null,
+  })
+}
+
 export default defineComponent({
   emits: [...useDialogPluginComponent.emits],
 
@@ -160,6 +170,8 @@ export default defineComponent({
       type: Date,
       required: true,
     },
+
+    initialData: Object as PropType<TaskCreateInitialData>,
   },
 
   setup(props) {
@@ -167,15 +179,15 @@ export default defineComponent({
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent()
 
-    const task = reactive<TaskDraftModel>({
-      title: null,
-      notes: null,
-      priority: null,
-      carryOverUntil: null,
-    })
+    const task = createTaskData(props.initialData)
 
     const formattedTargetDt = computed(() =>
       date.formatDate(props.targetDt, 'MMM D, YYYY')
+    )
+
+    const carryOver = useCarryOverRadioHelper(
+      toRef(task, 'carryOverUntil'),
+      toRef(props, 'targetDt')
     )
 
     return {
@@ -186,10 +198,7 @@ export default defineComponent({
       t,
       task,
       formattedTargetDt,
-      carryOver: useCarryOverRadioHelper(
-        toRef(task, 'carryOverUntil'),
-        toRef(props, 'targetDt')
-      ),
+      carryOver,
     }
   },
 })
