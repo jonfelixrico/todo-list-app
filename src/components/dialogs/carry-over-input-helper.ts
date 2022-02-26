@@ -1,15 +1,12 @@
-import { CarryOver } from 'src/typings/task.interface'
 import { Ref, computed, ref, reactive } from 'vue'
 
-export type TransformedCarryOver = 'NO_CARRY_OVER' | 'INDEFINITE' | 'DEFINITE'
+export type TransformedCarryOver = 'NO_CARRY_OVER' | 'DEFINITE'
 
 export function useCarryOverInputHelper(
-  carryOver: Ref<CarryOver>,
+  carryOver: Ref<Date | null>,
   dueDt: Ref<Date>
 ) {
-  const dateData = ref(
-    carryOver.value instanceof Date ? carryOver.value : dueDt.value
-  )
+  const dateData = ref(carryOver?.value ?? dueDt.value)
 
   const dateModel = computed({
     get: () => dateData.value,
@@ -20,10 +17,8 @@ export function useCarryOverInputHelper(
 
   const radioModel = computed({
     get: () => {
-      if (!carryOver.value) {
+      if (carryOver.value === dueDt.value) {
         return 'NO_CARRY_OVER'
-      } else if (carryOver.value === 'INDEFINITE') {
-        return 'INDEFINITE'
       } else {
         // carryOver instanceof Date is true
         return 'DEFINITE'
@@ -31,22 +26,12 @@ export function useCarryOverInputHelper(
     },
 
     set: (val: TransformedCarryOver) => {
-      switch (val) {
-        case 'NO_CARRY_OVER': {
-          carryOver.value = null
-          break
-        }
-
-        case 'DEFINITE': {
-          carryOver.value = dateModel.value
-          break
-        }
-
-        case 'INDEFINITE': {
-          carryOver.value = 'INDEFINITE'
-          break
-        }
+      if (val === 'NO_CARRY_OVER') {
+        carryOver.value = dueDt.value
+        return
       }
+
+      carryOver.value = dateModel.value
     },
   })
 

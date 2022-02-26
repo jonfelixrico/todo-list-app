@@ -147,7 +147,7 @@
 import { date, useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { computed, defineComponent, reactive, toRef, PropType } from 'vue'
-import { CarryOver, DraftTaskData } from 'src/typings/task.interface'
+import { DraftTaskData } from 'src/typings/task.interface'
 import { useCarryOverInputHelper } from './carry-over-input-helper'
 import { usePriorityInputHelper } from './priority-input-helper'
 import CDateInput from 'components/common/CDateInput.vue'
@@ -156,7 +156,7 @@ interface TaskDraftModel {
   title: string | null
   notes: string | null
   priority: number | null
-  carryOverUntil: CarryOver
+  carryOverUntil: Date | null
 }
 
 export interface TaskDraft extends TaskDraftModel {
