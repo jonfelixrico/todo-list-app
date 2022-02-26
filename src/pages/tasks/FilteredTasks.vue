@@ -1,5 +1,5 @@
 <template>
-  <div class="fit column">
+  <q-page class="column">
     <q-toolbar class="bg-secondary row justify-center">{{
       routeDate
     }}</q-toolbar>
@@ -16,7 +16,7 @@
         </q-card>
       </template>
     </div>
-  </div>
+  </q-page>
 </template>
 
 <script lang="ts">

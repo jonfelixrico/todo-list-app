@@ -1,26 +1,31 @@
 <template>
   <q-page class="column">
-    <q-toolbar class="bg-secondary">
-      <q-space />
-      <q-btn
-        dense
-        round
-        unelevated
-        color="white"
-        text-color="black"
-        icon="create"
-        @click="onWriteBtnClick"
-      />
-    </q-toolbar>
-    <div class="col relative-position">
-      <router-view class="absolute-full" />
-    </div>
+    <q-resize-observer @resize="onResize($event.height)" />
+    <q-layout container :style="{ height: `${height}px` }">
+      <q-header>
+        <q-toolbar class="bg-secondary">
+          <q-space />
+          <q-btn
+            dense
+            round
+            unelevated
+            color="white"
+            text-color="black"
+            icon="create"
+            @click="onWriteBtnClick"
+          />
+        </q-toolbar>
+      </q-header>
+      <q-page-container>
+        <router-view />
+      </q-page-container>
+    </q-layout>
   </q-page>
 </template>
 
 <script lang="ts">
 import { date, useQuasar } from 'quasar'
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useStore } from 'src/store'
 import { Task } from 'src/typings/task.interface'
 import { CreateTaskInput } from 'src/store/tasks/actions'
@@ -28,6 +33,18 @@ import CTaskCreateDialog, {
   TaskDraft,
 } from 'src/components/dialogs/CTaskCreateDialog.vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
+
+function useHeightObserverUtils() {
+  const heightRef = ref(0)
+  function onResize(height: number) {
+    heightRef.value = height
+  }
+
+  return {
+    onResize,
+    height: heightRef,
+  }
+}
 
 function useTaskCreate() {
   const $q = useQuasar()
@@ -54,7 +71,7 @@ function useTaskCreate() {
     })
   }
 
-  return { onWriteBtnClick }
+  return { onWriteBtnClick, ...useHeightObserverUtils() }
 }
 
 export default defineComponent({

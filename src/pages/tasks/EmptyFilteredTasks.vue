@@ -1,11 +1,11 @@
 <template>
-  <div class="fit flex flex-center">
+  <q-page class="flex flex-center">
     <q-date
       :events="events"
       :model-value="null"
       @update:model-value="onDateClick"
     />
-  </div>
+  </q-page>
 </template>
 
 <script lang="ts">
