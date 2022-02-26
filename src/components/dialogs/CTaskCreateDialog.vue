@@ -107,37 +107,13 @@
                 class="row items-center preformatted"
               >
                 <template #date>
-                  <q-input
+                  <CDateInput
                     outlined
                     dense
                     v-model="carryOver.dateModel"
                     :disable="carryOver.radioModel !== 'DEFINITE'"
                     :bottom-slots="false"
-                  >
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy
-                          ref="qDateProxy"
-                          cover
-                          transition-show="scale"
-                          transition-hide="scale"
-                          mask="date"
-                          :rules="['date']"
-                        >
-                          <q-date v-model="carryOver.dateModel">
-                            <div class="row items-center justify-end">
-                              <q-btn
-                                v-close-popup
-                                label="Close"
-                                color="primary"
-                                flat
-                              />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
+                  />
                 </template>
               </i18n-t>
             </q-radio>
@@ -172,6 +148,7 @@ import { computed, defineComponent, reactive, toRef, PropType } from 'vue'
 import { CarryOver, DraftTaskData } from 'src/typings/task.interface'
 import { useCarryOverInputHelper } from './carry-over-input-helper'
 import { usePriorityInputHelper } from './priority-input-helper'
+import CDateInput from 'components/common/CDateInput.vue'
 
 interface TaskDraftModel {
   title: string | null
@@ -197,6 +174,10 @@ function createTaskData(initialData?: TaskCreateInitialData) {
 
 export default defineComponent({
   emits: [...useDialogPluginComponent.emits],
+
+  components: {
+    CDateInput,
+  },
 
   props: {
     persistent: Boolean,
