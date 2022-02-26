@@ -19,7 +19,7 @@ export default defineComponent({
     const { setRouteDate } = useTaskListDateNavigation()
     const store = useStore()
 
-    const events = computed(() => {
+    const uniqueDates = computed(() => {
       const uniqueDates = new Set<Date>([])
       for (const { targetDt } of store.state.tasks.tasks) {
         if (!uniqueDates.has(targetDt)) {
@@ -27,11 +27,22 @@ export default defineComponent({
         }
       }
 
-      return [...uniqueDates].map((d) => date.formatDate(d, 'YYYY/MM/DD'))
+      return new Set(
+        [...uniqueDates].map((d) => date.formatDate(d, 'YYYY/MM/DD'))
+      )
     })
 
-    function onDateClick(dateString: string) {
-      void setRouteDate(new Date(dateString))
+    const events = computed(() => {
+      return [...uniqueDates.value]
+    })
+
+    function onDateClick(dateStr: string) {
+      if (!uniqueDates.value.has(dateStr)) {
+        // do not allow navigation to dates without tasks
+        return null
+      }
+
+      void setRouteDate(new Date(dateStr))
     }
 
     return {
