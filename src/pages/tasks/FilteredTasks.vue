@@ -1,5 +1,10 @@
 <template>
-  <div>{{ routeDate }}</div>
+  <div class="fit column">
+    <q-toolbar class="bg-secondary row justify-center">{{
+      routeDate
+    }}</q-toolbar>
+    <div class="col">test</div>
+  </div>
 </template>
 
 <script lang="ts">
