@@ -12,7 +12,9 @@
         @click="onWriteBtnClick"
       />
     </q-toolbar>
-    <div class="col"><router-view /></div>
+    <div class="col relative-position">
+      <router-view class="absolute-full" />
+    </div>
   </q-page>
 </template>
 
