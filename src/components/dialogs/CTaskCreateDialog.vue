@@ -113,6 +113,7 @@
                     v-model="carryOver.dateModel"
                     :disable="carryOver.radioModel !== 'DEFINITE'"
                     :bottom-slots="false"
+                    hide-clear
                   />
                 </template>
               </i18n-t>
