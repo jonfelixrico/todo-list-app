@@ -53,9 +53,11 @@
           <div class="row items-start q-gutter-x-sm">
             <q-checkbox
               :label="t('dialogs.taskCreate.inputs.hasPriority.label')"
+              v-model="priority.checkboxModel"
             />
             <q-input
-              v-model.number="task.priority"
+              :disable="!priority.checkboxModel"
+              v-model.number="priority.inputModel"
               type="number"
               outlined
               min="1"
