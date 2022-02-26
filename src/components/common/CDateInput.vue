@@ -7,28 +7,47 @@
     :bottom-slots="bottomSlots"
   >
     <template v-slot:append>
-      <q-icon name="event" class="cursor-pointer">
-        <q-popup-proxy
-          ref="qDateProxy"
-          cover
-          transition-show="scale"
-          transition-hide="scale"
-          mask="####/##/##"
-          :rules="['date']"
+      <div class="row">
+        <q-btn
+          v-if="!hideClear"
+          icon="close"
+          dense
+          flat
+          round
+          size="sm"
+          @click="model = null"
+        />
+        <q-btn
+          icon="event"
+          color="primary"
+          dense
+          flat
+          round
+          size="sm"
+          class="cursor-pointer"
         >
-          <q-date v-model="model">
-            <div class="row items-center justify-end">
-              <q-btn
-                v-close-popup
-                :label="t('common.close')"
-                color="primary"
-                flat
-                no-caps
-              />
-            </div>
-          </q-date>
-        </q-popup-proxy>
-      </q-icon>
+          <q-popup-proxy
+            ref="qDateProxy"
+            cover
+            transition-show="scale"
+            transition-hide="scale"
+            mask="####/##/##"
+            :rules="['date']"
+          >
+            <q-date v-model="model">
+              <div class="row items-center justify-end">
+                <q-btn
+                  v-close-popup
+                  :label="t('common.close')"
+                  color="primary"
+                  flat
+                  no-caps
+                />
+              </div>
+            </q-date>
+          </q-popup-proxy>
+        </q-btn>
+      </div>
     </template>
   </q-input>
 </template>
@@ -49,6 +68,7 @@ export default defineComponent({
     outlined: Boolean,
     dense: Boolean,
     bottomSlots: Boolean,
+    hideClear: Boolean,
   },
 
   setup(props, { emit }) {
