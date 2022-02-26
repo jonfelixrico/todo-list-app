@@ -3,8 +3,12 @@
     <q-card class="q-dialog-plugin">
       <q-card-section>
         <h6 class="text-h6 q-my-none">{{ t('dialogs.taskCreate.title') }}</h6>
-        <div class="text-caption">
-          {{ t('dialogs.taskCreate.targetDtLbl') }}
+        <div class="text-caption text-grey-6">
+          {{
+            t('dialogs.taskCreate.targetDtLbl', {
+              targetDate: formattedTargetDt,
+            })
+          }}
         </div>
       </q-card-section>
       <q-separator />
