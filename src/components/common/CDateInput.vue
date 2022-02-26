@@ -59,7 +59,7 @@ import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   emits: {
-    input: (payload?: Date) => !payload || payload instanceof Date,
+    input: (payload: Date | null) => !payload || payload instanceof Date,
   },
 
   props: {
@@ -84,7 +84,7 @@ export default defineComponent({
 
       set: (dateStr: string | null) => {
         if (!dateStr) {
-          emit('input', undefined)
+          emit('input', null)
         } else if (!date.isValid(dateStr)) {
           // do nothing
         } else {
