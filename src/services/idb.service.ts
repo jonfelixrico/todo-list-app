@@ -7,7 +7,7 @@ export const IdbServiceKey: InjectionKey<IDBPDatabase<IdbSchema>> =
   Symbol('idb')
 
 export function useIdb() {
-  return inject(IdbServiceKey)
+  return inject(IdbServiceKey) as IDBPDatabase<IdbSchema>
 }
 
 const boot: ServiceBootFn = async ({ app }: { app: App }) => {
