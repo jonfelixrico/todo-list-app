@@ -59,7 +59,7 @@ import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   emits: {
-    input: (payload?: Date) => payload && payload instanceof Date,
+    input: (payload?: Date) => !payload || payload instanceof Date,
   },
 
   props: {
