@@ -6,7 +6,7 @@ export interface TaskCrudService {
 }
 
 export const TaskCrudServiceKey: InjectionKey<TaskCrudService> =
-  Symbol('task store service')
+  Symbol('task crud service')
 
 export function useTaskCrudService() {
   return inject(TaskCrudServiceKey)
