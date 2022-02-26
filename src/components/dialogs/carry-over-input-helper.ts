@@ -4,7 +4,7 @@ import { Ref, computed, ref, reactive } from 'vue'
 
 export type TransformedCarryOver = 'NO_CARRY_OVER' | 'INDEFINITE' | 'DEFINITE'
 
-export function useCarryOverRadioHelper(
+export function useCarryOverInputHelper(
   carryOver: Ref<CarryOver>,
   targetDt: Ref<Date>
 ) {

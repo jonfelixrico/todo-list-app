@@ -165,7 +165,7 @@ import { date, useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { computed, defineComponent, reactive, toRef, PropType } from 'vue'
 import { CarryOver, DraftTaskData } from 'src/typings/task.interface'
-import { useCarryOverRadioHelper } from './carry-over-radio-helper'
+import { useCarryOverInputHelper } from './carry-over-input-helper'
 import { usePriorityInputHelper } from './priority-input-helper'
 
 interface TaskDraftModel {
@@ -214,11 +214,6 @@ export default defineComponent({
       date.formatDate(props.targetDt, 'MMM D, YYYY')
     )
 
-    const carryOver = useCarryOverRadioHelper(
-      toRef(task, 'carryOverUntil'),
-      toRef(props, 'targetDt')
-    )
-
     return {
       dialogRef,
       onDialogHide,
@@ -227,7 +222,10 @@ export default defineComponent({
       t,
       task,
       formattedTargetDt,
-      carryOver,
+      carryOver: useCarryOverInputHelper(
+        toRef(task, 'carryOverUntil'),
+        toRef(props, 'targetDt')
+      ),
       priority: usePriorityInputHelper(toRef(task, 'priority')),
     }
   },
