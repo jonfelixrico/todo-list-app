@@ -8,18 +8,7 @@ export function useCarryOverInputHelper(
   carryOver: Ref<CarryOver>,
   targetDt: Ref<Date>
 ) {
-  const definiteDate = ref(date.addToDate(targetDt.value, { day: 1 }))
-
-  const dateModel = computed({
-    get: () => date.formatDate(definiteDate.value, 'YYYY/MM/DD'),
-
-    set: (dateStr: string) => {
-      carryOver.value = definiteDate.value = date.extractDate(
-        dateStr,
-        'YYYY/MM/DD'
-      )
-    },
-  })
+  const dateModel = ref(date.addToDate(targetDt.value, { day: 1 }))
 
   const radioModel = computed({
     get: () => {
@@ -41,7 +30,7 @@ export function useCarryOverInputHelper(
         }
 
         case 'DEFINITE': {
-          carryOver.value = definiteDate.value
+          carryOver.value = dateModel.value
           break
         }
 
