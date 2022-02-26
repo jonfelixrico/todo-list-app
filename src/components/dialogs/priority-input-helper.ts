@@ -2,8 +2,8 @@ import { computed, reactive, ref, Ref } from 'vue'
 
 const clamp = (value: number) => Math.max(Math.min(10, value), 1)
 
-export function usePriorityInputHelper(priority: Ref<number>) {
-  const priorityInput = ref(clamp(priority.value))
+export function usePriorityInputHelper(priority: Ref<number | null>) {
+  const priorityInput = ref(clamp(priority.value ?? 0))
 
   const inputModel = computed({
     get: () => priorityInput.value,
@@ -13,7 +13,7 @@ export function usePriorityInputHelper(priority: Ref<number>) {
   })
 
   const checkboxModel = computed({
-    get: () => !!priority.value,
+    get: () => !!(priority.value ?? 0),
     set: (hasPriority: boolean) => {
       if (!hasPriority) {
         priority.value = 0

@@ -166,6 +166,7 @@ import { useI18n } from 'vue-i18n'
 import { computed, defineComponent, reactive, toRef, PropType } from 'vue'
 import { CarryOver, DraftTaskData } from 'src/typings/task.interface'
 import { useCarryOverRadioHelper } from './carry-over-radio-helper'
+import { usePriorityInputHelper } from './priority-input-helper'
 
 interface TaskDraftModel {
   title: string | null
@@ -227,6 +228,7 @@ export default defineComponent({
       task,
       formattedTargetDt,
       carryOver,
+      priority: usePriorityInputHelper(toRef(task, 'priority')),
     }
   },
 })
