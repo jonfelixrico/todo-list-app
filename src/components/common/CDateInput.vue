@@ -1,10 +1,10 @@
 <template>
   <q-input
-    outlined
-    dense
+    :outlined="outlined"
+    :dense="dense"
     v-model="model"
     :disable="disable"
-    :bottom-slots="false"
+    :bottom-slots="bottomSlots"
   >
     <template v-slot:append>
       <q-icon name="event" class="cursor-pointer">
@@ -23,6 +23,7 @@
                 :label="t('common.close')"
                 color="primary"
                 flat
+                no-caps
               />
             </div>
           </q-date>
@@ -47,6 +48,7 @@ export default defineComponent({
     disable: Boolean,
     outlined: Boolean,
     dense: Boolean,
+    bottomSlots: Boolean,
   },
 
   setup(props, { emit }) {
