@@ -1,9 +1,30 @@
 <template>
   <q-page class="column">
-    <q-toolbar class="bg-secondary row justify-center">{{
-      routeDate
-    }}</q-toolbar>
-    <div class="col">
+    <q-toolbar class="bg-secondary justify-between">
+      <!-- go back 1 day -->
+      <q-btn
+        icon="arrow_left"
+        @click="setRouteDate(adjacentDates.prev)"
+        :label="formatDate(adjacentDates.prev)"
+        unelevated
+        color="white"
+        text-color="black"
+        no-caps
+      />
+      <h2 class="text-h6 q-my-none">{{ formatDate(routeDate) }}</h2>
+
+      <!-- go forward 1 day -->
+      <q-btn
+        @click="setRouteDate(adjacentDates.next)"
+        :label="formatDate(adjacentDates.next)"
+        unelevated
+        color="white"
+        text-color="black"
+        icon-right="arrow_right"
+        no-caps
+      />
+    </q-toolbar>
+    <div class="col" v-if="taskGroups.length">
       <template
         v-for="{ targetDt, tasks } in taskGroups"
         :key="targetDt.getTime()"
@@ -16,12 +37,16 @@
         </q-card>
       </template>
     </div>
+
+    <div v-else class="col flex flex-center">
+      <h3 class="text-h6">No tasks.</h3>
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
 import { date } from 'quasar'
-import { ComputedRef, defineComponent } from 'vue'
+import { computed, ComputedRef, defineComponent } from 'vue'
 import { useTaskFilter } from './filter-task-helper'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
 
@@ -34,9 +59,23 @@ export default defineComponent({
      */
     const routeDate = dateNav.routeDate as ComputedRef<Date>
 
+    const adjacentDates = computed(() => {
+      return {
+        prev: date.subtractFromDate(routeDate.value, { day: 1 }),
+        next: date.addToDate(routeDate.value, { day: 1 }),
+      }
+    })
+
+    function formatDate(toFormat: Date) {
+      return date.formatDate(toFormat, 'MMM D, YYYY')
+    }
+
     return {
       routeDate,
       taskGroups: useTaskFilter(routeDate),
+      adjacentDates,
+      setRouteDate: dateNav.setRouteDate,
+      formatDate,
     }
   },
 
