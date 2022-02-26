@@ -3,14 +3,11 @@ import { IDBUpgradeCallback } from 'src/idb/idb.types'
 import { Task } from 'src/typings/task.interface'
 
 // TODO remove this
-export interface IdbTask extends Task {
-  carryOverUntil: Date
-}
 
 export interface TasksIdbStore extends DBSchema {
   tasks: {
     key: string
-    value: IdbTask
+    value: Task
     indexes: {
       referenceDates: Date
     }

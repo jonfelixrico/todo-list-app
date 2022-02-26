@@ -1,7 +1,7 @@
 import { date } from 'quasar'
-import { IdbTask } from 'src/idb/tasks.idb-store'
 import { TaskRepo } from 'src/services/abstracts/task-repo.service'
 import { useIdb } from 'src/services/idb.service'
+import { Task } from 'src/typings/task.interface'
 
 const BACKTRACK_LIMIT = 100
 
@@ -10,8 +10,7 @@ export const getTasks: TaskRepo['getTasks'] = async (snapshotDate: Date) => {
   const idb = useIdb()
 
   const alreadyProcessed = new Set<string>()
-  // TODO remove the use of IdbTask
-  const snapshotTasks: IdbTask[] = []
+  const snapshotTasks: Task[] = []
 
   for (
     let daysToSubtract = 0;
