@@ -5,6 +5,7 @@ export interface TaskRepoService {
   getTasks: (snapshotDate: Date) => Promise<Task[]>
   lastWrite: Ref<number>
   getDaysWithTasks: () => Promise<Date[]>
+  insert: (task: Task) => Promise<void>
 }
 
 export const TaskRepoServiceKey: InjectionKey<TaskRepoService> =
