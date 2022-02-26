@@ -32,9 +32,9 @@ function shouldCarryOver(
   return false
 }
 
-const sortByTargetDt = (a: Task, b: Task) => {
+const sortByDueDt = (a: Task, b: Task) => {
   // sort from oldest target to newest target
-  const targetDiff = a.targetDt.getTime() - b.targetDt.getTime()
+  const targetDiff = a.dueDt.getTime() - b.dueDt.getTime()
   if (targetDiff !== 0) {
     return targetDiff
   }
@@ -43,59 +43,59 @@ const sortByTargetDt = (a: Task, b: Task) => {
   return b.priority - a.priority
 }
 
-export interface TasksGroupedByTargetDt {
+export interface TasksGroupedByDueDt {
   tasks: Task[]
-  targetDt: Date
+  dueDt: Date
 }
 
-export function useTaskFilter(targetDt: Ref<Date>) {
+export function useTaskFilter(dueDt: Ref<Date>) {
   const store = useStore()
 
   /**
-   * Includes tasks which matches the provided `targetDt`.
+   * Includes tasks which matches the provided `dueDt`.
    */
   const inTarget = computed(() => {
     return (
       store.state.tasks.tasks
         /*
-         * NOTE cannot use targetDt.value === task.targetDt here since it will be a reference check
+         * NOTE cannot use dueDt.value === task.dueDt here since it will be a reference check
          * instead of equality check.
          */
-        .filter((task) => targetDt.value.getTime() === task.targetDt.getTime())
-        .sort(sortByTargetDt)
+        .filter((task) => dueDt.value.getTime() === task.dueDt.getTime())
+        .sort(sortByDueDt)
     )
   })
 
   /**
-   * Includes tasks which are created before the `targetDt`,
+   * Includes tasks which are created before the `dueDt`,
    * and are eligible for carry-over.
    */
   const carriedOver = computed(() => {
     return store.state.tasks.tasks
       .filter((task) => {
-        const madeBeforeTargetDt = task.targetDt < targetDt.value
-        return madeBeforeTargetDt && shouldCarryOver(task, targetDt.value)
+        const madeBeforeDueDt = task.dueDt < dueDt.value
+        return madeBeforeDueDt && shouldCarryOver(task, dueDt.value)
       })
-      .sort(sortByTargetDt)
+      .sort(sortByDueDt)
   })
 
   /**
-   * List of tasks grouped by the same targetDt.
+   * List of tasks grouped by the same dueDt.
    * These groups are sorted from earliest (made way before) to most recent (most recent would
-   * be tasks with matching `targetDt`).
+   * be tasks with matching `dueDt`).
    *
    * A group has sorted its tasks from highest priority to lowest priority (prio 10 to prio 0).
    */
   return computed(() => {
     const mergedTasks = inTarget.value.concat(carriedOver.value)
-    const groupedUp: TasksGroupedByTargetDt[] = []
+    const groupedUp: TasksGroupedByDueDt[] = []
 
     for (const task of mergedTasks) {
       const last = groupedUp[groupedUp.length - 1]
-      if (!last || last.targetDt !== task.targetDt) {
+      if (!last || last.dueDt !== task.dueDt) {
         groupedUp.push({
           tasks: [task],
-          targetDt: task.targetDt,
+          dueDt: task.dueDt,
         })
       } else {
         last.tasks.push(task)

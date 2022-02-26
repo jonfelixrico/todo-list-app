@@ -4,7 +4,7 @@ export interface EditableTaskAttrs {
   title: string
   notes: string | null
   priority: number
-  targetDt: Date
+  dueDt: Date
   carryOverUntil: CarryOver
 
   completeDt: Date | null

@@ -25,11 +25,8 @@
       />
     </q-toolbar>
     <div class="col" v-if="taskGroups.length">
-      <template
-        v-for="{ targetDt, tasks } in taskGroups"
-        :key="targetDt.getTime()"
-      >
-        <div>{{ targetDt }}</div>
+      <template v-for="{ dueDt, tasks } in taskGroups" :key="dueDt.getTime()">
+        <div>{{ dueDt }}</div>
         <q-card v-for="{ title, id } of tasks" :key="id">
           <q-card-section>
             {{ title }}

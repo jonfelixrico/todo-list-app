@@ -53,21 +53,21 @@ function useTaskCreate() {
   const createTask = (toCreate: CreateTaskInput) =>
     store.dispatch('tasks/createTask', toCreate) as Promise<Task>
 
-  const doCreate = async (task: TaskDraft, targetDt: Date) => {
-    const { id } = await createTask({ targetDt, ...task } as CreateTaskInput)
+  const doCreate = async (task: TaskDraft, dueDt: Date) => {
+    const { id } = await createTask({ dueDt, ...task } as CreateTaskInput)
     console.debug('Created task %s.', id)
   }
 
   const onWriteBtnClick = () => {
-    const targetDt = date.startOfDate(new Date(), 'day')
+    const dueDt = date.startOfDate(new Date(), 'day')
     $q.dialog({
       component: CTaskCreateDialog,
       componentProps: {
         persistent: true,
-        targetDt,
+        dueDt,
       },
     }).onOk((task: TaskDraft) => {
-      void doCreate(task, targetDt)
+      void doCreate(task, dueDt)
     })
   }
 

@@ -21,9 +21,9 @@ export default defineComponent({
 
     const uniqueDates = computed(() => {
       const uniqueDates = new Set<Date>([])
-      for (const { targetDt } of store.state.tasks.tasks) {
-        if (!uniqueDates.has(targetDt)) {
-          uniqueDates.add(targetDt)
+      for (const { dueDt } of store.state.tasks.tasks) {
+        if (!uniqueDates.has(dueDt)) {
+          uniqueDates.add(dueDt)
         }
       }
 

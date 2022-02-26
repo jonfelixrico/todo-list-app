@@ -5,8 +5,8 @@
         <h6 class="text-h6 q-my-none">{{ t('dialogs.taskCreate.title') }}</h6>
         <div class="text-caption text-grey-6">
           {{
-            t('dialogs.taskCreate.targetDtLbl', {
-              targetDate: formattedTargetDt,
+            t('dialogs.taskCreate.dueDtLbl', {
+              dueDt: formattedDueDt,
             })
           }}
         </div>
@@ -164,7 +164,7 @@ export interface TaskDraft extends TaskDraftModel {
   priority: number
 }
 
-export type TaskCreateInitialData = Omit<DraftTaskData, 'targetDt'>
+export type TaskCreateInitialData = Omit<DraftTaskData, 'dueDt'>
 function createTaskData(initialData?: TaskCreateInitialData) {
   return reactive<TaskDraftModel>({
     title: initialData?.title ?? null,
@@ -183,7 +183,7 @@ export default defineComponent({
 
   props: {
     persistent: Boolean,
-    targetDt: {
+    dueDt: {
       type: Date,
       required: true,
     },
@@ -198,8 +198,8 @@ export default defineComponent({
 
     const task = createTaskData(props.initialData)
 
-    const formattedTargetDt = computed(() =>
-      date.formatDate(props.targetDt, 'MMM D, YYYY')
+    const formattedDueDt = computed(() =>
+      date.formatDate(props.dueDt, 'MMM D, YYYY')
     )
 
     return {
@@ -209,10 +209,10 @@ export default defineComponent({
       onDialogCancel,
       t,
       task,
-      formattedTargetDt,
+      formattedDueDt,
       carryOver: useCarryOverInputHelper(
         toRef(task, 'carryOverUntil'),
-        toRef(props, 'targetDt')
+        toRef(props, 'dueDt')
       ),
       priority: usePriorityInputHelper(toRef(task, 'priority')),
     }

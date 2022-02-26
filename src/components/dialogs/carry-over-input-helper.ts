@@ -5,10 +5,10 @@ export type TransformedCarryOver = 'NO_CARRY_OVER' | 'INDEFINITE' | 'DEFINITE'
 
 export function useCarryOverInputHelper(
   carryOver: Ref<CarryOver>,
-  targetDt: Ref<Date>
+  dueDt: Ref<Date>
 ) {
   const dateData = ref(
-    carryOver.value instanceof Date ? carryOver.value : targetDt.value
+    carryOver.value instanceof Date ? carryOver.value : dueDt.value
   )
 
   const dateModel = computed({
