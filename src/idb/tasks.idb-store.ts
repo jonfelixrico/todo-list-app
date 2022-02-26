@@ -22,6 +22,8 @@ const upgradeCb: IDBUpgradeCallback<TasksIdbStore> = (db) => {
   store.createIndex('createDt', 'createDt')
   store.createIndex('deadlineDt', 'deadlineDt')
   store.createIndex('completeDt', 'copmleteDt')
+
+  console.debug('IndexedDB-promised: task store upgraded.')
 }
 
 export default upgradeCb

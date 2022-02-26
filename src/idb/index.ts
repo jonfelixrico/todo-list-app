@@ -12,6 +12,7 @@ export async function start() {
   return await openDB<Schema>(DB_NAME, DB_VERSION, {
     upgrade(...args) {
       tasksUpgradeCb(...args)
+      console.debug('IndexedDB-promised: DB ugpraded.')
     },
   })
 }
