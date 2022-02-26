@@ -221,6 +221,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .notes-input ::v-deep(.q-field__control-container) {
-  min-height: 300px;
+  min-height: 10vh;
 }
 </style>
