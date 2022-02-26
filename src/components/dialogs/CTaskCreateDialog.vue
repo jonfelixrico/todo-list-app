@@ -153,7 +153,7 @@ export interface TaskDraft extends TaskDraftModel {
 
 export type TaskCreateInitialData = Omit<DraftTaskData, 'targetDt'>
 function createTaskData(initialData?: TaskCreateInitialData) {
-  return reactive({
+  return reactive<TaskDraftModel>({
     title: initialData?.title ?? null,
     notes: initialData?.notes ?? null,
     priority: initialData?.priority ?? null,
