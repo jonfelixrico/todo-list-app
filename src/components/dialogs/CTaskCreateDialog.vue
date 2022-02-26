@@ -105,6 +105,7 @@
                 keypath="dialogs.taskCreate.inputs.carryOver.options.untilDate"
                 tag="div"
                 class="row items-center preformatted"
+                scope="global"
               >
                 <template #date>
                   <CDateInput
