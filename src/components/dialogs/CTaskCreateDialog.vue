@@ -65,6 +65,10 @@
 
           <!-- Carry over until date (if not yet completed) -->
           <q-radio v-model="carryOver.radioModel" val="DEFINITE">
+            <!--
+              The use of `preformatted` here is requried for HTML to honor the space between
+              "...over until {date}"
+            -->
             <i18n-t
               keypath="dialogs.taskCreate.inputs.carryOver.options.untilDate"
               tag="div"
