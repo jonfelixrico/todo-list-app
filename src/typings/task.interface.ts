@@ -15,3 +15,5 @@ export interface Task extends EditableTaskAttrs {
   createDt: Date
   lastUpdateDt: Date
 }
+
+export type DraftTaskData = Omit<EditableTaskAttrs, 'completeDt'>

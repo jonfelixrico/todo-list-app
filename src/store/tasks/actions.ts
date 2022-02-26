@@ -1,10 +1,10 @@
 import { uid } from 'quasar'
-import { EditableTaskAttrs, Task } from 'src/typings/task.interface'
+import { DraftTaskData, Task } from 'src/typings/task.interface'
 import { ActionTree } from 'vuex'
 import { StateInterface } from '../index'
 import { ITasksState } from './state'
 
-export type CreateTaskInput = Omit<EditableTaskAttrs, 'completeDt'>
+export type CreateTaskInput = DraftTaskData
 
 const actions: ActionTree<ITasksState, StateInterface> = {
   createTask({ commit }, toCreate: CreateTaskInput) {
