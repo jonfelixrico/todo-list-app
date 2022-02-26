@@ -1,5 +1,9 @@
 import { Ref, computed, ref, reactive } from 'vue'
 
+/**
+ * 'NO_CARRY_OVER' just means that the due date will be the carry over date.
+ * 'DEFINITE' has a carry over on a certain date.
+ */
 export type TransformedCarryOver = 'NO_CARRY_OVER' | 'DEFINITE'
 
 export function useCarryOverInputHelper(
