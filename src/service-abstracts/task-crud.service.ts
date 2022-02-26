@@ -1,8 +1,8 @@
 import { Task } from 'src/typings/task.interface'
 import { inject, InjectionKey } from 'vue'
 
-export abstract class TaskCrudService {
-  abstract getTasks(targetDt: Date): Promise<Task[]>
+export interface TaskCrudService {
+  getTasks: (snapshotDate: Date) => Promise<Task[]>
 }
 
 export const TaskCrudServiceKey: InjectionKey<TaskCrudService> =
