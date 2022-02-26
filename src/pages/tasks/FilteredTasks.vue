@@ -3,13 +3,26 @@
     <q-toolbar class="bg-secondary row justify-center">{{
       routeDate
     }}</q-toolbar>
-    <div class="col">test</div>
+    <div class="col">
+      <template
+        v-for="{ targetDt, tasks } in taskGroups"
+        :key="targetDt.getTime()"
+      >
+        <div>{{ targetDt }}</div>
+        <q-card v-for="{ title, id } of tasks" :key="id">
+          <q-card-section>
+            {{ title }}
+          </q-card-section>
+        </q-card>
+      </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { date } from 'quasar'
 import { ComputedRef, defineComponent } from 'vue'
+import { useTaskFilter } from './filter-task-helper'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
 
 export default defineComponent({
@@ -23,6 +36,7 @@ export default defineComponent({
 
     return {
       routeDate,
+      taskGroups: useTaskFilter(routeDate),
     }
   },
 
