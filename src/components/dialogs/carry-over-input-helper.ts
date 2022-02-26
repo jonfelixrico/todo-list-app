@@ -8,7 +8,16 @@ export function useCarryOverInputHelper(
   carryOver: Ref<CarryOver>,
   targetDt: Ref<Date>
 ) {
-  const dateModel = ref(date.addToDate(targetDt.value, { day: 1 }))
+  const dateData = ref(
+    carryOver.value instanceof Date ? carryOver.value : targetDt.value
+  )
+
+  const dateModel = computed({
+    get: () => dateData.value,
+    set: (date: Date) => {
+      carryOver.value = dateData.value = date
+    },
+  })
 
   const radioModel = computed({
     get: () => {
