@@ -20,7 +20,6 @@ export function useCarryOverInputHelper(
       if (carryOver.value === dueDt.value) {
         return 'NO_CARRY_OVER'
       } else {
-        // carryOver instanceof Date is true
         return 'DEFINITE'
       }
     },
