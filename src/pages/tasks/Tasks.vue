@@ -1,7 +1,7 @@
 <template>
   <q-page class="column">
     <q-resize-observer @resize="onResize($event.height)" />
-    <q-layout container :style="{ height: `${height}px` }">
+    <q-layout container :style="{ height: `${height}px` }" class="absolute">
       <q-header>
         <q-toolbar class="bg-secondary">
           <q-space />
