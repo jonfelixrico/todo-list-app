@@ -18,7 +18,12 @@
         >
           <q-date v-model="model">
             <div class="row items-center justify-end">
-              <q-btn v-close-popup label="Close" color="primary" flat />
+              <q-btn
+                v-close-popup
+                :label="t('common.close')"
+                color="primary"
+                flat
+              />
             </div>
           </q-date>
         </q-popup-proxy>
@@ -30,6 +35,7 @@
 <script lang="ts">
 import { date } from 'quasar'
 import { computed, defineComponent } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   emits: {
@@ -39,9 +45,12 @@ export default defineComponent({
   props: {
     modelValue: Date,
     disable: Boolean,
+    outlined: Boolean,
+    dense: Boolean,
   },
 
   setup(props, { emit }) {
+    const { t } = useI18n()
     const model = computed<null | string>({
       get: () => {
         if (!props.modelValue) {
@@ -64,6 +73,7 @@ export default defineComponent({
 
     return {
       model,
+      t,
     }
   },
 })
