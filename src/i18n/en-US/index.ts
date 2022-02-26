@@ -1,5 +1,5 @@
 import common from './common'
-import * as dialogs from './dialogs'
+import dialogs from './dialogs'
 
 export default {
   appTitle: 'To-do App',

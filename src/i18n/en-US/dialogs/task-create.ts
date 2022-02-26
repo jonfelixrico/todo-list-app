@@ -21,8 +21,8 @@ export default {
       label: 'Carry-over',
       options: {
         no: 'No carry over.',
-        indefinite: 'Carry over until completed.',
-        definite: 'Carry over until {date}',
+        untilCompleted: 'Carry over until completed.',
+        untilDate: 'Carry over until {date}',
       },
 
       date: {

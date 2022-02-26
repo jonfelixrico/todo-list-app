@@ -1,1 +1,5 @@
-export * as taskCreate from './task-create'
+import taskCreate from './task-create'
+
+export default {
+  taskCreate,
+}
