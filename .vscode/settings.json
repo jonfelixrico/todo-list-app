@@ -2,8 +2,11 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": true,
   "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
+
   "typescript.tsdk": "node_modules/typescript/lib"
 }
