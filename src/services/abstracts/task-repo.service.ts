@@ -1,16 +1,15 @@
 import { Task } from 'src/typings/task.interface'
 import { inject, InjectionKey, Ref } from 'vue'
 
-export interface TaskRepoService {
+export interface TaskRepo {
   getTasks: (snapshotDate: Date) => Promise<Task[]>
   lastWrite: Ref<number>
   getDaysWithTasks: () => Promise<Date[]>
   insert: (task: Task) => Promise<void>
 }
 
-export const TaskRepoServiceKey: InjectionKey<TaskRepoService> =
-  Symbol('task crud service')
+export const TaskRepoKey: InjectionKey<TaskRepo> = Symbol('task repo')
 
-export function useTaskRepoService() {
-  return inject(TaskRepoServiceKey)
+export function useTaskRepo() {
+  return inject(TaskRepoKey) as TaskRepo
 }
