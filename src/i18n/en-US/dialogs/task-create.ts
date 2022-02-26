@@ -12,6 +12,10 @@ export default {
       hint: 'Optional. Place additional details of your task here.',
     },
 
+    hasPriority: {
+      label: 'Has priority?',
+    },
+
     priority: {
       label: 'Priority',
       hint: '1 for least priority, 10 for most priority.',

@@ -50,16 +50,22 @@
           <div class="text-weight-bold">
             {{ t('dialogs.taskCreate.inputs.priority.label') }}
           </div>
-          <q-input
-            v-model.number="task.priority"
-            type="number"
-            outlined
-            min="1"
-            max="10"
-            step="0.1"
-            dense
-            :hint="t('dialogs.taskCreate.inputs.priority.hint')"
-          />
+          <div class="row items-start q-gutter-x-sm">
+            <q-checkbox
+              :label="t('dialogs.taskCreate.inputs.hasPriority.label')"
+            />
+            <q-input
+              v-model.number="task.priority"
+              type="number"
+              outlined
+              min="1"
+              max="10"
+              step="0.1"
+              dense
+              :hint="t('dialogs.taskCreate.inputs.priority.hint')"
+              class="col"
+            />
+          </div>
         </div>
 
         <!-- Carry-over -->
