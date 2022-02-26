@@ -55,9 +55,15 @@ export function useTaskFilter(targetDt: Ref<Date>) {
    * Includes tasks which matches the provided `targetDt`.
    */
   const inTarget = computed(() => {
-    return store.state.tasks.tasks
-      .filter((task) => targetDt.value === task.targetDt)
-      .sort(sortByTargetDt)
+    return (
+      store.state.tasks.tasks
+        /*
+         * NOTE cannot use targetDt.value === task.targetDt here since it will be a reference check
+         * instead of equality check.
+         */
+        .filter((task) => targetDt.value.getTime() === task.targetDt.getTime())
+        .sort(sortByTargetDt)
+    )
   })
 
   /**
