@@ -8,17 +8,17 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'tasks',
         name: 'tasks',
-        component: () => import('pages/Tasks.vue'),
+        component: () => import('pages/tasks/Tasks.vue'),
         children: [
           {
             path: ':date',
             name: 'filteredTasks',
-            component: () => import('pages/FilteredTasks.vue'),
+            component: () => import('pages/tasks/FilteredTasks.vue'),
           },
           {
             path: '',
             name: 'emptyFilteredTasks',
-            component: () => import('pages/EmptyFilteredTasks.vue'),
+            component: () => import('pages/tasks/EmptyFilteredTasks.vue'),
           },
         ],
       },
