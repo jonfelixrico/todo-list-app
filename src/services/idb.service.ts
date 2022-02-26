@@ -13,6 +13,8 @@ export async function startIdb(app: App) {
   app.provide(IdbServiceKey, db)
 }
 
+export default startIdb
+
 export function useIdb() {
   return inject(IdbServiceKey)
 }
