@@ -4,18 +4,30 @@
 
 <script lang="ts">
 import { date } from 'quasar'
-import { defineComponent } from 'vue'
+import { ComputedRef, defineComponent } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
 
 export default defineComponent({
   setup() {
-    const { routeDate } = useTaskListDateNavigation()
+    const dateNav = useTaskListDateNavigation()
+    /*
+     * Force-typing this as Date since we assume that beforeRouteEnter will prevent `routeDate`
+     * from having a value of null, only valid dates.
+     */
+    const routeDate = dateNav.routeDate as ComputedRef<Date>
 
     return {
       routeDate,
     }
   },
 
+  /**
+   * This route guard will automaticall redirect the user back to the `tasks` route if it detects
+   * an invalid date.
+   * @param to
+   * @param _
+   * @param next
+   */
   beforeRouteEnter(to, _, next) {
     const dateStr = to.params.date as string
     const isValid = date.isValid(dateStr)
