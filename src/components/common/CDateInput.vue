@@ -58,9 +58,7 @@ import { computed, defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
-  emits: {
-    input: (payload: Date | null) => !payload || payload instanceof Date,
-  },
+  emits: ['update:modelValue'],
 
   props: {
     modelValue: Date,
@@ -84,11 +82,11 @@ export default defineComponent({
 
       set: (dateStr: string | null) => {
         if (!dateStr) {
-          emit('input', null)
+          emit('update:modelValue', null)
         } else if (!date.isValid(dateStr)) {
           // do nothing
         } else {
-          emit('input', date.extractDate(dateStr, 'YYYY/MM/DD'))
+          emit('update:modelValue', date.extractDate(dateStr, 'YYYY/MM/DD'))
         }
       },
     })
