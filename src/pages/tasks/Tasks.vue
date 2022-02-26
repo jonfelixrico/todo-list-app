@@ -12,7 +12,6 @@
         @click="onWriteBtnClick"
       />
     </q-toolbar>
-    <q-toolbar class="bg-secondary"> </q-toolbar>
     <div class="col"><router-view /></div>
   </q-page>
 </template>
