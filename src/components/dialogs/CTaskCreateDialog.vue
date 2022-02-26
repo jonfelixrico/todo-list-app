@@ -31,6 +31,7 @@
 
         <!-- Notes -->
         <div class="q-gutter-y-sm">
+          <!-- TODO do proper a11y support for labels -->
           <div class="text-weight-bold">
             {{ t('dialogs.taskCreate.inputs.notes.label') }}
           </div>
@@ -47,6 +48,7 @@
 
         <!-- Priority -->
         <div class="q-gutter-y-sm">
+          <!-- TODO do proper a11y support for labels -->
           <div class="text-weight-bold">
             {{ t('dialogs.taskCreate.inputs.priority.label') }}
           </div>
@@ -72,6 +74,7 @@
 
         <!-- Carry-over -->
         <div class="q-gutter-y-sm">
+          <!-- TODO do proper a11y support for labels -->
           <div class="text-weight-bold">
             {{ t('dialogs.taskCreate.inputs.carryOver.label') }}
           </div>
