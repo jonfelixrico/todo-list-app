@@ -23,11 +23,11 @@ const getTasks: TaskRepo['getTasks'] = async (snapshotDt: Date) => {
       day: daysToSubtract,
     })
 
-    const items = await idb.getAllFromIndex(
-      'tasks',
-      'referenceDates',
-      subtracted
-    )
+    const retrieves = await Promise.all([
+      idb.getAllFromIndex('tasks', 'dueDt', subtracted),
+      idb.getAllFromIndex('tasks', 'carryOverUntil', subtracted),
+    ])
+    const items = retrieves.flat()
 
     for (const item of items) {
       if (alreadyProcessed.has(item.id)) {
