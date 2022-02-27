@@ -1,4 +1,3 @@
-import { date } from 'quasar'
 import { useTasksFetcher } from 'src/hooks/task.hooks'
 import { Task } from 'src/typings/task.interface'
 import { computed, Ref } from 'vue'
@@ -20,36 +19,11 @@ function doSorting(a: Task, b: Task) {
   return a.createDt.getTime() - b.createDt.getTime()
 }
 
-interface TaskGroup {
-  dueDt: Date
-  tasks: Task[]
-}
-
-function doGrouping(tasks: Task[]): TaskGroup[] {
-  const sorted = [...tasks].sort(doSorting)
-
-  const groups: TaskGroup[] = []
-  for (const task of sorted) {
-    const last = groups[groups.length - 1]
-    if (!last || !date.isSameDate(task.dueDt, last.dueDt)) {
-      groups.push({
-        dueDt: task.dueDt,
-        tasks: [task],
-      })
-      continue
-    }
-
-    last.tasks.push(task)
-  }
-
-  return groups
-}
-
 export function useFilteredTaskList(snapshotDt: Ref<Date>) {
   const { tasks, isLoading } = useTasksFetcher(snapshotDt)
 
   return {
-    taskGroups: computed(() => doGrouping(tasks.value)),
+    tasks: computed(() => [...tasks.value].sort(doSorting)),
     isLoading,
   }
 }

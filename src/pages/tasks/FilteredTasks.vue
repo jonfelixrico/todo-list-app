@@ -24,29 +24,26 @@
         no-caps
       />
     </q-toolbar>
-    <div class="col" v-if="taskGroups.length">
-      <div style="max-width: 1024px; margin: auto" class="q-gutter-y-lg">
-        <template v-for="{ dueDt, tasks } in taskGroups" :key="dueDt">
-          <h3 class="text-center text-h6">{{ formatDate(dueDt) }}</h3>
-          <q-card v-for="{ title, notes, id, priority } of tasks" :key="id">
-            <q-card-section class="row">
-              <div class="col q-gutter-y-md">
-                <div>
-                  <h5 class="text-h6 q-ma-none preformatted" v-text="title" />
-                  <div class="text-caption text-grey-8" v-if="priority">
-                    Priority {{ priority }}
-                  </div>
+    <div class="col" v-if="tasks.length">
+      <div style="max-width: 1024px; margin: auto" class="q-gutter-y-md">
+        <q-card v-for="{ title, notes, id, priority } of tasks" :key="id">
+          <q-card-section class="row">
+            <div class="col q-gutter-y-md">
+              <div>
+                <h5 class="text-h6 q-ma-none preformatted" v-text="title" />
+                <div class="text-caption text-grey-8" v-if="priority">
+                  Priority {{ priority }}
                 </div>
-
-                <div
-                  v-if="notes"
-                  v-text="notes"
-                  class="preformatted q-pa-sm bg-grey-3 rounded-borders"
-                />
               </div>
-            </q-card-section>
-          </q-card>
-        </template>
+
+              <div
+                v-if="notes"
+                v-text="notes"
+                class="preformatted q-pa-sm bg-grey-3 rounded-borders"
+              />
+            </div>
+          </q-card-section>
+        </q-card>
       </div>
     </div>
 
