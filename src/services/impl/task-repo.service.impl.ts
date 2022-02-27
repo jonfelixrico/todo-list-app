@@ -49,3 +49,36 @@ export const getTasks: TaskRepo['getTasks'] = async (snapshotDt: Date) => {
 
   return snapshotTasks
 }
+
+export const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () => {
+  const idb = useIdb()
+  const daysWithTasks = await idb.getAll('daysWithTasks')
+  return daysWithTasks.map(({ date }) => date).sort()
+}
+
+export const insert: TaskRepo['insert'] = async (task: Task) => {
+  const idb = useIdb()
+  const tx = idb.transaction(['daysWithTasks', 'tasks'], 'readwrite')
+
+  try {
+    await tx.objectStore('tasks').put(task)
+
+    const dwt = tx.objectStore('daysWithTasks')
+    const { dueDt } = task
+    const dwtEntry = await dwt.get(dueDt)
+
+    await dwt.put({
+      date: dueDt,
+      count: dwtEntry ? dwtEntry.count + 1 : 1,
+    })
+
+    tx.commit()
+  } catch (e) {
+    const err = e as Error
+    console.warn(
+      'TaskRepoImpl: error encountered while inserting: %s',
+      err.message ?? 'NO_ERR_MESSAGE'
+    )
+    tx.abort()
+  }
+}
