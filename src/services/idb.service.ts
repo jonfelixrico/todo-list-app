@@ -1,5 +1,6 @@
 import { IDBPDatabase } from 'idb'
-import { IdbSchema, start } from 'src/idb'
+import { start } from 'src/idb'
+import { IdbSchema } from 'src/idb/idb.schema'
 import { App, inject, InjectionKey } from 'vue'
 import { ServiceBootFn } from './service-boot.type'
 
