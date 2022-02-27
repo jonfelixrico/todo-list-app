@@ -24,8 +24,7 @@ export default {
     carryOver: {
       label: 'Carry-over',
       options: {
-        no: 'No carry over.',
-        untilCompleted: 'Carry over until completed.',
+        no: 'Do not carry over',
         untilDate: 'Carry over until {date}',
       },
 
