@@ -1,6 +1,6 @@
 import { date } from 'quasar'
+import { getIdb } from 'src/idb'
 import { TaskRepo, TaskRepoKey } from 'src/services/abstracts/task-repo.service'
-import { useIdb } from 'src/services/idb.service'
 import { ServiceBootFn } from 'src/services/service-boot.type'
 import { Task } from 'src/typings/task.interface'
 import { ref } from 'vue'
@@ -9,7 +9,7 @@ const BACKTRACK_LIMIT = 100
 
 const getTasks: TaskRepo['getTasks'] = async (snapshotDt: Date) => {
   const startOfSnapshotDt = date.startOfDate(snapshotDt, 'day')
-  const idb = useIdb()
+  const idb = getIdb()
 
   const alreadyProcessed = new Set<string>()
   const snapshotTasks: Task[] = []
@@ -53,7 +53,7 @@ const getTasks: TaskRepo['getTasks'] = async (snapshotDt: Date) => {
 }
 
 const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () => {
-  const idb = useIdb()
+  const idb = getIdb()
   const daysWithTasks = await idb.getAll('daysWithTasks')
   return daysWithTasks.map(({ date }) => date).sort()
 }
@@ -62,7 +62,7 @@ const KEYVAL_KEY_FOR_TASK_LAST_WRITE = 'tasksLastWrite'
 
 const lastWriteRef = ref(new Date())
 async function initLastWrite() {
-  const idb = useIdb()
+  const idb = getIdb()
   const fromDb = await idb.get('keyVal', KEYVAL_KEY_FOR_TASK_LAST_WRITE)
   const lastWrite =
     fromDb && date.isValid(fromDb) ? new Date(fromDb) : new Date()
@@ -70,7 +70,7 @@ async function initLastWrite() {
 }
 
 const insert: TaskRepo['insert'] = async (task: Task) => {
-  const idb = useIdb()
+  const idb = getIdb()
   const tx = idb.transaction(['daysWithTasks', 'tasks', 'keyVal'], 'readwrite')
 
   try {
