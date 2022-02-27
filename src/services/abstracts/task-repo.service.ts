@@ -3,7 +3,7 @@ import { inject, InjectionKey, Ref } from 'vue'
 
 export interface TaskRepo {
   getTasks: (snapshotDate: Date) => Promise<Task[]>
-  lastWrite: Ref<number>
+  lastWrite: Ref<Date>
   getDaysWithTasks: () => Promise<Date[]>
   insert: (task: Task) => Promise<void>
 }
