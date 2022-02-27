@@ -85,9 +85,12 @@ const insert: TaskRepo['insert'] = async (task: Task) => {
       count: dwtEntry ? dwtEntry.count + 1 : 1,
     })
 
+    const lastWrite = new Date()
+
     await tx
       .objectStore('keyVal')
-      .put(KEYVAL_KEY_FOR_TASK_LAST_WRITE, new Date().toISOString())
+      .put(lastWrite.toISOString(), KEYVAL_KEY_FOR_TASK_LAST_WRITE)
+    lastWriteRef.value = lastWrite
 
     tx.commit()
   } catch (e) {
