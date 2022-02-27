@@ -1,20 +1,6 @@
-import { DBSchema } from 'idb'
-import { IDBUpgradeCallback } from 'src/idb/idb.types'
-import { Task } from 'src/typings/task.interface'
+import { IdbUgpradeCb } from 'src/idb/idb.schema'
 
-// TODO remove this
-
-export interface TasksIdbStore extends DBSchema {
-  tasks: {
-    key: string
-    value: Task
-    indexes: {
-      referenceDates: Date
-    }
-  }
-}
-
-const upgradeCb: IDBUpgradeCallback<TasksIdbStore> = (db) => {
+const upgradeCb: IdbUgpradeCb = (db) => {
   const store = db.createObjectStore('tasks', {
     keyPath: 'id',
   })
