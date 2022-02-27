@@ -5,8 +5,8 @@ import { Task } from 'src/typings/task.interface'
 
 const BACKTRACK_LIMIT = 100
 
-export const getTasks: TaskRepo['getTasks'] = async (snapshotDate: Date) => {
-  const startOfDay = date.startOfDate(snapshotDate, 'day')
+export const getTasks: TaskRepo['getTasks'] = async (snapshotDt: Date) => {
+  const startOfSnapshotDt = date.startOfDate(snapshotDt, 'day')
   const idb = useIdb()
 
   const alreadyProcessed = new Set<string>()
@@ -17,7 +17,7 @@ export const getTasks: TaskRepo['getTasks'] = async (snapshotDate: Date) => {
     daysToSubtract <= BACKTRACK_LIMIT;
     daysToSubtract++
   ) {
-    const subtracted = date.subtractFromDate(startOfDay, {
+    const subtracted = date.subtractFromDate(startOfSnapshotDt, {
       day: daysToSubtract,
     })
 
@@ -33,12 +33,12 @@ export const getTasks: TaskRepo['getTasks'] = async (snapshotDate: Date) => {
       }
 
       if (
-        // due has lapsed
-        item.dueDt < startOfDay &&
+        // due has lapsed or is due on the day
+        item.dueDt <= startOfSnapshotDt &&
         // carry over is still in effect
-        item.carryOverUntil > startOfDay &&
-        // not yet completed, or it was completed after the snapshot
-        (!item.completeDt || item.completeDt >= startOfDay)
+        item.carryOverUntil >= startOfSnapshotDt &&
+        // not yet completed, or it was completed on or after the snapshot
+        (!item.completeDt || item.completeDt >= startOfSnapshotDt)
       ) {
         snapshotTasks.push(item)
       }
