@@ -24,8 +24,8 @@
         no-caps
       />
     </q-toolbar>
-    <!-- <div class="col" v-if="taskGroups.length">
-      <template v-for="{ dueDt, tasks } in taskGroups" :key="dueDt.getTime()">
+    <div class="col" v-if="taskGroups.length">
+      <template v-for="{ dueDt, tasks } in taskGroups" :key="dueDt">
         <div>{{ dueDt }}</div>
         <q-card v-for="{ title, id } of tasks" :key="id">
           <q-card-section>
@@ -37,12 +37,13 @@
 
     <div v-else class="col flex flex-center">
       <h3 class="text-h6">No tasks.</h3>
-    </div> -->
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
 import { date } from 'quasar'
+import { useFilteredTaskList } from 'src/pages/tasks/task-list-helper'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
 
@@ -75,8 +76,12 @@ function useNavigation() {
 
 export default defineComponent({
   setup() {
+    const { routeDate, ...others } = useNavigation()
+
     return {
-      ...useNavigation(),
+      ...others,
+      ...useFilteredTaskList(routeDate),
+      routeDate,
     }
   },
 

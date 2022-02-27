@@ -21,7 +21,7 @@ function doSorting(a: Task, b: Task) {
 }
 
 interface TaskGroup {
-  date: Date
+  dueDt: Date
   tasks: Task[]
 }
 
@@ -31,9 +31,9 @@ function doGrouping(tasks: Task[]): TaskGroup[] {
   const groups: TaskGroup[] = []
   for (const task of sorted) {
     const last = groups[groups.length - 1]
-    if (!last || !date.isSameDate(task.dueDt, last.date)) {
+    if (!last || !date.isSameDate(task.dueDt, last.dueDt)) {
       groups.push({
-        date: task.dueDt,
+        dueDt: task.dueDt,
         tasks: [task],
       })
       continue
@@ -49,7 +49,7 @@ export function useFilteredTaskList(snapshotDt: Ref<Date>) {
   const { tasks, isLoading } = useTasksFetcher(snapshotDt)
 
   return {
-    tasks: computed(() => doGrouping(tasks.value)),
+    taskGroups: computed(() => doGrouping(tasks.value)),
     isLoading,
   }
 }
