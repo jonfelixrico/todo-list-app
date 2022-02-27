@@ -146,8 +146,8 @@ import CDateInput from 'components/common/CDateInput.vue'
 interface TaskDraftModel {
   title: string | null
   notes: string | null
-  priority: number | null
-  carryOverUntil: Date | null
+  priority: number
+  carryOverUntil: Date
 }
 
 export interface TaskDraft extends TaskDraftModel {
@@ -156,12 +156,12 @@ export interface TaskDraft extends TaskDraftModel {
 }
 
 export type TaskCreateInitialData = Omit<DraftTaskData, 'dueDt'>
-function createTaskData(initialData?: TaskCreateInitialData) {
+function createTaskData(dueDt: Date, initialData?: TaskCreateInitialData) {
   return reactive<TaskDraftModel>({
     title: initialData?.title ?? null,
     notes: initialData?.notes ?? null,
-    priority: initialData?.priority ?? null,
-    carryOverUntil: initialData?.carryOverUntil ?? null,
+    priority: initialData?.priority ?? 0,
+    carryOverUntil: initialData?.carryOverUntil ?? dueDt,
   })
 }
 
@@ -187,7 +187,7 @@ export default defineComponent({
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent()
 
-    const task = createTaskData(props.initialData)
+    const task = createTaskData(props.dueDt, props.initialData)
 
     const formattedDueDt = computed(() =>
       date.formatDate(props.dueDt, 'MMM D, YYYY')
