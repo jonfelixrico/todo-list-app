@@ -108,5 +108,6 @@ const boot: ServiceBootFn = async ({ app }) => {
     insert,
     lastWrite: lastWriteRef,
   })
+  console.debug('TaskRepoImpl: provided.')
 }
 export default boot
