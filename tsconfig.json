@@ -1,6 +1,12 @@
 {
   "extends": "@quasar/app/tsconfig-preset",
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "lib": [
+      // to add Array#flat
+      "ES2019.Array",
+      // to avoid CSSStyleDeclaration not found errors; see https://github.com/0xProject/0x-monorepo/issues/1333
+      "DOM"
+    ]
   }
 }
