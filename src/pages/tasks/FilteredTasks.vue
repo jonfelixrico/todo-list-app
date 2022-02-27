@@ -46,31 +46,37 @@ import { date } from 'quasar'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
 
+function useNavigation() {
+  const dateNav = useTaskListDateNavigation()
+  /*
+   * Force-typing this as Date since we assume that beforeRouteEnter will prevent `routeDate`
+   * from having a value of null, only valid dates.
+   */
+  const routeDate = dateNav.routeDate as ComputedRef<Date>
+
+  const adjacentDates = computed(() => {
+    return {
+      prev: date.subtractFromDate(routeDate.value, { day: 1 }),
+      next: date.addToDate(routeDate.value, { day: 1 }),
+    }
+  })
+
+  function formatDate(toFormat: Date) {
+    return date.formatDate(toFormat, 'MMM D, YYYY')
+  }
+
+  return {
+    routeDate,
+    adjacentDates,
+    setRouteDate: dateNav.setRouteDate,
+    formatDate,
+  }
+}
+
 export default defineComponent({
   setup() {
-    const dateNav = useTaskListDateNavigation()
-    /*
-     * Force-typing this as Date since we assume that beforeRouteEnter will prevent `routeDate`
-     * from having a value of null, only valid dates.
-     */
-    const routeDate = dateNav.routeDate as ComputedRef<Date>
-
-    const adjacentDates = computed(() => {
-      return {
-        prev: date.subtractFromDate(routeDate.value, { day: 1 }),
-        next: date.addToDate(routeDate.value, { day: 1 }),
-      }
-    })
-
-    function formatDate(toFormat: Date) {
-      return date.formatDate(toFormat, 'MMM D, YYYY')
-    }
-
     return {
-      routeDate,
-      adjacentDates,
-      setRouteDate: dateNav.setRouteDate,
-      formatDate,
+      ...useNavigation(),
     }
   },
 
