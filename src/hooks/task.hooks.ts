@@ -1,24 +1,33 @@
 import { uid, useQuasar } from 'quasar'
 import { useTaskRepo } from 'src/services/abstracts/task-repo.service'
 import { DraftTaskData, Task } from 'src/typings/task.interface'
-import { ref, Ref, watch } from 'vue'
+import { computed, ref, Ref, watch } from 'vue'
 
 export function useTasksFetcher(date: Ref<Date>) {
   const { getTasks, lastWrite } = useTaskRepo()
-  const { loading } = useQuasar()
   const data = ref<Task[]>([])
+  const loadingJob = ref<string | null>(null)
 
   watch(
     [lastWrite, date],
     async () => {
+      const jobId = (loadingJob.value = uid())
       try {
-        loading.show()
         console.debug('useTasksFetcher: getting tasks for %s.', date.value)
-
-        const res = (data.value = await getTasks(date.value))
-        console.debug('useTasksFetcher: retrieved %d records.', res.length)
+        const res = await getTasks(date.value)
+        if (loadingJob.value === jobId) {
+          data.value = res
+          console.debug('useTasksFetcher: retrieved %d records.', res.length)
+        } else {
+          console.debug(
+            'useTasksFetcher: retrieved %d records, but not published to the ref.',
+            res.length
+          )
+        }
       } finally {
-        loading.hide()
+        if (jobId === loadingJob.value) {
+          loadingJob.value = null
+        }
       }
     },
     {
@@ -26,7 +35,10 @@ export function useTasksFetcher(date: Ref<Date>) {
     }
   )
 
-  return data
+  return {
+    tasks: data,
+    isLoading: computed(() => !!loadingJob.value),
+  }
 }
 
 export function useDateWithTasksFetcher() {
