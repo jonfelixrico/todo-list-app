@@ -29,6 +29,29 @@ export function useTasksFetcher(date: Ref<Date>) {
   return data
 }
 
+export function useDateWithTasksFetcher() {
+  const { getDaysWithTasks, lastWrite } = useTaskRepo()
+  const { loading } = useQuasar()
+  const data = ref<Date[]>([])
+
+  watch(
+    lastWrite,
+    async () => {
+      try {
+        loading.show()
+        data.value = data.value = await getDaysWithTasks()
+      } finally {
+        loading.hide()
+      }
+    },
+    {
+      immediate: true,
+    }
+  )
+
+  return data
+}
+
 export async function createTask(toCreate: DraftTaskData) {
   const createDt = new Date()
 
