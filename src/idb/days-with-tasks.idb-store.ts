@@ -1,8 +1,8 @@
 import { IdbUgpradeCb } from 'src/idb/idb.schema'
 
 const upgradeCb: IdbUgpradeCb = (db) => {
-  db.createObjectStore('keyVal')
-  console.debug('IndexedDB-promised: keyVal store upgraded.')
+  db.createObjectStore('daysWithTasks')
+  console.debug('IndexedDB-promised: daysWithTasks store upgraded.')
 }
 
 export default upgradeCb
