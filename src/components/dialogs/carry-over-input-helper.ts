@@ -1,3 +1,4 @@
+import { date } from 'quasar'
 import { Ref, computed, ref, reactive } from 'vue'
 
 /**
@@ -12,29 +13,37 @@ export function useCarryOverInputHelper(
 ) {
   const dateData = ref(carryOver?.value ?? dueDt.value)
 
+  function clampDate(toEval: Date) {
+    const lowerBound = date.addToDate(dueDt.value, { day: 1 })
+    return toEval < lowerBound ? lowerBound : toEval
+  }
+
   const dateModel = computed({
-    get: () => dateData.value,
+    get: () => clampDate(dateData.value),
     set: (date: Date) => {
-      carryOver.value = dateData.value = date
+      carryOver.value = dateData.value = clampDate(date)
     },
   })
 
-  const radioModel = computed({
+  const radioModel = computed<TransformedCarryOver>({
     get: () => {
-      if (carryOver.value === dueDt.value) {
+      if (
+        !carryOver.value ||
+        carryOver.value.getTime() === dueDt.value.getTime()
+      ) {
         return 'NO_CARRY_OVER'
       } else {
         return 'DEFINITE'
       }
     },
 
-    set: (val: TransformedCarryOver) => {
+    set: (val) => {
       if (val === 'NO_CARRY_OVER') {
         carryOver.value = dueDt.value
         return
       }
 
-      carryOver.value = dateModel.value
+      carryOver.value = clampDate(dateData.value)
     },
   })
 

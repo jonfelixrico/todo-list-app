@@ -86,15 +86,6 @@
               :label="t('dialogs.taskCreate.inputs.carryOver.options.no')"
             />
 
-            <!-- Carry over until completed -->
-            <q-radio
-              v-model="carryOver.radioModel"
-              val="INDEFINITE"
-              :label="
-                t('dialogs.taskCreate.inputs.carryOver.options.untilCompleted')
-              "
-            />
-
             <!-- Carry over until date (if not yet completed) -->
             <q-radio v-model="carryOver.radioModel" val="DEFINITE">
               <!--
