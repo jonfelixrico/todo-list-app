@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <q-date
-      :events="events"
+      :events="daysWithTasks"
       :model-value="null"
       @update:model-value="onDateClick"
     />
@@ -10,34 +10,25 @@
 
 <script lang="ts">
 import { date } from 'quasar'
-import { useStore } from 'src/store'
+import { useDateWithTasksFetcher } from 'src/hooks/task.hooks'
 import { computed, defineComponent } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
 
 export default defineComponent({
   setup() {
     const { setRouteDate } = useTaskListDateNavigation()
-    const store = useStore()
 
-    const uniqueDates = computed(() => {
-      const uniqueDates = new Set<Date>([])
-      for (const { dueDt } of store.state.tasks.tasks) {
-        if (!uniqueDates.has(dueDt)) {
-          uniqueDates.add(dueDt)
-        }
-      }
+    const daysWithTasks = useDateWithTasksFetcher()
+    const transformedDwt = computed(() =>
+      daysWithTasks.value.map((d) => date.formatDate(d, 'YYYY/MM/DD'))
+    )
 
-      return new Set(
-        [...uniqueDates].map((d) => date.formatDate(d, 'YYYY/MM/DD'))
-      )
-    })
-
-    const events = computed(() => {
-      return [...uniqueDates.value]
+    const transformedDwtSet = computed(() => {
+      return new Set(transformedDwt.value)
     })
 
     function onDateClick(dateStr: string) {
-      if (!uniqueDates.value.has(dateStr)) {
+      if (!transformedDwtSet.value.has(dateStr)) {
         // do not allow navigation to dates without tasks
         return null
       }
@@ -47,7 +38,7 @@ export default defineComponent({
 
     return {
       onDateClick,
-      events,
+      daysWithTasks: transformedDwt,
     }
   },
 })
