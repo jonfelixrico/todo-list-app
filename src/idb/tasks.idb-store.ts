@@ -7,7 +7,8 @@ export interface TasksIdbStore extends DBSchema {
     key: string
     value: Task
     indexes: {
-      referenceDates: Date
+      dueDt: Date
+      carryOverUntil: Date
     }
   }
 }
@@ -17,7 +18,8 @@ const upgradeCb: IdbUgpradeCb = (db) => {
     keyPath: 'id',
   })
 
-  store.createIndex('referenceDates', ['dueDt', 'carryOverUntil'])
+  store.createIndex('dueDt', 'dueDt')
+  store.createIndex('carryOverUntil', 'carryOverUntil')
 
   console.debug('IndexedDB-promised: task store upgraded.')
 }
