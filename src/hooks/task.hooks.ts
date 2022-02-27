@@ -52,19 +52,20 @@ export function useDateWithTasksFetcher() {
   return data
 }
 
-export async function createTask(toCreate: DraftTaskData) {
-  const createDt = new Date()
-
-  const task: Task = {
-    ...toCreate,
-    createDt,
-    lastUpdateDt: createDt,
-    completeDt: null,
-    id: uid(),
-  }
-
+export function useCreateTask() {
   const repo = useTaskRepo()
-  await repo.insert(task)
 
-  return task
+  return async (toCreate: DraftTaskData) => {
+    const createDt = new Date()
+    const task: Task = {
+      ...toCreate,
+      createDt,
+      lastUpdateDt: createDt,
+      completeDt: null,
+      id: uid(),
+    }
+
+    await repo.insert(task)
+    return task
+  }
 }
