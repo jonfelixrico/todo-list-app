@@ -1,11 +1,9 @@
-export type CarryOver = 'INDEFINITE' | Date | null
-
 export interface EditableTaskAttrs {
   title: string
   notes: string | null
   priority: number
-  targetDt: Date
-  carryOverUntil: CarryOver
+  dueDt: Date
+  carryOverUntil: Date
 
   completeDt: Date | null
 }

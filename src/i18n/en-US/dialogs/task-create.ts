@@ -1,6 +1,6 @@
 export default {
   title: 'Add to-do task',
-  targetDtLbl: 'For {targetDate}',
+  dueDtLbl: 'For {dueDt}',
   inputs: {
     title: {
       label: 'Title',
@@ -24,8 +24,7 @@ export default {
     carryOver: {
       label: 'Carry-over',
       options: {
-        no: 'No carry over.',
-        untilCompleted: 'Carry over until completed.',
+        no: 'Do not carry over',
         untilDate: 'Carry over until {date}',
       },
 

@@ -1,52 +1,49 @@
-import { CarryOver } from 'src/typings/task.interface'
+import { date } from 'quasar'
 import { Ref, computed, ref, reactive } from 'vue'
 
-export type TransformedCarryOver = 'NO_CARRY_OVER' | 'INDEFINITE' | 'DEFINITE'
+/**
+ * 'NO_CARRY_OVER' just means that the due date will be the carry over date.
+ * 'DEFINITE' has a carry over on a certain date.
+ */
+export type TransformedCarryOver = 'NO_CARRY_OVER' | 'DEFINITE'
 
 export function useCarryOverInputHelper(
-  carryOver: Ref<CarryOver>,
-  targetDt: Ref<Date>
+  carryOver: Ref<Date | null>,
+  dueDt: Ref<Date>
 ) {
-  const dateData = ref(
-    carryOver.value instanceof Date ? carryOver.value : targetDt.value
-  )
+  const dateData = ref(carryOver?.value ?? dueDt.value)
+
+  function clampDate(toEval: Date) {
+    const lowerBound = date.addToDate(dueDt.value, { day: 1 })
+    return toEval < lowerBound ? lowerBound : toEval
+  }
 
   const dateModel = computed({
-    get: () => dateData.value,
+    get: () => clampDate(dateData.value),
     set: (date: Date) => {
-      carryOver.value = dateData.value = date
+      carryOver.value = dateData.value = clampDate(date)
     },
   })
 
-  const radioModel = computed({
+  const radioModel = computed<TransformedCarryOver>({
     get: () => {
-      if (!carryOver.value) {
+      if (
+        !carryOver.value ||
+        carryOver.value.getTime() === dueDt.value.getTime()
+      ) {
         return 'NO_CARRY_OVER'
-      } else if (carryOver.value === 'INDEFINITE') {
-        return 'INDEFINITE'
       } else {
-        // carryOver instanceof Date is true
         return 'DEFINITE'
       }
     },
 
-    set: (val: TransformedCarryOver) => {
-      switch (val) {
-        case 'NO_CARRY_OVER': {
-          carryOver.value = null
-          break
-        }
-
-        case 'DEFINITE': {
-          carryOver.value = dateModel.value
-          break
-        }
-
-        case 'INDEFINITE': {
-          carryOver.value = 'INDEFINITE'
-          break
-        }
+    set: (val) => {
+      if (val === 'NO_CARRY_OVER') {
+        carryOver.value = dueDt.value
+        return
       }
+
+      carryOver.value = clampDate(dateData.value)
     },
   })
 

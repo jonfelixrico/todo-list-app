@@ -5,8 +5,8 @@
         <h6 class="text-h6 q-my-none">{{ t('dialogs.taskCreate.title') }}</h6>
         <div class="text-caption text-grey-6">
           {{
-            t('dialogs.taskCreate.targetDtLbl', {
-              targetDate: formattedTargetDt,
+            t('dialogs.taskCreate.dueDtLbl', {
+              dueDt: formattedDueDt,
             })
           }}
         </div>
@@ -86,15 +86,6 @@
               :label="t('dialogs.taskCreate.inputs.carryOver.options.no')"
             />
 
-            <!-- Carry over until completed -->
-            <q-radio
-              v-model="carryOver.radioModel"
-              val="INDEFINITE"
-              :label="
-                t('dialogs.taskCreate.inputs.carryOver.options.untilCompleted')
-              "
-            />
-
             <!-- Carry over until date (if not yet completed) -->
             <q-radio v-model="carryOver.radioModel" val="DEFINITE">
               <!--
@@ -147,7 +138,7 @@
 import { date, useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { computed, defineComponent, reactive, toRef, PropType } from 'vue'
-import { CarryOver, DraftTaskData } from 'src/typings/task.interface'
+import { DraftTaskData } from 'src/typings/task.interface'
 import { useCarryOverInputHelper } from './carry-over-input-helper'
 import { usePriorityInputHelper } from './priority-input-helper'
 import CDateInput from 'components/common/CDateInput.vue'
@@ -155,8 +146,8 @@ import CDateInput from 'components/common/CDateInput.vue'
 interface TaskDraftModel {
   title: string | null
   notes: string | null
-  priority: number | null
-  carryOverUntil: CarryOver
+  priority: number
+  carryOverUntil: Date
 }
 
 export interface TaskDraft extends TaskDraftModel {
@@ -164,13 +155,13 @@ export interface TaskDraft extends TaskDraftModel {
   priority: number
 }
 
-export type TaskCreateInitialData = Omit<DraftTaskData, 'targetDt'>
-function createTaskData(initialData?: TaskCreateInitialData) {
+export type TaskCreateInitialData = Omit<DraftTaskData, 'dueDt'>
+function createTaskData(dueDt: Date, initialData?: TaskCreateInitialData) {
   return reactive<TaskDraftModel>({
     title: initialData?.title ?? null,
     notes: initialData?.notes ?? null,
-    priority: initialData?.priority ?? null,
-    carryOverUntil: initialData?.carryOverUntil ?? null,
+    priority: initialData?.priority ?? 0,
+    carryOverUntil: initialData?.carryOverUntil ?? dueDt,
   })
 }
 
@@ -183,7 +174,7 @@ export default defineComponent({
 
   props: {
     persistent: Boolean,
-    targetDt: {
+    dueDt: {
       type: Date,
       required: true,
     },
@@ -196,10 +187,10 @@ export default defineComponent({
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent()
 
-    const task = createTaskData(props.initialData)
+    const task = createTaskData(props.dueDt, props.initialData)
 
-    const formattedTargetDt = computed(() =>
-      date.formatDate(props.targetDt, 'MMM D, YYYY')
+    const formattedDueDt = computed(() =>
+      date.formatDate(props.dueDt, 'MMM D, YYYY')
     )
 
     return {
@@ -209,10 +200,10 @@ export default defineComponent({
       onDialogCancel,
       t,
       task,
-      formattedTargetDt,
+      formattedDueDt,
       carryOver: useCarryOverInputHelper(
         toRef(task, 'carryOverUntil'),
-        toRef(props, 'targetDt')
+        toRef(props, 'dueDt')
       ),
       priority: usePriorityInputHelper(toRef(task, 'priority')),
     }

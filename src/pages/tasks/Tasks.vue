@@ -26,13 +26,12 @@
 <script lang="ts">
 import { date, useQuasar } from 'quasar'
 import { defineComponent, ref } from 'vue'
-import { useStore } from 'src/store'
-import { Task } from 'src/typings/task.interface'
 import { CreateTaskInput } from 'src/store/tasks/actions'
 import CTaskCreateDialog, {
   TaskDraft,
 } from 'src/components/dialogs/CTaskCreateDialog.vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
+import { useCreateTask } from 'src/hooks/task.hooks'
 
 function useHeightObserverUtils() {
   const heightRef = ref(0)
@@ -48,26 +47,23 @@ function useHeightObserverUtils() {
 
 function useTaskCreate() {
   const $q = useQuasar()
+  const createTask = useCreateTask()
 
-  const store = useStore()
-  const createTask = (toCreate: CreateTaskInput) =>
-    store.dispatch('tasks/createTask', toCreate) as Promise<Task>
-
-  const doCreate = async (task: TaskDraft, targetDt: Date) => {
-    const { id } = await createTask({ targetDt, ...task } as CreateTaskInput)
+  const doCreate = async (task: TaskDraft, dueDt: Date) => {
+    const { id } = await createTask({ dueDt, ...task } as CreateTaskInput)
     console.debug('Created task %s.', id)
   }
 
   const onWriteBtnClick = () => {
-    const targetDt = date.startOfDate(new Date(), 'day')
+    const dueDt = date.startOfDate(new Date(), 'day')
     $q.dialog({
       component: CTaskCreateDialog,
       componentProps: {
         persistent: true,
-        targetDt,
+        dueDt,
       },
     }).onOk((task: TaskDraft) => {
-      void doCreate(task, targetDt)
+      void doCreate(task, dueDt)
     })
   }
 

@@ -4,10 +4,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('src/layouts/MainLayout.vue'),
+    redirect: { name: 'tasks' },
     children: [
       {
         path: 'tasks',
         name: 'tasks',
+        redirect: { name: 'emptyFilteredTasks' },
         component: () => import('pages/tasks/Tasks.vue'),
         children: [
           {
