@@ -17,9 +17,7 @@ const upgradeCb: IdbUgpradeCb = (db) => {
     keyPath: 'id',
   })
 
-  store.createIndex('referenceDates', ['dueDt', 'carryOverUntil'], {
-    multiEntry: true,
-  })
+  store.createIndex('referenceDates', ['dueDt', 'carryOverUntil'])
 
   console.debug('IndexedDB-promised: task store upgraded.')
 }

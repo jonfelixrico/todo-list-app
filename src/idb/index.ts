@@ -1,6 +1,7 @@
 import { openDB } from 'idb'
 import tasksUpgradeCb from './tasks.idb-store'
 import keyvalUpgradeCb from './keyval.idb-store'
+import daysWithTasksUpgradeCb from './days-with-tasks.idb-store'
 import { IdbSchema } from 'src/idb/idb.schema'
 
 const DB_NAME = 'todo.idb'
@@ -12,6 +13,8 @@ export async function start() {
     upgrade(...args) {
       tasksUpgradeCb(...args)
       keyvalUpgradeCb(...args)
+      daysWithTasksUpgradeCb(...args)
+
       console.debug('IndexedDB-promised: DB ugpraded.')
     },
   })
