@@ -58,10 +58,12 @@ const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () => {
   return daysWithTasks.map(({ date }) => date).sort()
 }
 
+const KEYVAL_KEY_FOR_TASK_LAST_WRITE = 'tasksLastWrite'
+
 const lastWriteRef = ref(new Date())
 async function initLastWrite() {
   const idb = useIdb()
-  const fromDb = await idb.get('keyVal', 'tasksLastWrite')
+  const fromDb = await idb.get('keyVal', KEYVAL_KEY_FOR_TASK_LAST_WRITE)
   const lastWrite =
     fromDb && date.isValid(fromDb) ? new Date(fromDb) : new Date()
   lastWriteRef.value = lastWrite
@@ -69,7 +71,7 @@ async function initLastWrite() {
 
 const insert: TaskRepo['insert'] = async (task: Task) => {
   const idb = useIdb()
-  const tx = idb.transaction(['daysWithTasks', 'tasks'], 'readwrite')
+  const tx = idb.transaction(['daysWithTasks', 'tasks', 'keyVal'], 'readwrite')
 
   try {
     await tx.objectStore('tasks').put(task)
@@ -82,6 +84,10 @@ const insert: TaskRepo['insert'] = async (task: Task) => {
       date: dueDt,
       count: dwtEntry ? dwtEntry.count + 1 : 1,
     })
+
+    await tx
+      .objectStore('keyVal')
+      .put(KEYVAL_KEY_FOR_TASK_LAST_WRITE, new Date().toISOString())
 
     tx.commit()
   } catch (e) {
