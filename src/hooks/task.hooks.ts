@@ -1,17 +1,25 @@
+import { uid, useQuasar } from 'quasar'
 import { useTaskRepo } from 'src/services/abstracts/task-repo.service'
-import { Task } from 'src/typings/task.interface'
+import { DraftTaskData, Task } from 'src/typings/task.interface'
 import { ref, Ref, watch } from 'vue'
 
 export function useTasksFetcher(date: Ref<Date>) {
   const { getTasks, lastWrite } = useTaskRepo()
+  const { loading } = useQuasar()
   const data = ref<Task[]>([])
 
   watch(
     [lastWrite, date],
     async () => {
-      console.debug('useTasksFetcher: getting tasks for %s.', date.value)
-      const res = (data.value = await getTasks(date.value))
-      console.debug('useTasksFetcher: retrieved %d records.', res.length)
+      try {
+        loading.show()
+        console.debug('useTasksFetcher: getting tasks for %s.', date.value)
+
+        const res = (data.value = await getTasks(date.value))
+        console.debug('useTasksFetcher: retrieved %d records.', res.length)
+      } finally {
+        loading.hide()
+      }
     },
     {
       immediate: true,
@@ -19,4 +27,21 @@ export function useTasksFetcher(date: Ref<Date>) {
   )
 
   return data
+}
+
+export async function createTask(toCreate: DraftTaskData) {
+  const createDt = new Date()
+
+  const task: Task = {
+    ...toCreate,
+    createDt,
+    lastUpdateDt: createDt,
+    completeDt: null,
+    id: uid(),
+  }
+
+  const repo = useTaskRepo()
+  await repo.insert(task)
+
+  return task
 }
