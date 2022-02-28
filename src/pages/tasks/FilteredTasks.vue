@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { date, useQuasar } from 'quasar'
+import { date } from 'quasar'
 import { useFilteredTaskList } from 'src/pages/tasks/task-list-helper'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
@@ -50,6 +50,7 @@ import CTaskListCard from 'src/components/tasks/CTaskListCard.vue'
 import { useRemoveTask } from 'src/hooks/task.hooks'
 import { useI18n } from 'vue-i18n'
 import { Task } from 'src/typings/task.interface'
+import { useCustomQuasarDialog } from 'src/hooks/custom-quasar.hooks'
 
 function useNavigation() {
   const dateNav = useTaskListDateNavigation()
@@ -80,20 +81,20 @@ function useNavigation() {
 
 function useDeleteHelper() {
   const removeFn = useRemoveTask()
-  const $q = useQuasar()
+  const { createDialog } = useCustomQuasarDialog()
   const { t } = useI18n()
 
   async function doDelete({ id, title }: Task) {
     try {
       await removeFn(id)
-      $q.dialog({
+      createDialog({
         title: t('tasks.dialogs.deleteTaskSuccess.title'),
         message: t('tasks.dialogs.deleteTaskSuccess.message', { title }),
       })
     } catch (e) {
       const { message } = e as Error
 
-      $q.dialog({
+      createDialog({
         title: t('tasks.dialogs.deleteTaskError.title'),
         message: t('tasks.dialogs.deleteTaskError.message', { title, message }),
       })
@@ -101,19 +102,13 @@ function useDeleteHelper() {
   }
 
   function doDeleteConfirm(task: Task) {
-    $q.dialog({
+    createDialog({
       title: t('tasks.dialogs.deleteTaskConfirm.title'),
       message: t('tasks.dialogs.deleteTaskConfirm.message'),
       ok: {
-        noCaps: true,
-        color: 'primary',
-        unelevated: true,
         label: t('tasks.dialogs.deleteTaskConfirm.confirm'),
       },
       cancel: {
-        noCaps: true,
-        flat: true,
-        color: 'standard',
         label: t('tasks.dialogs.deleteTaskConfirm.cancel'),
       },
     }).onOk(() => {
