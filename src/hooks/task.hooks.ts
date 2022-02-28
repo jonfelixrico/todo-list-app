@@ -85,5 +85,5 @@ export function useCreateTask() {
 export function useRemoveTask() {
   const repo = useTaskRepo()
 
-  return async (taskId: string) => repo.remove(taskId)
+  return async (taskId: string) => await repo.remove(taskId)
 }
