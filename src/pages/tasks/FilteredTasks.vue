@@ -26,24 +26,7 @@
     </q-toolbar>
     <div class="col" v-if="tasks.length">
       <div style="max-width: 1024px; margin: auto" class="q-gutter-y-md">
-        <q-card v-for="{ title, notes, id, priority } of tasks" :key="id">
-          <q-card-section class="row">
-            <div class="col q-gutter-y-md">
-              <div>
-                <h5 class="text-h6 q-ma-none preformatted" v-text="title" />
-                <div class="text-caption text-grey-8" v-if="priority">
-                  Priority {{ priority }}
-                </div>
-              </div>
-
-              <div
-                v-if="notes"
-                v-text="notes"
-                class="preformatted q-pa-sm bg-grey-3 rounded-borders"
-              />
-            </div>
-          </q-card-section>
-        </q-card>
+        <CTaskListCard v-for="task of tasks" :key="task.id" :task="task" />
       </div>
     </div>
 
@@ -58,6 +41,7 @@ import { date } from 'quasar'
 import { useFilteredTaskList } from 'src/pages/tasks/task-list-helper'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
+import CTaskListCard from 'src/components/tasks/CTaskListCard.vue'
 
 function useNavigation() {
   const dateNav = useTaskListDateNavigation()
@@ -87,9 +71,10 @@ function useNavigation() {
 }
 
 export default defineComponent({
+  components: { CTaskListCard },
+
   setup() {
     const { routeDate, ...others } = useNavigation()
-
     return {
       ...others,
       ...useFilteredTaskList(routeDate),
@@ -107,7 +92,6 @@ export default defineComponent({
   beforeRouteEnter(to, _, next) {
     const dateStr = to.params.date as string
     const isValid = date.isValid(dateStr)
-
     if (!isValid) {
       console.log(
         'FilteredTasks: %s is an invalid date. Redirected to tasks instead.',
@@ -116,7 +100,6 @@ export default defineComponent({
       next({ name: 'tasks' })
       return
     }
-
     next()
   },
 })
