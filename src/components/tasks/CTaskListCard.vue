@@ -54,13 +54,11 @@ export default defineComponent({
   emits: ['edit', 'delete'],
 
   setup(props, { emit }) {
-    const task = toRefs(props.task)
-
     return {
-      ...task,
+      ...toRefs(props.task),
       t: useI18n().t,
-      onEdit: () => emit('edit', task),
-      onDelete: () => emit('delete', task),
+      onEdit: () => emit('edit', props.task),
+      onDelete: () => emit('delete', props.task),
     }
   },
 })
