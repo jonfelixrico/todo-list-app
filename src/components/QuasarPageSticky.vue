@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'QuasarPageSticky',
@@ -17,5 +17,5 @@ export default defineComponent({
       required: true,
     },
   },
-});
+})
 </script>
