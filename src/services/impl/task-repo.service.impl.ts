@@ -100,6 +100,56 @@ const insert: TaskRepo['insert'] = async (task: Task) => {
       err.message ?? 'NO_ERR_MESSAGE'
     )
     tx.abort()
+    throw err
+  }
+}
+
+const remove: TaskRepo['remove'] = async (taskId) => {
+  const idb = getIdb()
+  const tx = idb.transaction(['daysWithTasks', 'tasks', 'keyVal'], 'readwrite')
+
+  try {
+    const tasksStore = tx.objectStore('tasks')
+
+    const task = await tasksStore.get(taskId)
+    if (!task) {
+      throw new Error(`Task ${taskId} does not exist!`)
+    }
+
+    await tx.objectStore('tasks').delete(taskId)
+
+    const dwt = tx.objectStore('daysWithTasks')
+    const { dueDt } = task
+    const dwtEntry = await dwt.get(dueDt)
+
+    if (dwtEntry) {
+      await dwt.put({
+        date: dueDt,
+        count: dwtEntry.count - 1,
+      })
+    } else {
+      console.warn(
+        'TaskRepoService: daysWithTasks entry for %s is not found',
+        dueDt.toISOString()
+      )
+    }
+
+    const lastWrite = new Date()
+
+    await tx
+      .objectStore('keyVal')
+      .put(lastWrite.toISOString(), KEYVAL_KEY_FOR_TASK_LAST_WRITE)
+    lastWriteRef.value = lastWrite
+
+    tx.commit()
+  } catch (e) {
+    const err = e as Error
+    console.warn(
+      'TaskRepoImpl: error encountered while inserting: %s',
+      err.message ?? 'NO_ERR_MESSAGE'
+    )
+    tx.abort()
+    throw err
   }
 }
 
@@ -110,6 +160,7 @@ const boot: ServiceBootFn = async ({ app }) => {
     getTasks,
     insert,
     lastWrite: lastWriteRef,
+    remove,
   })
   console.debug('TaskRepoImpl: provided.')
 }

@@ -6,6 +6,7 @@ export interface TaskRepo {
   lastWrite: Ref<Date>
   getDaysWithTasks: () => Promise<Date[]>
   insert: (task: Task) => Promise<void>
+  remove: (taskId: string) => Promise<void>
 }
 
 export const TaskRepoKey: InjectionKey<TaskRepo> = Symbol('task repo')

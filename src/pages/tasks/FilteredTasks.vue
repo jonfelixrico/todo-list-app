@@ -11,7 +11,7 @@
         text-color="black"
         no-caps
       />
-      <h2 class="text-h6 q-my-none">{{ formatDate(routeDate) }}</h2>
+      <h2 class="text-h5 q-my-none">{{ formatDate(routeDate) }}</h2>
 
       <!-- go forward 1 day -->
       <q-btn
@@ -24,15 +24,15 @@
         no-caps
       />
     </q-toolbar>
-    <div class="col" v-if="taskGroups.length">
-      <template v-for="{ dueDt, tasks } in taskGroups" :key="dueDt">
-        <div>{{ dueDt }}</div>
-        <q-card v-for="{ title, id } of tasks" :key="id">
-          <q-card-section>
-            {{ title }}
-          </q-card-section>
-        </q-card>
-      </template>
+    <div class="col" v-if="tasks.length">
+      <div style="max-width: 1024px; margin: auto" class="q-gutter-y-md">
+        <CTaskListCard
+          v-for="task of tasks"
+          :key="task.id"
+          :task="task"
+          @delete="onDelete"
+        />
+      </div>
     </div>
 
     <div v-else class="col flex flex-center">
@@ -46,6 +46,11 @@ import { date } from 'quasar'
 import { useFilteredTaskList } from 'src/pages/tasks/task-list-helper'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
+import CTaskListCard from 'src/components/tasks/CTaskListCard.vue'
+import { useRemoveTask } from 'src/hooks/task.hooks'
+import { useI18n } from 'vue-i18n'
+import { Task } from 'src/typings/task.interface'
+import { useCustomQuasarDialog } from 'src/hooks/custom-quasar.hooks'
 
 function useNavigation() {
   const dateNav = useTaskListDateNavigation()
@@ -74,14 +79,56 @@ function useNavigation() {
   }
 }
 
+function useDeleteHelper() {
+  const removeFn = useRemoveTask()
+  const { createDialog } = useCustomQuasarDialog()
+  const { t } = useI18n()
+
+  async function doDelete({ id, title }: Task) {
+    try {
+      await removeFn(id)
+      createDialog({
+        title: t('tasks.dialogs.deleteTaskSuccess.title'),
+        message: t('tasks.dialogs.deleteTaskSuccess.message', { title }),
+      })
+    } catch (e) {
+      const { message } = e as Error
+
+      createDialog({
+        title: t('tasks.dialogs.deleteTaskError.title'),
+        message: t('tasks.dialogs.deleteTaskError.message', { title, message }),
+      })
+    }
+  }
+
+  function doDeleteConfirm(task: Task) {
+    createDialog({
+      title: t('tasks.dialogs.deleteTaskConfirm.title'),
+      message: t('tasks.dialogs.deleteTaskConfirm.message'),
+      ok: {
+        label: t('tasks.dialogs.deleteTaskConfirm.confirm'),
+      },
+      cancel: {
+        label: t('tasks.dialogs.deleteTaskConfirm.cancel'),
+      },
+    }).onOk(() => {
+      void doDelete(task)
+    })
+  }
+
+  return doDeleteConfirm
+}
+
 export default defineComponent({
+  components: { CTaskListCard },
+
   setup() {
     const { routeDate, ...others } = useNavigation()
-
     return {
       ...others,
       ...useFilteredTaskList(routeDate),
       routeDate,
+      onDelete: useDeleteHelper(),
     }
   },
 
@@ -95,7 +142,6 @@ export default defineComponent({
   beforeRouteEnter(to, _, next) {
     const dateStr = to.params.date as string
     const isValid = date.isValid(dateStr)
-
     if (!isValid) {
       console.log(
         'FilteredTasks: %s is an invalid date. Redirected to tasks instead.',
@@ -104,7 +150,6 @@ export default defineComponent({
       next({ name: 'tasks' })
       return
     }
-
     next()
   },
 })
