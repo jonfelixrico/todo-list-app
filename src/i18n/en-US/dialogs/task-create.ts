@@ -5,6 +5,7 @@ export default {
     title: {
       label: 'Title',
       hint: 'Description or title of your task',
+      error: 'Title is required',
     },
 
     notes: {
