@@ -19,7 +19,7 @@ export function useCustomQuasarDialog() {
     label: t('common.cancel'),
   }
 
-  function create(options: QDialogOptions) {
+  function createDialog(options: QDialogOptions) {
     return dialog({
       ...options,
       ok:
@@ -38,6 +38,6 @@ export function useCustomQuasarDialog() {
      * Wrapper for $q.dialog. We've made the default button props to be
      * standard across the app.
      */
-    create,
+    createDialog,
   }
 }
