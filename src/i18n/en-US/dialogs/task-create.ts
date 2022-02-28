@@ -4,12 +4,12 @@ export default {
   inputs: {
     title: {
       label: 'Title',
-      hint: 'Description or title of your task.',
+      hint: 'Description or title of your task',
     },
 
     notes: {
       label: 'Notes',
-      hint: 'Optional. Place additional details of your task here.',
+      hint: 'Optional. Place additional details of your task here',
     },
 
     hasPriority: {
@@ -18,7 +18,7 @@ export default {
 
     priority: {
       label: 'Priority',
-      hint: '1 for least priority, 10 for most priority.',
+      hint: '1 for least priority, 10 for most priority',
     },
 
     carryOver: {
