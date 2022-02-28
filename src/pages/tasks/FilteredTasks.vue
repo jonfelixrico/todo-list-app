@@ -26,7 +26,12 @@
     </q-toolbar>
     <div class="col" v-if="tasks.length">
       <div style="max-width: 1024px; margin: auto" class="q-gutter-y-md">
-        <CTaskListCard v-for="task of tasks" :key="task.id" :task="task" />
+        <CTaskListCard
+          v-for="task of tasks"
+          :key="task.id"
+          :task="task"
+          @delete="onDelete"
+        />
       </div>
     </div>
 
@@ -37,11 +42,14 @@
 </template>
 
 <script lang="ts">
-import { date } from 'quasar'
+import { date, useQuasar } from 'quasar'
 import { useFilteredTaskList } from 'src/pages/tasks/task-list-helper'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
 import CTaskListCard from 'src/components/tasks/CTaskListCard.vue'
+import { useRemoveTask } from 'src/hooks/task.hooks'
+import { useI18n } from 'vue-i18n'
+import { Task } from 'src/typings/task.interface'
 
 function useNavigation() {
   const dateNav = useTaskListDateNavigation()
@@ -70,6 +78,52 @@ function useNavigation() {
   }
 }
 
+function useDeleteHelper() {
+  const removeFn = useRemoveTask()
+  const $q = useQuasar()
+  const { t } = useI18n()
+
+  async function doDelete({ id, title }: Task) {
+    try {
+      await removeFn(id)
+      $q.dialog({
+        title: t('tasks.dialogs.deleteTaskSuccess.title'),
+        message: t('tasks.dialogs.deleteTaskSuccess.message', { title }),
+      })
+    } catch (e) {
+      const { message } = e as Error
+
+      $q.dialog({
+        title: t('tasks.dialogs.deleteTaskError.title'),
+        message: t('tasks.dialogs.deleteTaskError.message', { title, message }),
+      })
+    }
+  }
+
+  function doDeleteConfirm(task: Task) {
+    $q.dialog({
+      title: t('tasks.dialogs.deleteTaskConfirm.title'),
+      message: t('tasks.dialogs.deleteTaskConfirm.message'),
+      ok: {
+        noCaps: true,
+        color: 'primary',
+        unelevated: true,
+        label: t('tasks.dialogs.deleteTaskConfirm.confirm'),
+      },
+      cancel: {
+        noCaps: true,
+        flat: true,
+        color: 'standard',
+        label: t('tasks.dialogs.deleteTaskConfirm.cancel'),
+      },
+    }).onOk(() => {
+      void doDelete(task)
+    })
+  }
+
+  return doDeleteConfirm
+}
+
 export default defineComponent({
   components: { CTaskListCard },
 
@@ -79,6 +133,7 @@ export default defineComponent({
       ...others,
       ...useFilteredTaskList(routeDate),
       routeDate,
+      onDelete: useDeleteHelper(),
     }
   },
 
