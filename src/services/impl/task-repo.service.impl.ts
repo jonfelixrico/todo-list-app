@@ -100,6 +100,7 @@ const insert: TaskRepo['insert'] = async (task: Task) => {
       err.message ?? 'NO_ERR_MESSAGE'
     )
     tx.abort()
+    throw err
   }
 }
 
@@ -110,7 +111,7 @@ const remove: TaskRepo['remove'] = async (taskId) => {
   try {
     const tasksStore = tx.objectStore('tasks')
 
-    const task = await tasksStore.get('taskId')
+    const task = await tasksStore.get(taskId)
     if (!task) {
       throw new Error(`Task ${taskId} does not exist!`)
     }
@@ -148,6 +149,7 @@ const remove: TaskRepo['remove'] = async (taskId) => {
       err.message ?? 'NO_ERR_MESSAGE'
     )
     tx.abort()
+    throw err
   }
 }
 
