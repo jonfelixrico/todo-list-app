@@ -5,6 +5,7 @@ import { ServiceBootFn } from 'src/services/service-boot.type'
 import { Task } from 'src/typings/task.interface'
 import { ref } from 'vue'
 import { omit } from 'lodash'
+import { IdbTask } from 'src/idb/tasks.idb-store'
 
 const getTasks: TaskRepo['getTasks'] = async (startDt: Date, endDt?: Date) => {
   startDt = date.startOfDate(startDt, 'day')
@@ -27,6 +28,37 @@ const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () => {
   return daysWithTasks.map(({ date }) => date).sort()
 }
 
+/**
+ * Helper method to prepare the task data for IDB storage.
+ * Mainly concerned with the `$activeDates` attribute.
+ *
+ * This is exported for unit testing purposes.
+ *
+ * @param task
+ * @returns
+ */
+export function prepareTaskForIdb(task: Task): IdbTask {
+  const $activeDates: Date[] = []
+
+  const { dueDt, carryOverUntil, completeDt } = task
+
+  const daysBetween = date.getDateDiff(
+    // TODO ensure that getDateDiff is inclusive
+    dueDt,
+    // TODO add comment why we do this
+    completeDt && completeDt <= carryOverUntil ? completeDt : carryOverUntil
+  )
+
+  for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
+    $activeDates.push(date.addToDate(dueDt, { days: daysToAdd }))
+  }
+
+  return {
+    ...task,
+    $activeDates,
+  }
+}
+
 const KEYVAL_KEY_FOR_TASK_LAST_WRITE = 'tasksLastWrite'
 
 const lastWriteRef = ref(new Date())
@@ -43,7 +75,8 @@ const insert: TaskRepo['insert'] = async (task: Task) => {
   const tx = idb.transaction(['daysWithTasks', 'tasks', 'keyVal'], 'readwrite')
 
   try {
-    await tx.objectStore('tasks').put(task)
+    const idbTask = prepareTaskForIdb(task)
+    await tx.objectStore('tasks').put(idbTask)
 
     const dwt = tx.objectStore('daysWithTasks')
     const { dueDt } = task
