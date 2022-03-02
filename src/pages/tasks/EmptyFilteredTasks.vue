@@ -77,22 +77,22 @@ function useDateHarness() {
     yearMonthModel.month = month
   }
 
-  const firstAndLastDaysOfMonth = computed(() => {
-    const asDate = date.buildDate({
+  const dateRange = computed(() => {
+    const monthDt = date.buildDate({
       month: yearMonthModel.month,
       year: yearMonthModel.year,
     })
 
     return {
-      start: date.startOfDate(asDate, 'month'),
-      end: date.endOfDate(asDate, 'month'),
+      start: date.startOfDate(monthDt, 'month'),
+      end: date.endOfDate(monthDt, 'month'),
     }
   })
 
   return {
     defaultYearMonth,
     onDateNavigate,
-    firstAndLastDaysOfMonth,
+    dateRange,
   }
 }
 
@@ -100,8 +100,8 @@ export default defineComponent({
   setup() {
     const { setRouteDate } = useTaskListDateNavigation()
 
-    const { firstAndLastDaysOfMonth, ...dateHarness } = useDateHarness()
-    const events = useEventsFetcher(firstAndLastDaysOfMonth)
+    const { dateRange, ...dateHarness } = useDateHarness()
+    const events = useEventsFetcher(dateRange)
 
     function onDateClick(dateStr: string) {
       if (!events.value.includes(dateStr)) {
