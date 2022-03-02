@@ -34,13 +34,13 @@ function useEventsFetcher(
       const tasks = await getTasks(start, end)
       const dates = tasks
         .map(({ dueDt, completeDt, carryOverUntil }) => {
+          // TODO ensure that getDateDiff is inclusive
           const daysBetween = date.getDateDiff(
-            // TODO ensure that getDateDiff is inclusive
-            dueDt,
             // TODO add comment why we do this
             completeDt && completeDt <= carryOverUntil
               ? completeDt
-              : carryOverUntil
+              : carryOverUntil,
+            dueDt
           )
 
           const dates: Date[] = []
