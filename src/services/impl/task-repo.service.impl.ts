@@ -23,9 +23,7 @@ const getTasks: TaskRepo['getTasks'] = async (startDt: Date, endDt?: Date) => {
 }
 
 const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () => {
-  const idb = getIdb()
-  const daysWithTasks = await idb.getAll('daysWithTasks')
-  return daysWithTasks.map(({ date }) => date).sort()
+  return []
 }
 
 /**
