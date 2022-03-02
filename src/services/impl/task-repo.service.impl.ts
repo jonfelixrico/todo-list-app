@@ -39,11 +39,11 @@ export function prepareTaskForIdb(task: Task): IdbTask {
 
   const { dueDt, carryOverUntil, completeDt } = task
 
+  // TODO ensure that getDateDiff is inclusive
   const daysBetween = date.getDateDiff(
-    // TODO ensure that getDateDiff is inclusive
-    dueDt,
     // TODO add comment why we do this
-    completeDt && completeDt <= carryOverUntil ? completeDt : carryOverUntil
+    completeDt && completeDt <= carryOverUntil ? completeDt : carryOverUntil,
+    dueDt
   )
 
   for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
