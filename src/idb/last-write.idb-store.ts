@@ -1,9 +1,9 @@
 import { DBSchema } from 'idb'
-import type { IdbUgpradeCb, IdbSchema } from 'src/idb/idb.schema'
+import type { IdbUgpradeCb } from 'src/idb/idb.schema'
 
 export interface LastWriteEntry {
-  storeName: keyof IdbSchema
-  lastWrite: Date
+  storeName: 'tasks'
+  lastWriteDt: Date
 }
 
 export interface LastWriteIdbStore extends DBSchema {
