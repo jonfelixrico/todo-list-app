@@ -4,52 +4,21 @@ import { TaskRepo, TaskRepoKey } from 'src/services/abstracts/task-repo.service'
 import { ServiceBootFn } from 'src/services/service-boot.type'
 import { Task } from 'src/typings/task.interface'
 import { ref } from 'vue'
+import { omit } from 'lodash'
 
-const BACKTRACK_LIMIT = 100
+const getTasks: TaskRepo['getTasks'] = async (startDt: Date, endDt?: Date) => {
+  startDt = date.startOfDate(startDt, 'day')
+  endDt = date.startOfDate(endDt ?? startDt, 'day')
 
-const getTasks: TaskRepo['getTasks'] = async (snapshotDt: Date) => {
-  const startOfSnapshotDt = date.startOfDate(snapshotDt, 'day')
   const idb = getIdb()
 
-  const alreadyProcessed = new Set<string>()
-  const snapshotTasks: Task[] = []
+  const tasks = await idb.getAllFromIndex(
+    'tasks',
+    'activeDates',
+    IDBKeyRange.bound(startDt, endDt)
+  )
 
-  for (
-    let daysToSubtract = 0;
-    daysToSubtract <= BACKTRACK_LIMIT;
-    daysToSubtract++
-  ) {
-    const subtracted = date.subtractFromDate(startOfSnapshotDt, {
-      day: daysToSubtract,
-    })
-
-    const retrieves = await Promise.all([
-      idb.getAllFromIndex('tasks', 'dueDt', subtracted),
-      idb.getAllFromIndex('tasks', 'carryOverUntil', subtracted),
-    ])
-    const items = retrieves.flat()
-
-    for (const item of items) {
-      if (alreadyProcessed.has(item.id)) {
-        continue
-      }
-
-      if (
-        // due has lapsed or is due on the day
-        item.dueDt <= startOfSnapshotDt &&
-        // carry over is still in effect
-        item.carryOverUntil >= startOfSnapshotDt &&
-        // not yet completed, or it was completed on or after the snapshot
-        (!item.completeDt || item.completeDt >= startOfSnapshotDt)
-      ) {
-        snapshotTasks.push(item)
-      }
-
-      alreadyProcessed.add(item.id)
-    }
-  }
-
-  return snapshotTasks
+  return tasks.map((t) => omit(t, '$activeDates'))
 }
 
 const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () => {
