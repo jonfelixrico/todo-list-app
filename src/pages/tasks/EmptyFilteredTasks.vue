@@ -37,9 +37,9 @@ function useEventsFetcher(
           // TODO ensure that getDateDiff is inclusive
           const daysBetween = date.getDateDiff(
             // TODO add comment why we do this
-            completeDt && completeDt <= carryOverUntil
-              ? completeDt
-              : carryOverUntil,
+            new Date(
+              Math.min(+(completeDt ?? carryOverUntil), +carryOverUntil, +end)
+            ),
             dueDt
           )
 
@@ -85,7 +85,7 @@ function useDateHarness() {
 
     return {
       start: date.startOfDate(monthDt, 'month'),
-      end: date.endOfDate(monthDt, 'month'),
+      end: date.endOfDate(now, 'day'),
     }
   })
 
