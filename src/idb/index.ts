@@ -5,7 +5,7 @@ import { IdbSchema, IdbUgpradeCb } from 'src/idb/idb.schema'
 
 const DB_NAME = 'todo.idb'
 // TODO update this per schema change
-const DB_VERSION = 1
+const DB_VERSION = 2
 
 let idb: IDBPDatabase<IdbSchema>
 
