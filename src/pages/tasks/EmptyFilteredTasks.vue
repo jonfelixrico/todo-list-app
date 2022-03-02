@@ -15,7 +15,6 @@ import { useTaskRepo } from 'src/services/abstracts/task-repo.service'
 import { date } from 'quasar'
 import { computed, defineComponent, reactive, Ref, ref, watch } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
-import { uniq } from 'lodash'
 
 interface YearMonthModel {
   year: number
@@ -32,28 +31,29 @@ function useEventsFetcher(
     [dates, lastWrite],
     async ([{ start, end }]) => {
       const tasks = await getTasks(start, end)
-      const dates = tasks
-        .map(({ dueDt, completeDt, carryOverUntil }) => {
-          // TODO ensure that getDateDiff is inclusive
-          const daysBetween = date.getDateDiff(
-            // TODO add comment why we do this
-            new Date(
-              Math.min(+(completeDt ?? carryOverUntil), +carryOverUntil, +end)
-            ),
-            dueDt
-          )
+      const datesWithTasks = new Set<string>()
 
-          const dates: Date[] = []
-          for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
-            dates.push(date.addToDate(dueDt, { days: daysToAdd }))
+      for (const { dueDt, completeDt, carryOverUntil } of tasks) {
+        // TODO ensure that getDateDiff is inclusive
+        const daysBetween = date.getDateDiff(
+          // TODO add comment why we do this
+          new Date(
+            Math.min(+(completeDt ?? carryOverUntil), +carryOverUntil, +end)
+          ),
+          dueDt
+        )
+
+        for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
+          const computedDt = date.addToDate(dueDt, { days: daysToAdd })
+          const asStr = date.formatDate(computedDt, 'YYYY/MM/DD')
+
+          if (!datesWithTasks.has(asStr)) {
+            datesWithTasks.add(asStr)
           }
+        }
+      }
 
-          return dates
-        })
-        .flat()
-        .map((dt) => date.formatDate(dt, 'YYYY/MM/DD'))
-
-      events.value = uniq(dates)
+      events.value = [...datesWithTasks]
     },
     {
       immediate: true,
