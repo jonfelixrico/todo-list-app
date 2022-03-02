@@ -9,14 +9,14 @@ import { IdbTask } from 'src/idb/tasks.idb-store'
 
 const getTasks: TaskRepo['getTasks'] = async (startDt: Date, endDt?: Date) => {
   startDt = date.startOfDate(startDt, 'day')
-  endDt = date.startOfDate(endDt ?? startDt, 'day')
+  endDt = date.endOfDate(endDt ?? startDt, 'day')
 
   const idb = getIdb()
 
   const tasks = await idb.getAllFromIndex(
     'tasks',
-    'activeDates',
-    IDBKeyRange.bound(startDt, endDt)
+    'activeMillis',
+    IDBKeyRange.bound(startDt.getTime(), endDt.getTime())
   )
 
   return tasks.map((t) => omit(t, '$activeDates'))
@@ -35,7 +35,7 @@ const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () =>
  * @returns
  */
 export function prepareTaskForIdb(task: Task): IdbTask {
-  const $activeDates: Date[] = []
+  const activeMillis: number[] = []
 
   const { dueDt, carryOverUntil, completeDt } = task
 
@@ -47,12 +47,12 @@ export function prepareTaskForIdb(task: Task): IdbTask {
   )
 
   for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
-    $activeDates.push(date.addToDate(dueDt, { days: daysToAdd }))
+    activeMillis.push(date.addToDate(dueDt, { days: daysToAdd }).getTime())
   }
 
   return {
     ...task,
-    $activeDates,
+    $activeMillis: activeMillis,
   }
 }
 

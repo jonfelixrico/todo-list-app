@@ -7,7 +7,7 @@ export interface IdbTask extends Task {
    * This is for the sake of indexing so we can easily look up active/carried-over tasks.
    * This is not part of the task entity, this is just for DB use.
    */
-  $activeDates: Date[]
+  $activeMillis: number[]
 }
 
 export interface TasksIdbStore extends DBSchema {
@@ -15,7 +15,7 @@ export interface TasksIdbStore extends DBSchema {
     key: string
     value: IdbTask
     indexes: {
-      activeDates: Date
+      activeMillis: number
     }
   }
 }
@@ -25,7 +25,7 @@ const upgradeCb: IdbUgpradeCb = (db) => {
     keyPath: 'id',
   })
 
-  store.createIndex('activeDates', '$activeDates', {
+  store.createIndex('activeMillis', '$activeMillis', {
     multiEntry: true,
     unique: false,
   })
