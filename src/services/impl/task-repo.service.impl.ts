@@ -22,9 +22,8 @@ const getTasks: TaskRepo['getTasks'] = async (startDt: Date, endDt?: Date) => {
   return tasks.map((t) => omit(t, '$activeDates'))
 }
 
-const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () => {
-  return []
-}
+const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () =>
+  Promise.resolve([])
 
 /**
  * Helper method to prepare the task data for IDB storage.
