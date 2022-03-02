@@ -15,10 +15,6 @@ export interface TasksIdbStore extends DBSchema {
     key: string
     value: IdbTask
     indexes: {
-      /** @deprecated */
-      dueDt: Date
-      /** @deprecated */
-      carryOverUntil: Date
       activeDates: Date
     }
   }
