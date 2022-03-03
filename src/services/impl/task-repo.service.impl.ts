@@ -1,4 +1,3 @@
-import { date } from 'quasar'
 import { getIdb } from 'src/idb'
 import { TaskRepo, TaskRepoKey } from 'src/services/abstracts/task-repo.service'
 import { ServiceBootFn } from 'src/services/service-boot.type'
@@ -6,7 +5,7 @@ import { Task } from 'src/typings/task.interface'
 import { ref } from 'vue'
 import { omit } from 'lodash'
 import { IdbTask } from 'src/idb/tasks.idb-store'
-import { getMaxDate, getMinDate } from 'src/utils/date.utils'
+import { getDaysBetween, getMaxDate, getMinDate } from 'src/utils/date.utils'
 
 const getTasks: TaskRepo['getTasks'] = async (startDt: Date, endDt?: Date) => {
   endDt = endDt ?? startDt
@@ -38,24 +37,15 @@ const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () =>
  * @returns
  */
 export function prepareTaskForIdb(task: Task): IdbTask {
-  const activeMillis: number[] = []
-
   const { dueDt, carryOverUntil, completeDt } = task
 
-  // TODO ensure that getDateDiff is inclusive
-  const daysBetween = date.getDateDiff(
-    // TODO add comment why we do this
-    completeDt && completeDt <= carryOverUntil ? completeDt : carryOverUntil,
-    dueDt
-  )
-
-  for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
-    activeMillis.push(date.addToDate(dueDt, { days: daysToAdd }).getTime())
-  }
+  const args = [dueDt, carryOverUntil, completeDt].filter(Boolean) as Date[]
+  const start = getMinDate(...args)
+  const end = getMaxDate(...args)
 
   return {
     ...task,
-    $activeMillis: activeMillis,
+    $activeMillis: getDaysBetween(start, end).map((d) => d.getTime()),
   }
 }
 
