@@ -1,4 +1,4 @@
-import { getMaxDate, getMinDate } from 'src/utils/date.utils'
+import { getDaysBetween, getMaxDate, getMinDate } from 'src/utils/date.utils'
 import { describe, expect, it } from '@jest/globals'
 
 const min = new Date('1998/06/21')
@@ -24,5 +24,24 @@ describe('getMaxDate', () => {
 
   it('will give the start of epoch date if used empty', () => {
     expect(getMaxDate()).toEqual(new Date(0))
+  })
+})
+
+describe('getDaysBetween', () => {
+  const start = new Date('1998/06/16')
+  const end = new Date('1998/06/21')
+
+  const results = getDaysBetween(start, end)
+
+  it('will have the start as the first item', () => {
+    expect(results[0]).toEqual(start)
+  })
+
+  it('will have the end as the last item', () => {
+    expect(results[results.length - 1]).toEqual(end)
+  })
+
+  it('will have 6 items', () => {
+    expect(results.length).toBe(6)
   })
 })
