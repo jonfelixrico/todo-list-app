@@ -6,17 +6,20 @@ import { Task } from 'src/typings/task.interface'
 import { ref } from 'vue'
 import { omit } from 'lodash'
 import { IdbTask } from 'src/idb/tasks.idb-store'
+import { getMaxDate, getMinDate } from 'src/utils/date.utils'
 
 const getTasks: TaskRepo['getTasks'] = async (startDt: Date, endDt?: Date) => {
-  startDt = date.startOfDate(startDt, 'day')
-  endDt = date.endOfDate(endDt ?? startDt, 'day')
+  endDt = endDt ?? startDt
 
   const idb = getIdb()
 
   const tasks = await idb.getAllFromIndex(
     'tasks',
     'activeMillis',
-    IDBKeyRange.bound(startDt.getTime(), endDt.getTime())
+    IDBKeyRange.bound(
+      getMinDate(startDt, endDt).getTime(),
+      getMaxDate(startDt, endDt).getTime()
+    )
   )
 
   return tasks.map((t) => omit(t, '$activeDates'))
