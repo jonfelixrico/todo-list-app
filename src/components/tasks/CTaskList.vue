@@ -1,9 +1,18 @@
 <template>
   <q-list separator>
-    <q-item clickable v-for="{ title, id, notes } of tasks" :key="id">
+    <q-item
+      clickable
+      v-for="{ title, id, notes } of tasks"
+      :key="id"
+      class="q-pa-md"
+    >
       <q-item-section>
-        <q-item-label class="preformatted" v-text="title" />
-        <q-item-label class="preformatted" v-if="notes" v-text="notes" />
+        <h6 class="preformatted text-h6 q-my-none q-mb-sm" v-text="title" />
+        <div
+          class="preformatted q-py-sm q-px-xs bg-grey-3"
+          v-if="notes"
+          v-text="notes"
+        />
       </q-item-section>
     </q-item>
   </q-list>
