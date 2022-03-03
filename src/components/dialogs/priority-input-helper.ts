@@ -1,14 +1,19 @@
+import { clamp } from 'lodash'
 import { computed, reactive, ref, Ref } from 'vue'
 
-const clamp = (value: number) => Math.max(Math.min(10, value), 1)
+const MIN_PRIORITY = 1
+const MAX_PRIORITY = 10
+
+const clampPriority = (value: number) =>
+  clamp(value, MIN_PRIORITY, MAX_PRIORITY)
 
 export function usePriorityInputHelper(priority: Ref<number | null>) {
-  const priorityInput = ref(clamp(priority.value ?? 0))
+  const priorityInput = ref(clampPriority(priority.value ?? 0))
 
   const inputModel = computed({
     get: () => priorityInput.value,
     set: (value: number) => {
-      priorityInput.value = priority.value = clamp(value)
+      priorityInput.value = priority.value = clampPriority(value)
     },
   })
 
