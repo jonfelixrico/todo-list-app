@@ -1,4 +1,5 @@
 /**
+import { date } from 'quasar';
  * Returns the smallest date in terms of their time millis.
  *
  * @param dates
@@ -6,7 +7,7 @@
  * start of the epoch will be returned instead (1970/1/1).
  */
 export function getMinDate(...dates: Date[]) {
-  const converted = dates.filter((date) => !!date).map((date) => +date)
+  const converted = dates.map((date) => +date)
   const minVal = Math.min(...converted)
   return new Date(minVal === Infinity ? 0 : minVal)
 }
