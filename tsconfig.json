@@ -9,10 +9,10 @@
       "DOM"
     ],
     "paths": {
-      "hooks": ["src/hooks/*"],
-      "idb": ["src/idb/*"],
-      "typings": ["src/typings/*"],
-      "services": ["src/services/*"]
+      "@hooks": ["src/hooks/*"],
+      "@idb": ["src/idb/*"],
+      "@typings": ["src/typings/*"],
+      "@services": ["src/services/*"]
     }
   }
 }
