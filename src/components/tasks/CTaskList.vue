@@ -9,7 +9,6 @@ import { useTaskRepo } from 'src/services/abstracts/task-repo.service'
 import { uid } from 'quasar'
 import { computed, defineComponent, Ref, ref, toRefs, watch } from 'vue'
 import { Task } from 'src/typings/task.interface'
-import { useI18n } from 'vue-i18n'
 import CTaskListItem from 'src/components/tasks/CTaskListItem.vue'
 
 function useTasksFetcher(date: Ref<Date>) {
@@ -59,12 +58,10 @@ export default defineComponent({
   },
 
   setup(props) {
-    const { t } = useI18n()
     const { snapshotDt } = toRefs(props)
     const { tasks } = useTasksFetcher(snapshotDt)
     return {
       tasks,
-      t,
     }
   },
 
