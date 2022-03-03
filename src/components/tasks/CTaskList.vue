@@ -9,7 +9,7 @@
       <q-item-section>
         <h6 class="preformatted text-h6 q-my-none q-mb-sm" v-text="title" />
         <div
-          class="preformatted q-py-sm q-px-xs bg-grey-3"
+          class="preformatted q-pa-sm bg-grey-3 rounded-borders"
           v-if="notes"
           v-text="notes"
         />
