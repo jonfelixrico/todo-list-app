@@ -1,6 +1,6 @@
 <template>
-  <q-list>
-    <q-item v-for="{ title, id, notes } of tasks" :key="id">
+  <q-list separator>
+    <q-item clickable v-for="{ title, id, notes } of tasks" :key="id">
       <q-item-section>
         <q-item-label class="preformatted" v-text="title" />
         <q-item-label class="preformatted" v-if="notes" v-text="notes" />
