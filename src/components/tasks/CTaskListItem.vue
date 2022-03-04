@@ -10,37 +10,37 @@
               -->
             <h6
               class="preformatted text-h6 q-my-none"
-              :class="{ 'text-strike': !!completeDt }"
-              v-text="title"
+              :class="{ 'text-strike': !!task.completeDt }"
+              v-text="task.title"
               data-cy="title"
             />
 
             <div
               class="text-caption text-grey-8"
-              v-if="completeDt"
+              v-if="task.completeDt"
               data-cy="completed"
             >
-              Completed on {{ completeDt }}
+              Completed on {{ task.completeDt }}
             </div>
           </div>
 
           <div
             class="row items-center q-gutter-x-sm"
-            v-if="isCarriedOver || priority"
+            v-if="task.isCarriedOver || task.priority"
           >
-            <q-badge v-if="isCarriedOver" data-cy="carry-over">
-              Carried over from {{ dueDt }}
+            <q-badge v-if="task.isCarriedOver" data-cy="carry-over">
+              Carried over from {{ task.dueDt }}
             </q-badge>
-            <q-badge v-if="priority" color="warning" data-cy="priority">
-              Priority {{ priority }}
+            <q-badge v-if="task.priority" color="warning" data-cy="priority">
+              Priority {{ task.priority }}
             </q-badge>
           </div>
         </div>
 
         <div
           class="preformatted q-pa-sm bg-grey-3 rounded-borders"
-          v-if="notes"
-          v-text="notes"
+          v-if="task.notes"
+          v-text="task.notes"
           data-cy="notes"
         />
       </div>
@@ -55,8 +55,8 @@
           flat
           round
           icon="info"
-          @click="onClick"
-          data-cy="info-btn"
+          @click="$emit('click')"
+          data-cy="button"
         />
       </div>
     </div>
@@ -64,13 +64,9 @@
 </template>
 
 <script lang="ts">
-import { Task } from 'src/typings/task.interface'
-import { defineComponent, PropType, toRefs } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-
-export interface PresentationTask extends Task {
-  isCarriedOver?: boolean
-}
+import { PresentationTask } from './task-list-item.types'
 
 export default defineComponent({
   props: {
@@ -82,17 +78,11 @@ export default defineComponent({
 
   emits: ['click'],
 
-  setup(props, { emit }) {
+  setup() {
     const { t } = useI18n()
-
-    function onClick() {
-      emit('click', props.task)
-    }
 
     return {
       t,
-      ...toRefs(props.task),
-      onClick,
     }
   },
 })
