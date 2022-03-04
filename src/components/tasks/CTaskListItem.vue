@@ -12,9 +12,14 @@
               class="preformatted text-h6 q-my-none"
               :class="{ 'text-strike': !!completeDt }"
               v-text="title"
+              data-cy="title"
             />
 
-            <div class="text-caption text-grey-8" v-if="completeDt">
+            <div
+              class="text-caption text-grey-8"
+              v-if="completeDt"
+              data-cy="completed"
+            >
               Completed on {{ completeDt }}
             </div>
           </div>
@@ -23,18 +28,20 @@
             class="row items-center q-gutter-x-sm"
             v-if="isCarriedOver || priority"
           >
-            <q-badge v-if="isCarriedOver">
+            <q-badge v-if="isCarriedOver" data-cy="carry-over">
               Carried over from {{ dueDt }}
             </q-badge>
-            <q-badge v-if="priority" color="warning">
+            <q-badge v-if="priority" color="warning" data-cy="priority">
               Priority {{ priority }}
             </q-badge>
           </div>
         </div>
+
         <div
           class="preformatted q-pa-sm bg-grey-3 rounded-borders"
           v-if="notes"
           v-text="notes"
+          data-cy="notes"
         />
       </div>
 
@@ -49,6 +56,7 @@
           round
           icon="info"
           @click="onClick"
+          data-cy="info-btn"
         />
       </div>
     </div>
