@@ -4,7 +4,7 @@ import CTaskListItem from 'src/components/tasks/CTaskListItem.vue'
 import { PresentationTask } from 'src/components/tasks/task-list-item.types'
 import { createI18n } from 'vue-i18n'
 
-describe('QuasarTooltip', () => {
+describe('CTaskListItem', () => {
   const dueDt = date.startOfDate(new Date(), 'day')
   const now = new Date()
 
