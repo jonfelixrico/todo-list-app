@@ -37,7 +37,7 @@
           flat
           round
           icon="info"
-          @click="$emit('click')"
+          @click="onClick"
         />
       </div>
     </div>
@@ -63,12 +63,17 @@ export default defineComponent({
 
   emits: ['click'],
 
-  setup(props) {
+  setup(props, { emit }) {
     const { t } = useI18n()
+
+    function onClick() {
+      emit('click', props.task)
+    }
 
     return {
       t,
       ...toRefs(props.task),
+      onClick,
     }
   },
 })
