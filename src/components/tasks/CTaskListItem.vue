@@ -13,11 +13,22 @@
               :class="{ 'text-strike': !!completeDt }"
               v-text="title"
             />
+
+            <div class="text-caption text-grey-8" v-if="completeDt">
+              Completed on {{ completeDt }}
+            </div>
           </div>
 
-          <div class="row items-center q-gutter-x-sm">
-            <q-badge v-if="isCarriedOver">MOCK_CARRIED_OVER</q-badge>
-            <q-badge v-if="priority">MOCK_PRIORITY</q-badge>
+          <div
+            class="row items-center q-gutter-x-sm"
+            v-if="isCarriedOver || priority"
+          >
+            <q-badge v-if="isCarriedOver">
+              Carried over from {{ dueDt }}
+            </q-badge>
+            <q-badge v-if="priority" color="warning">
+              Priority {{ priority }}
+            </q-badge>
           </div>
         </div>
         <div
