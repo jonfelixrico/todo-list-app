@@ -26,9 +26,9 @@
 
           <div
             class="row items-center q-gutter-x-sm"
-            v-if="task.isCarriedOver || task.priority"
+            v-if="isCarriedOver || task.priority"
           >
-            <q-badge v-if="task.isCarriedOver" data-cy="carry-over">
+            <q-badge v-if="isCarriedOver" data-cy="carry-over">
               Carried over from {{ task.dueDt }}
             </q-badge>
             <q-badge v-if="task.priority" color="warning" data-cy="priority">
@@ -64,25 +64,42 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { Task } from 'src/typings/task.interface'
+import { computed, defineComponent, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PresentationTask } from './task-list-item.types'
 
 export default defineComponent({
   props: {
     task: {
-      type: Object as PropType<PresentationTask>,
+      type: Object as PropType<Task>,
+      required: true,
+    },
+
+    referenceDt: {
+      type: Date,
       required: true,
     },
   },
 
   emits: ['click'],
 
-  setup() {
+  setup(props) {
     const { t } = useI18n()
+
+    const isCarriedOver = computed(() => {
+      const { task, referenceDt } = props
+      const { dueDt, carryOverUntil, completeDt } = task
+
+      const isWithinCarryOver =
+        referenceDt >= dueDt && referenceDt <= carryOverUntil
+      const completedAfterReferenceDt = completeDt && completeDt > referenceDt
+
+      return isWithinCarryOver && !completedAfterReferenceDt
+    })
 
     return {
       t,
+      isCarriedOver,
     }
   },
 })
