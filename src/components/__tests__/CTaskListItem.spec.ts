@@ -20,6 +20,24 @@ describe('CTaskListItem', () => {
     completeDt: null,
   }
 
+  it('should display the task details', () => {
+    mount(CTaskListItem, {
+      props: {
+        task,
+      },
+
+      global: {
+        plugins: [createI18n()],
+      },
+    })
+
+    cy.dataCy('title').should('exist').and('not.have.class', 'text-strike')
+    cy.dataCy('completed').should('not.exist')
+    cy.dataCy('carry-over').should('not.exist')
+    cy.dataCy('priority').should('not.exist')
+    cy.dataCy('notes').should('not.exist')
+  })
+
   it('should indicate completion', () => {
     mount(CTaskListItem, {
       props: {
