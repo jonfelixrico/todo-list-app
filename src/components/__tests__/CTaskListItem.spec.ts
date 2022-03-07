@@ -1,14 +1,14 @@
 import { mount } from '@cypress/vue'
 import { date } from 'quasar'
 import CTaskListItem from 'src/components/tasks/CTaskListItem.vue'
-import { PresentationTask } from 'src/components/tasks/task-list-item.types'
+import { Task } from 'src/typings/task.interface'
 import { createI18n } from 'vue-i18n'
 
 describe('CTaskListItem', () => {
   const dueDt = date.startOfDate(new Date(), 'day')
   const now = new Date()
 
-  const task: PresentationTask = {
+  const task: Task = {
     title: 'mock title',
     priority: 0,
     carryOverUntil: dueDt,
@@ -20,10 +20,13 @@ describe('CTaskListItem', () => {
     completeDt: null,
   }
 
+  const referenceDt = date.startOfDate(new Date(), 'day')
+
   it('should display the task details', () => {
     mount(CTaskListItem, {
       props: {
         task,
+        referenceDt,
       },
 
       global: {
@@ -43,8 +46,9 @@ describe('CTaskListItem', () => {
       props: {
         task: {
           ...task,
-          completeDt: new Date(),
-        } as PresentationTask,
+          completeDt: date.startOfDate(new Date(), 'day'),
+        } as Task,
+        referenceDt,
       },
       global: {
         plugins: [createI18n()],
@@ -62,10 +66,8 @@ describe('CTaskListItem', () => {
       },
 
       props: {
-        task: {
-          ...task,
-          isCarriedOver: true,
-        } as PresentationTask,
+        task,
+        referenceDt,
       },
     })
 
@@ -84,7 +86,9 @@ describe('CTaskListItem', () => {
         task: {
           ...task,
           priority,
-        } as PresentationTask,
+        } as Task,
+
+        referenceDt,
       },
     })
 
@@ -102,7 +106,9 @@ describe('CTaskListItem', () => {
         task: {
           ...task,
           notes,
-        } as PresentationTask,
+        } as Task,
+
+        referenceDt,
       },
     })
 
@@ -117,6 +123,8 @@ describe('CTaskListItem', () => {
 
       props: {
         task,
+
+        referenceDt,
       },
     })
 
