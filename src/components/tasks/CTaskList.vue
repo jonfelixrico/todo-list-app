@@ -1,6 +1,11 @@
 <template>
   <q-list separator>
-    <CTaskListItem v-for="task of tasks" :key="task.id" :task="task" />
+    <CTaskListItem
+      v-for="task of tasks"
+      :key="task.id"
+      :task="task"
+      :referenceDt="snapshotDt"
+    />
   </q-list>
 </template>
 
