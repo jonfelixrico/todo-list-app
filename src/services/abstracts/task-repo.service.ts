@@ -8,7 +8,6 @@ export interface TaskRepo {
   getTasks(startDt: DateTime, endDt?: DateTime): Promise<Task[]>
 
   lastWrite: Ref<DateTime>
-  getDaysWithTasks: () => Promise<DateTime[]>
   insert: (task: Task) => Promise<void>
   remove: (taskId: string) => Promise<void>
 }

@@ -76,9 +76,6 @@ const getTasks: TaskRepo['getTasks'] = async (
   return tasks.map(convertFromIdb)
 }
 
-const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () =>
-  Promise.resolve([])
-
 const lastWriteRef = ref(DateTime.now())
 /**
  * This needs to be called once we've got IDB access.
@@ -156,7 +153,6 @@ const remove: TaskRepo['remove'] = async (taskId) => {
 const boot: ServiceBootFn = async ({ app }) => {
   await initLastWrite()
   app.provide(TaskRepoKey, {
-    getDaysWithTasks,
     getTasks,
     insert,
     lastWrite: lastWriteRef,
