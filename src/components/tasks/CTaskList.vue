@@ -15,6 +15,7 @@ import { uid } from 'quasar'
 import { computed, defineComponent, Ref, ref, toRefs, watch } from 'vue'
 import { Task } from 'src/typings/task.interface'
 import CTaskListItem from 'src/components/tasks/CTaskListItem.vue'
+import { DateTime } from 'luxon'
 
 function useTasksFetcher(date: Ref<Date>) {
   const { getTasks, lastWrite } = useTaskRepo()
@@ -57,7 +58,7 @@ function useTasksFetcher(date: Ref<Date>) {
 export default defineComponent({
   props: {
     snapshotDt: {
-      type: Date,
+      type: DateTime,
       required: true,
     },
   },

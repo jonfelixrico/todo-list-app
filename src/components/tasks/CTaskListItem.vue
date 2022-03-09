@@ -64,6 +64,7 @@
 </template>
 
 <script lang="ts">
+import { DateTime } from 'luxon'
 import { Task } from 'src/typings/task.interface'
 import { computed, defineComponent, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -76,7 +77,7 @@ export default defineComponent({
     },
 
     referenceDt: {
-      type: Date,
+      type: DateTime,
       required: true,
     },
   },
