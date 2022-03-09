@@ -31,6 +31,7 @@
             <q-badge v-if="isCarriedOver" data-cy="carry-over">
               Carried over from {{ task.dueDt }}
             </q-badge>
+
             <q-badge v-if="task.priority" color="warning" data-cy="priority">
               Priority {{ task.priority }}
             </q-badge>
@@ -66,7 +67,7 @@
 <script lang="ts">
 import { DateTime } from 'luxon'
 import { Task } from 'src/typings/task.interface'
-import { computed, defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
@@ -76,31 +77,16 @@ export default defineComponent({
       required: true,
     },
 
-    referenceDt: {
-      type: DateTime,
-      required: true,
-    },
+    isCarriedOver: Boolean,
+    carryOverReferenceDt: DateTime,
   },
 
   emits: ['click'],
 
-  setup(props) {
+  setup() {
     const { t } = useI18n()
-
-    const isCarriedOver = computed(() => {
-      const { task, referenceDt } = props
-      const { dueDt, carryOverUntil, completeDt } = task
-
-      const isWithinCarryOver =
-        referenceDt >= dueDt && referenceDt <= carryOverUntil
-      const completedAfterReferenceDt = completeDt && completeDt > referenceDt
-
-      return isWithinCarryOver && !completedAfterReferenceDt
-    })
-
     return {
       t,
-      isCarriedOver,
     }
   },
 })
