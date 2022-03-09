@@ -1,38 +1,4 @@
-import { date } from 'quasar'
-
-const START_OF_EPOCH = new Date(0)
-
-/**
- * Returns the smallest date in terms of their time millis.
- *
- * @param dates
- * @returns The smallest date. If empty `dates` arugment was provided, then the
- * start of the epoch will be returned instead (1970/1/1).
- */
-export function getMinDate(...dates: Date[]): Date {
-  if (!dates.length) {
-    return START_OF_EPOCH
-  }
-
-  const converted = dates.map((date) => +date)
-  return new Date(Math.min(...converted))
-}
-
-/**
- * Returns the largest date in terms of their time millis.
- *
- * @param dates
- * @returns The largest date. If empty `dates` arugment was provided, then the
- * start of the epoch will be returned instead (1970/1/1).
- */
-export function getMaxDate(...dates: Date[]): Date {
-  if (!dates.length) {
-    return START_OF_EPOCH
-  }
-
-  const converted = dates.map((date) => +date)
-  return new Date(Math.max(...converted))
-}
+import { DateTime } from 'luxon'
 
 /**
  * Gets the days between a start and end date. Inclusive.
@@ -42,17 +8,17 @@ export function getMaxDate(...dates: Date[]): Date {
  * start of day of `end`. The items in between are the start of day of the individual
  * days in between.
  */
-export function getDaysBetween(start: Date, end: Date): Date[] {
+export function getDaysBetween(start: DateTime, end: DateTime): DateTime[] {
   const oStart = start
   const oEnd = end
 
-  start = date.startOfDate(getMinDate(oStart, oEnd), 'day')
-  end = date.startOfDate(getMaxDate(oStart, oEnd), 'day')
-  const daysBetween = date.getDateDiff(end, start, 'days')
+  start = DateTime.min(oStart, oEnd).startOf('day')
+  end = DateTime.max(oStart, oEnd).startOf('day')
+  const daysBetween = end.diff(start, 'day').days
 
-  const dates: Date[] = []
+  const dates: DateTime[] = []
   for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
-    dates.push(date.addToDate(start, { days: daysToAdd }))
+    dates.push(start.plus({ days: daysToAdd }))
   }
 
   return dates
