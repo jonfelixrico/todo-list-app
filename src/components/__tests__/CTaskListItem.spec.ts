@@ -1,26 +1,22 @@
 import { mount } from '@cypress/vue'
-import { date } from 'quasar'
 import CTaskListItem from 'src/components/tasks/CTaskListItem.vue'
 import { Task } from 'src/typings/task.interface'
 import { createI18n } from 'vue-i18n'
 
 describe('CTaskListItem', () => {
-  const dueDt = date.startOfDate(new Date(), 'day')
-  const now = new Date()
-
   const task: Task = {
     title: 'mock title',
     priority: 0,
-    carryOverUntil: dueDt,
-    dueDt,
-    createDt: now,
-    lastUpdateDt: now,
+    dueDt: new Date('2022-01-03'),
+    carryOverUntil: new Date('2022-01-03'),
+    createDt: new Date('2022-01-01'),
+    lastUpdateDt: new Date('2022-01-01'),
     id: 'fake id',
     notes: null,
     completeDt: null,
   }
 
-  const referenceDt = date.startOfDate(new Date(), 'day')
+  const referenceDt = new Date('2022-01-01')
 
   it('should display the task details', () => {
     mount(CTaskListItem, {
@@ -46,7 +42,7 @@ describe('CTaskListItem', () => {
       props: {
         task: {
           ...task,
-          completeDt: date.startOfDate(new Date(), 'day'),
+          completeDt: task.dueDt,
         } as Task,
         referenceDt,
       },
