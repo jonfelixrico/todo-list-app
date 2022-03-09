@@ -71,9 +71,10 @@ export default defineComponent({
 
     const tasksForDisplay = computed(() => {
       return tasks.value.map((task) => {
+        const dayDiff = snapshotDt.value.diff(task.dueDt, 'day').days ?? 0
         return {
           task,
-          isCarriedOver: task.dueDt.hasSame(snapshotDt.value, 'day'),
+          isCarriedOver: dayDiff >= 1,
         }
       })
     })
