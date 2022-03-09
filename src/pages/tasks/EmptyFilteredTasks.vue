@@ -42,7 +42,7 @@ function useEventsFetcher(
 
         for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
           const computedDt = dueDt.plus({ days: daysToAdd })
-          const asStr = computedDt.toFormat('YYYY/MM/DD')
+          const asStr = computedDt.toFormat('yyyy/MM/dd')
 
           if (!datesWithTasks.has(asStr)) {
             datesWithTasks.add(asStr)
@@ -62,7 +62,7 @@ function useEventsFetcher(
 
 function useDateHarness() {
   const now = DateTime.now()
-  const defaultYearMonth = now.toFormat('YYYY/MM')
+  const defaultYearMonth = now.toFormat('yyyy/MM')
 
   const yearMonthModel: YearMonthModel = reactive({
     year: now.year,
@@ -106,7 +106,7 @@ export default defineComponent({
         return null
       }
 
-      void setRouteDate(DateTime.fromISO(dateStr))
+      void setRouteDate(DateTime.fromFormat(dateStr, 'yyyy/MM/dd'))
     }
 
     return {

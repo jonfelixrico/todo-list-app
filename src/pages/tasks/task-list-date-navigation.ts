@@ -3,7 +3,7 @@ import { date } from 'quasar'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-const DATE_FORMAT = 'YYYY-MM-DD'
+const DATE_FORMAT = 'yyyy-MM-dd'
 
 /**
  * Utils for manipulating the `date` query param.

@@ -197,7 +197,9 @@ export default defineComponent({
 
     const task = createTaskData(props.dueDt, props.initialData)
 
-    const formattedDueDt = computed(() => props.dueDt.toFormat('MMM D, YYYY'))
+    const formattedDueDt = computed(() =>
+      props.dueDt.toLocaleString(DateTime.DATE_MED)
+    )
 
     return {
       dialogRef,
