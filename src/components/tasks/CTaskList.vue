@@ -5,6 +5,7 @@
       :key="task.id"
       :task="task"
       :showCarryOverBadge="isCarriedOver"
+      :carryOverReferenceDt="snapshotDt"
     />
   </q-list>
 </template>
