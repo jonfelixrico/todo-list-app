@@ -12,9 +12,9 @@
 
 <script lang="ts">
 import { useTaskRepo } from 'src/services/abstracts/task-repo.service'
-import { date } from 'quasar'
 import { computed, defineComponent, reactive, Ref, ref, watch } from 'vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
+import { DateTime } from 'luxon'
 
 interface YearMonthModel {
   year: number
@@ -22,7 +22,7 @@ interface YearMonthModel {
 }
 
 function useEventsFetcher(
-  dates: Ref<{ start: Date; end: Date }>
+  dates: Ref<{ start: DateTime; end: DateTime }>
 ): Ref<string[]> {
   const events = ref<string[]>([])
   const { getTasks, lastWrite } = useTaskRepo()
@@ -34,18 +34,15 @@ function useEventsFetcher(
       const datesWithTasks = new Set<string>()
 
       for (const { dueDt, completeDt, carryOverUntil } of tasks) {
-        // TODO ensure that getDateDiff is inclusive
-        const daysBetween = date.getDateDiff(
-          // TODO add comment why we do this
-          new Date(
-            Math.min(+(completeDt ?? carryOverUntil), +carryOverUntil, +end)
-          ),
-          dueDt
-        )
+        const daysBetween = DateTime.min(
+          completeDt ?? carryOverUntil,
+          carryOverUntil,
+          end
+        ).diff(dueDt, 'days').days
 
         for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
-          const computedDt = date.addToDate(dueDt, { days: daysToAdd })
-          const asStr = date.formatDate(computedDt, 'YYYY/MM/DD')
+          const computedDt = dueDt.plus({ days: daysToAdd })
+          const asStr = computedDt.toFormat('YYYY/MM/DD')
 
           if (!datesWithTasks.has(asStr)) {
             datesWithTasks.add(asStr)
@@ -64,12 +61,12 @@ function useEventsFetcher(
 }
 
 function useDateHarness() {
-  const now = new Date()
-  const defaultYearMonth = date.formatDate(now, 'YYYY/MM')
+  const now = DateTime.now()
+  const defaultYearMonth = now.toFormat('YYYY/MM')
 
   const yearMonthModel: YearMonthModel = reactive({
-    year: now.getFullYear(),
-    month: now.getMonth() + 1,
+    year: now.year,
+    month: now.month,
   })
 
   function onDateNavigate({ year, month }: YearMonthModel) {
@@ -78,14 +75,14 @@ function useDateHarness() {
   }
 
   const dateRange = computed(() => {
-    const monthDt = date.buildDate({
+    const monthDt = DateTime.fromObject({
       month: yearMonthModel.month,
       year: yearMonthModel.year,
     })
 
     return {
-      start: date.startOfDate(monthDt, 'month'),
-      end: date.endOfDate(now, 'day'),
+      start: monthDt.startOf('month'),
+      end: now.endOf('day'),
     }
   })
 
@@ -109,7 +106,7 @@ export default defineComponent({
         return null
       }
 
-      void setRouteDate(new Date(dateStr))
+      void setRouteDate(DateTime.fromISO(dateStr))
     }
 
     return {

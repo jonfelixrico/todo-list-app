@@ -1,4 +1,5 @@
 import { mount } from '@cypress/vue'
+import { DateTime } from 'luxon'
 import CTaskListItem from 'src/components/tasks/CTaskListItem.vue'
 import { Task } from 'src/typings/task.interface'
 import { createI18n } from 'vue-i18n'
@@ -7,16 +8,16 @@ describe('CTaskListItem', () => {
   const task: Task = {
     title: 'mock title',
     priority: 0,
-    dueDt: new Date('2022-01-03'),
-    carryOverUntil: new Date('2022-01-03'),
-    createDt: new Date('2022-01-01'),
-    lastUpdateDt: new Date('2022-01-01'),
+    dueDt: DateTime.fromISO('2022-01-03'),
+    carryOverUntil: DateTime.fromISO('2022-01-03'),
+    createDt: DateTime.fromISO('2022-01-01'),
+    lastUpdateDt: DateTime.fromISO('2022-01-01'),
     id: 'fake id',
     notes: null,
     completeDt: null,
   }
 
-  const referenceDt = new Date('2022-01-01')
+  const referenceDt = DateTime.fromISO('2022-01-01')
 
   it('should display the task details', () => {
     mount(CTaskListItem, {

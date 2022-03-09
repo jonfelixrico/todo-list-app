@@ -48,6 +48,7 @@ import { useI18n } from 'vue-i18n'
 import { Task } from 'src/typings/task.interface'
 import { useCustomQuasarDialog } from 'src/hooks/custom-quasar.hooks'
 import CTaskList from 'src/components/tasks/CTaskList.vue'
+import { DateTime } from 'luxon'
 
 function useNavigation() {
   const dateNav = useTaskListDateNavigation()
@@ -55,17 +56,17 @@ function useNavigation() {
    * Force-typing this as Date since we assume that beforeRouteEnter will prevent `routeDate`
    * from having a value of null, only valid dates.
    */
-  const routeDate = dateNav.routeDate as ComputedRef<Date>
+  const routeDate = dateNav.routeDate as ComputedRef<DateTime>
 
   const adjacentDates = computed(() => {
     return {
-      prev: date.subtractFromDate(routeDate.value, { day: 1 }),
-      next: date.addToDate(routeDate.value, { day: 1 }),
+      prev: routeDate.value.minus({ day: 1 }),
+      next: routeDate.value.plus({ day: 1 }),
     }
   })
 
-  function formatDate(toFormat: Date) {
-    return date.formatDate(toFormat, 'MMM D, YYYY')
+  function formatDate(date: DateTime) {
+    return date.toFormat('MMM D, YYYY')
   }
 
   return {

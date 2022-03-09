@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import { date } from 'quasar'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -17,14 +18,13 @@ export function useTaskListDateNavigation() {
       return null
     }
 
-    return date.startOfDate(date.extractDate(dateStr, DATE_FORMAT), 'day')
+    return DateTime.fromFormat(dateStr, DATE_FORMAT).startOf('day')
   })
 
-  const setRouteDate = (toDate: Date) => {
-    const formatted = date.formatDate(toDate, DATE_FORMAT)
+  const setRouteDate = (toDate: DateTime) => {
     return router.push({
       name: 'filteredTasks',
-      params: { date: formatted },
+      params: { date: toDate.toFormat(DATE_FORMAT) },
     })
   }
 
