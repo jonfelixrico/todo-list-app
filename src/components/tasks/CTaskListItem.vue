@@ -20,7 +20,17 @@
               v-if="task.completeDt"
               data-cy="completed"
             >
-              {{ t('tasks.completedOn', { date: task.completeDt }) }}
+              {{
+                t('tasks.completedOn', { date: formatDate(task.completeDt) })
+              }}
+            </div>
+
+            <div
+              class="text-caption text-grey-8"
+              v-if="isCarriedOver"
+              data-cy="completed"
+            >
+              {{ t('tasks.carriedOverFrom', { date: formatDate(task.dueDt) }) }}
             </div>
           </div>
 
@@ -99,9 +109,14 @@ export default defineComponent({
       return carryOverReferenceDt?.diff(task.dueDt, 'days').days ?? null
     })
 
+    function formatDate(date: DateTime) {
+      return date.toLocaleString(DateTime.DATE_MED)
+    }
+
     return {
       t,
       daysLapsed,
+      formatDate,
     }
   },
 })
