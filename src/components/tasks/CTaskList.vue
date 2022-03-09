@@ -1,10 +1,11 @@
 <template>
   <q-list separator>
     <CTaskListItem
-      v-for="task of tasks"
+      v-for="{ task, isCarriedOver } of tasksForDisplay"
       :key="task.id"
       :task="task"
-      :referenceDt="snapshotDt"
+      :showCarryOverBadge="isCarriedOver"
+      :carryOverReferenceDt="snapshotDt"
     />
   </q-list>
 </template>
@@ -19,7 +20,8 @@ import { DateTime } from 'luxon'
 
 function useTasksFetcher(date: Ref<DateTime>) {
   const { getTasks, lastWrite } = useTaskRepo()
-  const data = ref<Task[]>([])
+
+  const tasks = ref<Task[]>([])
   const loadingJob = ref<string | null>(null)
 
   watch(
@@ -30,7 +32,7 @@ function useTasksFetcher(date: Ref<DateTime>) {
         console.debug('useTasksFetcher: getting tasks for %s.', date.value)
         const res = await getTasks(date.value)
         if (loadingJob.value === jobId) {
-          data.value = res
+          tasks.value = res
           console.debug('useTasksFetcher: retrieved %d records.', res.length)
         } else {
           console.debug(
@@ -50,7 +52,7 @@ function useTasksFetcher(date: Ref<DateTime>) {
   )
 
   return {
-    tasks: data,
+    tasks,
     isLoading: computed(() => !!loadingJob.value),
   }
 }
@@ -66,8 +68,20 @@ export default defineComponent({
   setup(props) {
     const { snapshotDt } = toRefs(props)
     const { tasks } = useTasksFetcher(snapshotDt)
+
+    const tasksForDisplay = computed(() => {
+      return tasks.value.map((task) => {
+        const dayDiff = snapshotDt.value.diff(task.dueDt, 'day').days ?? 0
+        return {
+          task,
+          isCarriedOver: dayDiff >= 1,
+        }
+      })
+    })
+
     return {
       tasks,
+      tasksForDisplay,
     }
   },
 

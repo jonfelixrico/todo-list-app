@@ -20,7 +20,17 @@
               v-if="task.completeDt"
               data-cy="completed"
             >
-              Completed on {{ task.completeDt }}
+              {{
+                t('tasks.completedOn', { date: formatDate(task.completeDt) })
+              }}
+            </div>
+
+            <div
+              class="text-caption text-grey-8"
+              v-if="isCarriedOver"
+              data-cy="completed"
+            >
+              {{ t('tasks.carriedOverFrom', { date: formatDate(task.dueDt) }) }}
             </div>
           </div>
 
@@ -28,11 +38,12 @@
             class="row items-center q-gutter-x-sm"
             v-if="isCarriedOver || task.priority"
           >
-            <q-badge v-if="isCarriedOver" data-cy="carry-over">
-              Carried over from {{ task.dueDt }}
+            <q-badge v-if="isCarriedOver && daysLapsed" data-cy="carry-over">
+              {{ t('tasks.daysLapsed', { count: daysLapsed }, daysLapsed) }}
             </q-badge>
+
             <q-badge v-if="task.priority" color="warning" data-cy="priority">
-              Priority {{ task.priority }}
+              {{ t('tasks.priority', { priorityRating: task.priority }) }}
             </q-badge>
           </div>
         </div>
@@ -76,10 +87,8 @@ export default defineComponent({
       required: true,
     },
 
-    referenceDt: {
-      type: DateTime,
-      required: true,
-    },
+    isCarriedOver: Boolean,
+    carryOverReferenceDt: DateTime,
   },
 
   emits: ['click'],
@@ -87,20 +96,27 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n()
 
-    const isCarriedOver = computed(() => {
-      const { task, referenceDt } = props
-      const { dueDt, carryOverUntil, completeDt } = task
+    const daysLapsed = computed<null | number>(() => {
+      const { isCarriedOver, task, carryOverReferenceDt } = props
 
-      const isWithinCarryOver =
-        referenceDt >= dueDt && referenceDt <= carryOverUntil
-      const completedAfterReferenceDt = completeDt && completeDt > referenceDt
+      if (
+        !isCarriedOver ||
+        (carryOverReferenceDt && carryOverReferenceDt < task.dueDt)
+      ) {
+        return null
+      }
 
-      return isWithinCarryOver && !completedAfterReferenceDt
+      return carryOverReferenceDt?.diff(task.dueDt, 'days').days ?? null
     })
+
+    function formatDate(date: DateTime) {
+      return date.toLocaleString(DateTime.DATE_MED)
+    }
 
     return {
       t,
-      isCarriedOver,
+      daysLapsed,
+      formatDate,
     }
   },
 })

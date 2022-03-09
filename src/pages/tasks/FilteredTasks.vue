@@ -66,7 +66,7 @@ function useNavigation() {
   })
 
   function formatDate(date: DateTime) {
-    return date.toFormat('MMM D, YYYY')
+    return date.toLocaleString(DateTime.DATE_MED)
   }
 
   return {

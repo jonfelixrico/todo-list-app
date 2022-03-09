@@ -18,4 +18,9 @@ export default {
         'Something wrong happened while deleting task "{title}": {errorMessage}',
     },
   },
+
+  daysLapsed: '1 day lapsed | {count} days lapsed',
+  completedOn: 'Completed on {date}',
+  carriedOverFrom: 'Carried over from {date}',
+  priority: 'Priority {priorityRating}',
 }
