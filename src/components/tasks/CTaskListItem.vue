@@ -20,7 +20,7 @@
               v-if="task.completeDt"
               data-cy="completed"
             >
-              Completed on {{ task.completeDt }}
+              {{ t('tasks.completedOn', { date: task.completeDt }) }}
             </div>
           </div>
 
@@ -28,12 +28,12 @@
             class="row items-center q-gutter-x-sm"
             v-if="isCarriedOver || task.priority"
           >
-            <q-badge v-if="isCarriedOver" data-cy="carry-over">
-              Carried over from {{ task.dueDt }}
+            <q-badge v-if="isCarriedOver && daysLapsed" data-cy="carry-over">
+              {{ t('tasks.daysLapsed', { count: daysLapsed }, daysLapsed) }}
             </q-badge>
 
             <q-badge v-if="task.priority" color="warning" data-cy="priority">
-              Priority {{ task.priority }}
+              {{ t('tasks.priority', { priorityRating: task.priority }) }}
             </q-badge>
           </div>
         </div>
@@ -67,7 +67,7 @@
 <script lang="ts">
 import { DateTime } from 'luxon'
 import { Task } from 'src/typings/task.interface'
-import { defineComponent, PropType } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
@@ -83,10 +83,25 @@ export default defineComponent({
 
   emits: ['click'],
 
-  setup() {
+  setup(props) {
     const { t } = useI18n()
+
+    const daysLapsed = computed<null | number>(() => {
+      const { isCarriedOver, task, carryOverReferenceDt } = props
+
+      if (
+        !isCarriedOver ||
+        (carryOverReferenceDt && carryOverReferenceDt < task.dueDt)
+      ) {
+        return null
+      }
+
+      return carryOverReferenceDt?.diff(task.dueDt, 'days').days ?? null
+    })
+
     return {
       t,
+      daysLapsed,
     }
   },
 })
