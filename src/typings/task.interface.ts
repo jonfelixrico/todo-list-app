@@ -7,7 +7,7 @@ export interface EditableTaskAttrs {
   dueDt: DateTime
   carryOverUntil: DateTime
 
-  completeDt: Date | null
+  completeDt: DateTime | null
 }
 
 export interface Task extends EditableTaskAttrs {
