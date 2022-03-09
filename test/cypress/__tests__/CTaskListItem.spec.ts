@@ -30,7 +30,10 @@ describe('CTaskListItem', () => {
 
     cy.dataCy('title').should('exist').and('not.have.class', 'text-strike')
     cy.dataCy('completed').should('not.exist')
-    cy.dataCy('carry-over').should('not.exist')
+
+    cy.dataCy('carried-over').should('not.exist')
+    cy.dataCy('days-lapsed').should('not.exist')
+
     cy.dataCy('priority').should('not.exist')
     cy.dataCy('notes').should('not.exist')
   })
@@ -52,7 +55,7 @@ describe('CTaskListItem', () => {
     cy.dataCy('completed').should('exist')
   })
 
-  it('should show carry over badge', () => {
+  it('should show carry over from', () => {
     mount(CTaskListItem, {
       global: {
         plugins: [createI18n()],
@@ -60,10 +63,28 @@ describe('CTaskListItem', () => {
 
       props: {
         task,
+        isCarriedOver: true,
       },
     })
 
-    cy.dataCy('carry-over').should('exist')
+    cy.dataCy('carried-over').should('exist')
+    cy.dataCy('days-lapsed').should('not.exist')
+  })
+
+  it('should show days lapsed', () => {
+    mount(CTaskListItem, {
+      global: {
+        plugins: [createI18n()],
+      },
+
+      props: {
+        task,
+        isCarriedOver: true,
+        carryOverReferenceDt: task.carryOverUntil,
+      },
+    })
+
+    cy.dataCy('carried-over').should('exist')
   })
 
   it('should show priority badge', () => {
@@ -82,7 +103,7 @@ describe('CTaskListItem', () => {
       },
     })
 
-    cy.dataCy('priority').should('exist').and('contain.text', priority)
+    cy.dataCy('priority').should('exist')
   })
 
   it('should have a notes section', () => {
