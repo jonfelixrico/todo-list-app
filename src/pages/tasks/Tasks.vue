@@ -24,14 +24,15 @@
 </template>
 
 <script lang="ts">
-import { date, useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 import { defineComponent, ref } from 'vue'
-import { CreateTaskInput } from 'src/store/tasks/actions'
 import CTaskCreateDialog, {
   TaskDraft,
 } from 'src/components/dialogs/CTaskCreateDialog.vue'
 import { useTaskListDateNavigation } from './task-list-date-navigation'
 import { useCreateTask } from 'src/hooks/task.hooks'
+import { DateTime } from 'luxon'
+import { DraftTaskData } from 'src/typings/task.interface'
 
 function useHeightObserverUtils() {
   const heightRef = ref(0)
@@ -49,13 +50,13 @@ function useTaskCreate() {
   const $q = useQuasar()
   const createTask = useCreateTask()
 
-  const doCreate = async (task: TaskDraft, dueDt: Date) => {
-    const { id } = await createTask({ dueDt, ...task } as CreateTaskInput)
+  const doCreate = async (task: TaskDraft, dueDt: DateTime) => {
+    const { id } = await createTask({ dueDt, ...task } as DraftTaskData)
     console.debug('Created task %s.', id)
   }
 
   const onWriteBtnClick = () => {
-    const dueDt = date.startOfDate(new Date(), 'day')
+    const dueDt = DateTime.now().startOf('day')
     $q.dialog({
       component: CTaskCreateDialog,
       componentProps: {

@@ -1,12 +1,19 @@
 import { DBSchema } from 'idb'
 import type { IdbUgpradeCb } from 'src/idb/idb.schema'
-import { Task } from 'src/typings/task.interface'
 
-export interface IdbTask extends Task {
-  /**
-   * This is for the sake of indexing so we can easily look up active/carried-over tasks.
-   * This is not part of the task entity, this is just for DB use.
-   */
+export interface IdbTask {
+  title: string
+  notes: string | null
+  priority: number
+  dueDt: Date
+  carryOverUntil: Date
+
+  completeDt: Date | null
+
+  id: string
+  createDt: Date
+  lastUpdateDt: Date
+
   $activeMillis: number[]
 }
 

@@ -1,9 +1,10 @@
-import { uid, useQuasar } from 'quasar'
+import { DateTime } from 'luxon'
+import { uid } from 'quasar'
 import { useTaskRepo } from 'src/services/abstracts/task-repo.service'
 import { DraftTaskData, Task } from 'src/typings/task.interface'
 import { computed, ref, Ref, watch } from 'vue'
 
-export function useTasksFetcher(date: Ref<Date>) {
+export function useTasksFetcher(date: Ref<DateTime>) {
   const { getTasks, lastWrite } = useTaskRepo()
   const data = ref<Task[]>([])
   const loadingJob = ref<string | null>(null)
@@ -41,34 +42,11 @@ export function useTasksFetcher(date: Ref<Date>) {
   }
 }
 
-export function useDateWithTasksFetcher() {
-  const { getDaysWithTasks, lastWrite } = useTaskRepo()
-  const { loading } = useQuasar()
-  const data = ref<Date[]>([])
-
-  watch(
-    lastWrite,
-    async () => {
-      try {
-        loading.show()
-        data.value = data.value = await getDaysWithTasks()
-      } finally {
-        loading.hide()
-      }
-    },
-    {
-      immediate: true,
-    }
-  )
-
-  return data
-}
-
 export function useCreateTask() {
   const repo = useTaskRepo()
 
   return async (toCreate: DraftTaskData) => {
-    const createDt = new Date()
+    const createDt = DateTime.now()
     const task: Task = {
       ...toCreate,
       createDt,

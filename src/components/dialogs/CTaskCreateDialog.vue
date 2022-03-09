@@ -140,19 +140,20 @@
 </template>
 
 <script lang="ts">
-import { date, useDialogPluginComponent } from 'quasar'
+import { useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { computed, defineComponent, reactive, toRef, PropType } from 'vue'
 import { DraftTaskData } from 'src/typings/task.interface'
 import { useCarryOverInputHelper } from './carry-over-input-helper'
 import { usePriorityInputHelper } from './priority-input-helper'
 import CDateInput from 'components/common/CDateInput.vue'
+import { DateTime } from 'luxon'
 
 interface TaskDraftModel {
   title: string | null
   notes: string | null
   priority: number
-  carryOverUntil: Date
+  carryOverUntil: DateTime
 }
 
 export interface TaskDraft extends TaskDraftModel {
@@ -161,12 +162,14 @@ export interface TaskDraft extends TaskDraftModel {
 }
 
 export type TaskCreateInitialData = Omit<DraftTaskData, 'dueDt'>
-function createTaskData(dueDt: Date, initialData?: TaskCreateInitialData) {
+function createTaskData(dueDt: DateTime, initialData?: TaskCreateInitialData) {
   return reactive<TaskDraftModel>({
     title: initialData?.title ?? null,
     notes: initialData?.notes ?? null,
     priority: initialData?.priority ?? 0,
-    carryOverUntil: initialData?.carryOverUntil ?? dueDt,
+    carryOverUntil: initialData?.carryOverUntil
+      ? initialData.carryOverUntil
+      : dueDt,
   })
 }
 
@@ -180,7 +183,7 @@ export default defineComponent({
   props: {
     persistent: Boolean,
     dueDt: {
-      type: Date,
+      type: DateTime,
       required: true,
     },
 
@@ -194,9 +197,7 @@ export default defineComponent({
 
     const task = createTaskData(props.dueDt, props.initialData)
 
-    const formattedDueDt = computed(() =>
-      date.formatDate(props.dueDt, 'MMM D, YYYY')
-    )
+    const formattedDueDt = computed(() => props.dueDt.toFormat('MMM D, YYYY'))
 
     return {
       dialogRef,
