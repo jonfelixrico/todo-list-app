@@ -17,13 +17,10 @@ describe('CTaskListItem', () => {
     completeDt: null,
   }
 
-  const referenceDt = DateTime.fromISO('2022-01-01')
-
   it('should display the task details', () => {
     mount(CTaskListItem, {
       props: {
         task,
-        referenceDt,
       },
 
       global: {
@@ -45,7 +42,6 @@ describe('CTaskListItem', () => {
           ...task,
           completeDt: task.dueDt,
         } as Task,
-        referenceDt,
       },
       global: {
         plugins: [createI18n()],
@@ -64,7 +60,6 @@ describe('CTaskListItem', () => {
 
       props: {
         task,
-        referenceDt,
       },
     })
 
@@ -84,8 +79,6 @@ describe('CTaskListItem', () => {
           ...task,
           priority,
         } as Task,
-
-        referenceDt,
       },
     })
 
@@ -104,8 +97,6 @@ describe('CTaskListItem', () => {
           ...task,
           notes,
         } as Task,
-
-        referenceDt,
       },
     })
 
@@ -120,8 +111,6 @@ describe('CTaskListItem', () => {
 
       props: {
         task,
-
-        referenceDt,
       },
     })
 
