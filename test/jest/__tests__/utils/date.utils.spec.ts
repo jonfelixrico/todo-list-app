@@ -3,8 +3,8 @@ import { describe, expect, it } from '@jest/globals'
 import { DateTime } from 'luxon'
 
 describe('getDaysBetween', () => {
-  const start = DateTime.fromISO('1998/06/16')
-  const end = DateTime.fromISO('1998/06/21')
+  const start = DateTime.fromISO('1998-06-16')
+  const end = DateTime.fromISO('1998-06-21')
 
   const results = getDaysBetween(start, end)
 
