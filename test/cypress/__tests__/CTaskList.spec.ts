@@ -5,8 +5,27 @@ import { TaskRepoKey, TaskRepo } from 'src/services/abstracts/task-repo.service'
 import { createI18n } from 'vue-i18n'
 import { ref } from 'vue'
 import { Task } from 'src/typings/task.interface'
+import { range } from 'lodash'
 
-const mockData: Task[] = []
+const snapshotDt = DateTime.fromISO('2022-01-01')
+
+const taskTemplate: Omit<Task, 'id' | 'title'> = {
+  carryOverUntil: snapshotDt,
+  dueDt: snapshotDt,
+  createDt: snapshotDt,
+  lastUpdateDt: snapshotDt,
+  priority: 0,
+  notes: null,
+  completeDt: null,
+}
+
+const mockData: Task[] = range(0, 10).map((rangeNo) => {
+  return {
+    ...taskTemplate,
+    id: String(rangeNo),
+    title: `mock item #${rangeNo}`,
+  }
+})
 
 beforeEach(() => {
   const mockRepo: TaskRepo = {
@@ -19,7 +38,7 @@ beforeEach(() => {
 
   mount(CTaskList, {
     props: {
-      snapshotDt: DateTime.now(),
+      snapshotDt,
     },
 
     global: {
@@ -29,14 +48,12 @@ beforeEach(() => {
         [TaskRepoKey as symbol]: mockRepo,
       },
     },
-
-    shallow: true,
   })
 })
 
 describe('CTaskList', () => {
   // TODO change this placeholder
-  it('Placeholder', () => {
-    cy.dataCy('list-item').should('have.lengthOf.at.least', 1)
+  it('should render the same amount of items that getTasks yield', () => {
+    cy.dataCy('list-item').should('have.lengthOf', 10)
   })
 })
