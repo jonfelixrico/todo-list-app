@@ -6,6 +6,7 @@
       :task="task"
       :showCarryOverBadge="isCarriedOver"
       :carryOverReferenceDt="snapshotDt"
+      data-cy="list-item"
     />
   </q-list>
 </template>
