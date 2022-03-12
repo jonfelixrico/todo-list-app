@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { date } from 'quasar'
-import { useFilteredTaskList } from 'src/pages/tasks/task-list-helper'
+import { useFilteredTaskList } from 'src/composables/task-list-helper.composable'
 import { computed, defineComponent } from 'vue'
 import { useRemoveTask } from 'src/hooks/task.hooks'
 import { useI18n } from 'vue-i18n'
@@ -48,7 +48,7 @@ import { Task } from 'src/typings/task.interface'
 import { useCustomQuasarDialog } from 'src/hooks/custom-quasar.hooks'
 import CTaskList from 'src/components/tasks/CTaskList.vue'
 import { DateTime } from 'luxon'
-import { useTaskListDateNavigator } from 'src/composables/task-list-date-navigator'
+import { useTaskListDateNavigator } from 'src/composables/task-list-date-navigator.composable'
 
 function useNavigation() {
   const dateNav = useTaskListDateNavigator()
