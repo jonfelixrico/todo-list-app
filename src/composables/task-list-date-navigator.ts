@@ -44,7 +44,7 @@ export interface TaskListDateNavigatorComposable {
   setRouteDate(toDate: DateTime): ReturnType<Router['push']>
 }
 
-export function useTaskListNavigator() {
+export function useTaskListDateNavigator() {
   const abstractComposable = inject(TaskListDateNavigatorComposableKey)
 
   if (abstractComposable) {
