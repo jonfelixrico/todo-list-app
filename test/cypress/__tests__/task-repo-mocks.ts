@@ -4,7 +4,7 @@ import { TaskRepo } from 'src/services/abstracts/task-repo.service'
 import { Task } from 'src/typings/task.interface'
 import { ref } from 'vue'
 
-const mockDt = DateTime.fromISO('2022-01-01')
+export const mockDt = DateTime.fromISO('2022-01-01')
 
 const taskTemplate: Omit<Task, 'id' | 'title'> = {
   carryOverUntil: mockDt,
