@@ -19,7 +19,7 @@ beforeEach(() => {
       plugins: [createI18n()],
       provide: {
         // originally of type InjectionKey
-        [TaskRepoKey as symbol]: mockTaskRepo,
+        [TaskRepoKey as symbol]: mockTaskRepo(),
       },
     },
   })

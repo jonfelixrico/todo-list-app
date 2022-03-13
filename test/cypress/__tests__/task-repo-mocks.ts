@@ -24,10 +24,11 @@ const mockData: Task[] = range(0, 10).map((rangeNo) => {
   }
 })
 
-export const mockTaskRepo: TaskRepo = {
-  // This is the only method that matters in this unit test
-  getTasks: cy.stub().resolves(mockData),
-  insert: cy.stub(),
-  lastWrite: ref(DateTime.now()),
-  remove: cy.stub(),
+export function mockTaskRepo(): TaskRepo {
+  return {
+    getTasks: cy.stub().resolves(mockData),
+    insert: cy.stub(),
+    lastWrite: ref(DateTime.now()),
+    remove: cy.stub(),
+  }
 }
