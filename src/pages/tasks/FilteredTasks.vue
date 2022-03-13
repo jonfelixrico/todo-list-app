@@ -10,8 +10,12 @@
         color="white"
         text-color="black"
         no-caps
+        data-cy="prev"
       />
-      <h2 class="text-h5 q-my-none">{{ formatDate(routeDate) }}</h2>
+
+      <h2 class="text-h5 q-my-none" data-cy="current-date">
+        {{ formatDate(routeDate) }}
+      </h2>
 
       <!-- go forward 1 day -->
       <q-btn
@@ -22,6 +26,7 @@
         text-color="black"
         icon-right="arrow_right"
         no-caps
+        data-cy="next"
       />
     </q-toolbar>
     <div class="col" v-if="tasks.length">
