@@ -1,4 +1,3 @@
-import { date } from 'quasar'
 import { getIdb } from 'src/idb'
 import { TaskRepo, TaskRepoKey } from 'src/services/abstracts/task-repo.service'
 import { ServiceBootFn } from 'src/services/service-boot.type'
@@ -6,57 +5,78 @@ import { Task } from 'src/typings/task.interface'
 import { ref } from 'vue'
 import { omit } from 'lodash'
 import { IdbTask } from 'src/idb/tasks.idb-store'
+import { getDaysBetween } from 'src/utils/date.utils'
+import { DateTime } from 'luxon'
 
-const getTasks: TaskRepo['getTasks'] = async (startDt: Date, endDt?: Date) => {
-  startDt = date.startOfDate(startDt, 'day')
-  endDt = date.endOfDate(endDt ?? startDt, 'day')
+function convertFromIdb({
+  carryOverUntil,
+  completeDt,
+  createDt,
+  lastUpdateDt,
+  dueDt,
+  ...others
+}: IdbTask): Task {
+  return {
+    ...omit(others, '$activeMillis'),
+    carryOverUntil: DateTime.fromJSDate(carryOverUntil),
+    completeDt: completeDt ? DateTime.fromJSDate(completeDt) : null,
+    createDt: DateTime.fromJSDate(createDt),
+    lastUpdateDt: DateTime.fromJSDate(lastUpdateDt),
+    dueDt: DateTime.fromJSDate(dueDt),
+  }
+}
+
+/**
+ * Helper method to prepare the task data for IDB storage.
+ * Mainly concerned with the `$activeDates` attribute.
+ *
+ * @param task
+ * @returns
+ */
+export function convertToIdb({
+  carryOverUntil,
+  completeDt,
+  createDt,
+  dueDt,
+  lastUpdateDt,
+  ...others
+}: Task): IdbTask {
+  const args = [dueDt, carryOverUntil, completeDt].filter(Boolean) as DateTime[]
+  const start = DateTime.min(...args)
+  const end = DateTime.max(...args)
+
+  return {
+    ...others,
+    carryOverUntil: carryOverUntil.toJSDate(),
+    completeDt: completeDt ? completeDt.toJSDate() : null,
+    createDt: createDt.toJSDate(),
+    lastUpdateDt: lastUpdateDt.toJSDate(),
+    dueDt: dueDt.toJSDate(),
+    $activeMillis: getDaysBetween(start, end).map((d) => d.toMillis()),
+  }
+}
+
+const getTasks: TaskRepo['getTasks'] = async (
+  startDt: DateTime,
+  endDt?: DateTime
+) => {
+  endDt = endDt ?? startDt
 
   const idb = getIdb()
 
   const tasks = await idb.getAllFromIndex(
     'tasks',
     'activeMillis',
-    IDBKeyRange.bound(startDt.getTime(), endDt.getTime())
+    IDBKeyRange.bound(
+      DateTime.min(startDt, endDt).toMillis(),
+      DateTime.max(startDt, endDt).toMillis()
+    )
   )
 
-  return tasks.map((t) => omit(t, '$activeDates'))
+  return tasks.map(convertFromIdb)
 }
 
-const getDaysWithTasks: TaskRepo['getDaysWithTasks'] = async () =>
-  Promise.resolve([])
-
-/**
- * Helper method to prepare the task data for IDB storage.
- * Mainly concerned with the `$activeDates` attribute.
- *
- * This is exported for unit testing purposes.
- *
- * @param task
- * @returns
- */
-export function prepareTaskForIdb(task: Task): IdbTask {
-  const activeMillis: number[] = []
-
-  const { dueDt, carryOverUntil, completeDt } = task
-
-  // TODO ensure that getDateDiff is inclusive
-  const daysBetween = date.getDateDiff(
-    // TODO add comment why we do this
-    completeDt && completeDt <= carryOverUntil ? completeDt : carryOverUntil,
-    dueDt
-  )
-
-  for (let daysToAdd = 0; daysToAdd <= daysBetween; daysToAdd++) {
-    activeMillis.push(date.addToDate(dueDt, { days: daysToAdd }).getTime())
-  }
-
-  return {
-    ...task,
-    $activeMillis: activeMillis,
-  }
-}
-
-const lastWriteRef = ref(new Date())
+const lastWriteRef = ref(DateTime.now())
 /**
  * This needs to be called once we've got IDB access.
  * This reads the lastWriteDt for the tasks store from the IDB and then
@@ -65,7 +85,9 @@ const lastWriteRef = ref(new Date())
 async function initLastWrite() {
   const idb = getIdb()
   const data = await idb.get('lastWrite', 'tasks')
-  lastWriteRef.value = data?.lastWriteDt ?? new Date()
+  lastWriteRef.value = data?.lastWriteDt
+    ? DateTime.fromJSDate(data.lastWriteDt)
+    : DateTime.now()
 }
 
 const insert: TaskRepo['insert'] = async (task: Task) => {
@@ -73,13 +95,13 @@ const insert: TaskRepo['insert'] = async (task: Task) => {
   const tx = idb.transaction(['tasks', 'lastWrite'], 'readwrite')
 
   try {
-    const idbTask = prepareTaskForIdb(task)
+    const idbTask = convertToIdb(task)
     await tx.objectStore('tasks').put(idbTask)
 
-    const lastWriteDt = new Date()
+    const lastWriteDt = DateTime.now()
     await tx.objectStore('lastWrite').put({
       storeName: 'tasks',
-      lastWriteDt,
+      lastWriteDt: lastWriteDt.toJSDate(),
     })
     lastWriteRef.value = lastWriteDt
 
@@ -108,10 +130,10 @@ const remove: TaskRepo['remove'] = async (taskId) => {
     }
     await tx.objectStore('tasks').delete(taskId)
 
-    const lastWriteDt = new Date()
+    const lastWriteDt = DateTime.now()
     await tx.objectStore('lastWrite').put({
       storeName: 'tasks',
-      lastWriteDt,
+      lastWriteDt: lastWriteDt.toJSDate(),
     })
     lastWriteRef.value = lastWriteDt
 
@@ -131,7 +153,6 @@ const remove: TaskRepo['remove'] = async (taskId) => {
 const boot: ServiceBootFn = async ({ app }) => {
   await initLastWrite()
   app.provide(TaskRepoKey, {
-    getDaysWithTasks,
     getTasks,
     insert,
     lastWrite: lastWriteRef,

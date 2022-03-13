@@ -8,7 +8,7 @@
   "videosFolder": "test/cypress/videos",
   "video": true,
   "component": {
-    "componentFolder": "src",
+    "componentFolder": "test/cypress/__tests__",
     "testFiles": "**/*.spec.ts",
     "supportFile": "test/cypress/support/unit.ts"
   }

@@ -1,4 +1,4 @@
-import { date } from 'quasar'
+import { DateTime } from 'luxon'
 import { Ref, computed, ref, reactive } from 'vue'
 
 /**
@@ -8,29 +8,29 @@ import { Ref, computed, ref, reactive } from 'vue'
 export type TransformedCarryOver = 'NO_CARRY_OVER' | 'DEFINITE'
 
 export function useCarryOverInputHelper(
-  carryOver: Ref<Date | null>,
-  dueDt: Ref<Date>
+  carryOver: Ref<DateTime | null>,
+  dueDt: Ref<DateTime>
 ) {
   const dateData = ref(carryOver?.value ?? dueDt.value)
 
-  function clampDate(toEval: Date) {
-    const lowerBound = date.addToDate(dueDt.value, { day: 1 })
-    return toEval < lowerBound ? lowerBound : toEval
+  function clampDate(toEval: DateTime, dueDt: DateTime) {
+    const lowerBound = dueDt.plus({ day: 1 })
+    return DateTime.max(toEval, lowerBound)
   }
 
   const dateModel = computed({
-    get: () => clampDate(dateData.value),
+    get: () => clampDate(dateData.value, dueDt.value).toJSDate(),
     set: (date: Date) => {
-      carryOver.value = dateData.value = clampDate(date)
+      carryOver.value = dateData.value = clampDate(
+        DateTime.fromJSDate(date),
+        dueDt.value
+      )
     },
   })
 
   const radioModel = computed<TransformedCarryOver>({
     get: () => {
-      if (
-        !carryOver.value ||
-        carryOver.value.getTime() === dueDt.value.getTime()
-      ) {
+      if (!carryOver.value || carryOver.value.equals(dueDt.value)) {
         return 'NO_CARRY_OVER'
       } else {
         return 'DEFINITE'
@@ -43,7 +43,7 @@ export function useCarryOverInputHelper(
         return
       }
 
-      carryOver.value = clampDate(dateData.value)
+      carryOver.value = clampDate(dateData.value, dueDt.value)
     },
   })
 

@@ -1,17 +1,19 @@
+import { DateTime } from 'luxon'
+
 export interface EditableTaskAttrs {
   title: string
   notes: string | null
   priority: number
-  dueDt: Date
-  carryOverUntil: Date
+  dueDt: DateTime
+  carryOverUntil: DateTime
 
-  completeDt: Date | null
+  completeDt: DateTime | null
 }
 
 export interface Task extends EditableTaskAttrs {
   id: string
-  createDt: Date
-  lastUpdateDt: Date
+  createDt: DateTime
+  lastUpdateDt: DateTime
 }
 
 export type DraftTaskData = Omit<EditableTaskAttrs, 'completeDt'>

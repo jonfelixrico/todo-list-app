@@ -1,10 +1,11 @@
+import { DateTime } from 'luxon'
 import { useTasksFetcher } from 'src/hooks/task.hooks'
 import { Task } from 'src/typings/task.interface'
 import { computed, Ref } from 'vue'
 
 function doSorting(a: Task, b: Task) {
   // sort from due dt, ascending
-  const dueDtDiff = a.dueDt.getTime() - b.dueDt.getTime()
+  const dueDtDiff = a.dueDt.toMillis() - b.dueDt.toMillis()
   if (!dueDtDiff) {
     return dueDtDiff
   }
@@ -16,10 +17,10 @@ function doSorting(a: Task, b: Task) {
   }
 
   // sort by create dt, ascending
-  return a.createDt.getTime() - b.createDt.getTime()
+  return a.createDt.toMillis() - b.createDt.toMillis()
 }
 
-export function useFilteredTaskList(snapshotDt: Ref<Date>) {
+export function useFilteredTaskList(snapshotDt: Ref<DateTime>) {
   const { tasks, isLoading } = useTasksFetcher(snapshotDt)
 
   return {
