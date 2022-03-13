@@ -36,16 +36,16 @@ function fallbackTaskListNavigation() {
   }
 }
 
-export const TaskListDateNavigatorComposableKey: InjectionKey<TaskListDateNavigatorComposable> =
+export const TaskListDateNavigatorKey: InjectionKey<TaskListDateNavigator> =
   Symbol('task list date navigation')
 
-export interface TaskListDateNavigatorComposable {
+export interface TaskListDateNavigator {
   routeDate: Ref<DateTime>
   setRouteDate(toDate: DateTime): ReturnType<Router['push']>
 }
 
 export function useTaskListDateNavigator() {
-  const abstractComposable = inject(TaskListDateNavigatorComposableKey)
+  const abstractComposable = inject(TaskListDateNavigatorKey)
 
   if (abstractComposable) {
     return abstractComposable
