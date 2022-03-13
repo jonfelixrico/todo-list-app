@@ -16,7 +16,10 @@ const taskTemplate: Omit<Task, 'id' | 'title'> = {
   completeDt: null,
 }
 
-const mockData: Task[] = range(0, 10).map((rangeNo) => {
+/**
+ * The mock tasks that the mock task repo's `getTasks` method will yield.
+ */
+export const mockTasks: Task[] = range(0, 10).map((rangeNo) => {
   return {
     ...taskTemplate,
     id: String(rangeNo),
@@ -26,7 +29,7 @@ const mockData: Task[] = range(0, 10).map((rangeNo) => {
 
 export function mockTaskRepo(): TaskRepo {
   return {
-    getTasks: cy.stub().resolves(mockData),
+    getTasks: cy.stub().resolves(mockTasks),
     insert: cy.stub(),
     lastWrite: ref(DateTime.now()),
     remove: cy.stub(),
