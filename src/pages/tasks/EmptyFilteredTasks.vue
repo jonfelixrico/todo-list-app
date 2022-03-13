@@ -13,8 +13,8 @@
 <script lang="ts">
 import { useTaskRepo } from 'src/services/abstracts/task-repo.service'
 import { computed, defineComponent, reactive, Ref, ref, watch } from 'vue'
-import { useTaskListDateNavigation } from './task-list-date-navigation'
 import { DateTime } from 'luxon'
+import { useTaskListDateNavigator } from 'src/composables/task-list-date-navigator.composable'
 
 interface YearMonthModel {
   year: number
@@ -95,7 +95,7 @@ function useDateHarness() {
 
 export default defineComponent({
   setup() {
-    const { setRouteDate } = useTaskListDateNavigation()
+    const { setRouteDate } = useTaskListDateNavigator()
 
     const { dateRange, ...dateHarness } = useDateHarness()
     const events = useEventsFetcher(dateRange)
