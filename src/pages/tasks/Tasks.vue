@@ -29,10 +29,10 @@ import { defineComponent, ref } from 'vue'
 import CTaskCreateDialog, {
   TaskDraft,
 } from 'src/components/dialogs/CTaskCreateDialog.vue'
-import { useTaskListDateNavigation } from './task-list-date-navigation'
 import { useCreateTask } from 'src/hooks/task.hooks'
 import { DateTime } from 'luxon'
 import { DraftTaskData } from 'src/typings/task.interface'
+import { useTaskListDateNavigator } from 'src/composables/task-list-date-navigator.composable'
 
 function useHeightObserverUtils() {
   const heightRef = ref(0)
@@ -75,7 +75,7 @@ export default defineComponent({
   setup() {
     return {
       ...useTaskCreate(),
-      ...useTaskListDateNavigation(),
+      ...useTaskListDateNavigator(),
     }
   },
 })
