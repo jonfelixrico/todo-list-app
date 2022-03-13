@@ -1,15 +1,11 @@
 import { DateTime } from 'luxon'
 import { date } from 'quasar'
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, inject, InjectionKey, Ref } from 'vue'
+import { useRouter, Router } from 'vue-router'
 
 const DATE_FORMAT = 'yyyy-MM-dd'
 
-/**
- * Utils for manipulating the `date` query param.
- * Intended for use with the `task` named route and its subroutes.
- */
-export function useTaskListDateNavigation() {
+function fallbackTaskListNavigation() {
   const router = useRouter()
 
   const routeDate = computed(() => {
@@ -38,4 +34,22 @@ export function useTaskListDateNavigation() {
      */
     setRouteDate,
   }
+}
+
+export const TaskListDateNavigatorKey: InjectionKey<TaskListDateNavigator> =
+  Symbol('task list date navigation')
+
+export interface TaskListDateNavigator {
+  routeDate: Ref<DateTime>
+  setRouteDate(toDate: DateTime): ReturnType<Router['push']>
+}
+
+export function useTaskListDateNavigator() {
+  const abstractComposable = inject(TaskListDateNavigatorKey)
+
+  if (abstractComposable) {
+    return abstractComposable
+  }
+
+  return fallbackTaskListNavigation()
 }

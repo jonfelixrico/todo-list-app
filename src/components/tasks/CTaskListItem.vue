@@ -28,7 +28,7 @@
             <div
               class="text-caption text-grey-8"
               v-if="isCarriedOver"
-              data-cy="completed"
+              data-cy="carried-over"
             >
               {{ t('tasks.carriedOverFrom', { date: formatDate(task.dueDt) }) }}
             </div>
@@ -38,7 +38,7 @@
             class="row items-center q-gutter-x-sm"
             v-if="isCarriedOver || task.priority"
           >
-            <q-badge v-if="isCarriedOver && daysLapsed" data-cy="carry-over">
+            <q-badge v-if="isCarriedOver && daysLapsed" data-cy="days-lapsed">
               {{ t('tasks.daysLapsed', { count: daysLapsed }, daysLapsed) }}
             </q-badge>
 

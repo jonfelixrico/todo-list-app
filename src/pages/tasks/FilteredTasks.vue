@@ -10,8 +10,12 @@
         color="white"
         text-color="black"
         no-caps
+        data-cy="prev"
       />
-      <h2 class="text-h5 q-my-none">{{ formatDate(routeDate) }}</h2>
+
+      <h2 class="text-h5 q-my-none" data-cy="current-date">
+        {{ formatDate(routeDate) }}
+      </h2>
 
       <!-- go forward 1 day -->
       <q-btn
@@ -22,6 +26,7 @@
         text-color="black"
         icon-right="arrow_right"
         no-caps
+        data-cy="next"
       />
     </q-toolbar>
     <div class="col" v-if="tasks.length">
@@ -40,23 +45,23 @@
 
 <script lang="ts">
 import { date } from 'quasar'
-import { useFilteredTaskList } from 'src/pages/tasks/task-list-helper'
-import { computed, ComputedRef, defineComponent } from 'vue'
-import { useTaskListDateNavigation } from './task-list-date-navigation'
+import { useFilteredTaskList } from 'src/composables/task-list-helper.composable'
+import { computed, defineComponent } from 'vue'
 import { useRemoveTask } from 'src/hooks/task.hooks'
 import { useI18n } from 'vue-i18n'
 import { Task } from 'src/typings/task.interface'
 import { useCustomQuasarDialog } from 'src/hooks/custom-quasar.hooks'
 import CTaskList from 'src/components/tasks/CTaskList.vue'
 import { DateTime } from 'luxon'
+import { useTaskListDateNavigator } from 'src/composables/task-list-date-navigator.composable'
 
 function useNavigation() {
-  const dateNav = useTaskListDateNavigation()
+  const dateNav = useTaskListDateNavigator()
   /*
    * Force-typing this as Date since we assume that beforeRouteEnter will prevent `routeDate`
    * from having a value of null, only valid dates.
    */
-  const routeDate = dateNav.routeDate as ComputedRef<DateTime>
+  const routeDate = computed(() => dateNav.routeDate.value ?? DateTime.now())
 
   const adjacentDates = computed(() => {
     return {
