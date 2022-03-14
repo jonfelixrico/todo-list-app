@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable class="q-pa-md">
+  <q-item class="q-pa-md">
     <div class="row full-width q-gutter-x-sm">
       <div class="col column justify-center q-gutter-y-sm">
         <div class="row">
@@ -34,10 +34,17 @@
             </div>
           </div>
 
-          <div
-            class="row items-center q-gutter-x-sm"
-            v-if="isCarriedOver || task.priority"
-          >
+          <div class="row items-center q-gutter-x-sm">
+            <q-btn
+              color="primary"
+              no-caps
+              dense
+              unelevated
+              :label="t('tasks.showDetails')"
+              @click="emitClick"
+              data-cy="show-details-btn"
+            />
+
             <q-badge v-if="isCarriedOver && daysLapsed" data-cy="days-lapsed">
               {{ t('tasks.daysLapsed', { count: daysLapsed }, daysLapsed) }}
             </q-badge>
@@ -53,21 +60,6 @@
           v-if="task.notes"
           v-text="task.notes"
           data-cy="notes"
-        />
-      </div>
-
-      <q-separator vertical />
-
-      <div>
-        <q-btn
-          color="primary"
-          no-caps
-          dense
-          flat
-          round
-          icon="info"
-          @click="$emit('click')"
-          data-cy="button"
         />
       </div>
     </div>
@@ -93,7 +85,7 @@ export default defineComponent({
 
   emits: ['click'],
 
-  setup(props) {
+  setup(props, { emit }) {
     const { t } = useI18n()
 
     const daysLapsed = computed<null | number>(() => {
@@ -113,10 +105,15 @@ export default defineComponent({
       return date.toLocaleString(DateTime.DATE_MED)
     }
 
+    function emitClick() {
+      emit('click', { ...props.task })
+    }
+
     return {
       t,
       daysLapsed,
       formatDate,
+      emitClick,
     }
   },
 })

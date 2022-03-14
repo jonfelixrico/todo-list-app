@@ -124,7 +124,7 @@ describe('CTaskListItem', () => {
     cy.dataCy('notes').should('exist').and('contain.text', notes)
   })
 
-  it('should emit task if button is clicked', () => {
+  it('should emit task if show details is clicked', () => {
     mount(CTaskListItem, {
       global: {
         plugins: [createI18n()],
@@ -135,10 +135,12 @@ describe('CTaskListItem', () => {
       },
     })
 
-    cy.dataCy('button')
+    cy.dataCy('show-details-btn')
       .click()
       .should(() => {
-        expect(Cypress.vueWrapper.emitted('click')).to.have.lengthOf(1)
+        const emitted = Cypress.vueWrapper.emitted<[Task | undefined]>('click')
+        const emission = emitted?.[0]?.[0]
+        expect(emission?.id).equals(task.id)
       })
   })
 })
