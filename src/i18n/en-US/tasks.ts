@@ -23,4 +23,5 @@ export default {
   completedOn: 'Completed on {date}',
   carriedOverFrom: 'Carried over from {date}',
   priority: 'Priority {priorityRating}',
+  showDetails: 'Show Details',
 }
