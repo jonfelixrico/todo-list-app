@@ -41,8 +41,8 @@
               dense
               unelevated
               :label="t('tasks.showDetails')"
-              @click="$emit('click')"
-              data-cy="button"
+              @click="emitClick"
+              data-cy="show-details-btn"
             />
 
             <q-badge v-if="isCarriedOver && daysLapsed" data-cy="days-lapsed">
@@ -85,7 +85,7 @@ export default defineComponent({
 
   emits: ['click'],
 
-  setup(props) {
+  setup(props, { emit }) {
     const { t } = useI18n()
 
     const daysLapsed = computed<null | number>(() => {
@@ -105,10 +105,15 @@ export default defineComponent({
       return date.toLocaleString(DateTime.DATE_MED)
     }
 
+    function emitClick() {
+      emit('click', { ...props.task })
+    }
+
     return {
       t,
       daysLapsed,
       formatDate,
+      emitClick,
     }
   },
 })
