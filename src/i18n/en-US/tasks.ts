@@ -1,3 +1,5 @@
+import form from './task-form'
+
 export default {
   dialogs: {
     deleteTaskConfirm: {
@@ -18,6 +20,8 @@ export default {
         'Something wrong happened while deleting task "{title}": {errorMessage}',
     },
   },
+
+  form,
 
   daysLapsed: '1 day lapsed | {count} days lapsed',
   completedOn: 'Completed on {date}',
