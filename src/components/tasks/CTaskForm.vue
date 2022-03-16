@@ -1,151 +1,117 @@
 <template>
-  <q-form @submit="onSubmit" autofocus>
-    <q-dialog ref="dialogRef" @hide="onDialogHide" :persistent="persistent">
-      <q-card class="q-dialog-plugin">
-        <q-card-section>
-          <h6 class="text-h6 q-my-none">{{ t('task.form.title') }}</h6>
-          <div class="text-caption text-grey-6">
-            {{
-              t('task.form.dueDtLbl', {
-                dueDt: formattedDueDt,
-              })
-            }}
-          </div>
-        </q-card-section>
-        <q-separator />
-        <q-card-section class="q-gutter-y-lg">
-          <!-- Title -->
-          <div class="q-gutter-y-sm">
-            <!-- TODO do proper a11y support for labels -->
-            <div class="text-weight-bold">
-              {{ t('task.form.inputs.title.label') }}
-            </div>
-            <q-input
-              v-model="task.title"
-              type="textarea"
-              outlined
-              autogrow
-              dense
-              :hint="t('task.form.inputs.title.hint')"
-              :rules="[(val) => !!val || t('task.form.inputs.title.error')]"
-            />
-          </div>
+  <q-form @submit="$emit('submit', task)" autofocus ref="formRef">
+    <!-- Title -->
+    <div class="q-gutter-y-sm">
+      <!-- TODO do proper a11y support for labels -->
+      <div class="text-weight-bold">
+        {{ t('task.form.inputs.title.label') }}
+      </div>
+      <q-input
+        v-model="task.title"
+        type="textarea"
+        outlined
+        autogrow
+        dense
+        :hint="t('task.form.inputs.title.hint')"
+        :rules="[(val) => !!val || t('task.form.inputs.title.error')]"
+      />
+    </div>
 
-          <!-- Notes -->
-          <div class="q-gutter-y-sm">
-            <!-- TODO do proper a11y support for labels -->
-            <div class="text-weight-bold">
-              {{ t('task.form.inputs.notes.label') }}
-            </div>
-            <q-input
-              v-model="task.notes"
-              type="textarea"
-              outlined
-              autogrow
-              dense
-              class="notes-input"
-              :hint="t('task.form.inputs.notes.hint')"
-            />
-          </div>
+    <!-- Notes -->
+    <div class="q-gutter-y-sm">
+      <!-- TODO do proper a11y support for labels -->
+      <div class="text-weight-bold">
+        {{ t('task.form.inputs.notes.label') }}
+      </div>
+      <q-input
+        v-model="task.notes"
+        type="textarea"
+        outlined
+        autogrow
+        dense
+        class="notes-input"
+        :hint="t('task.form.inputs.notes.hint')"
+      />
+    </div>
 
-          <!-- Priority -->
-          <div class="q-gutter-y-sm">
-            <!-- TODO do proper a11y support for labels -->
-            <div class="text-weight-bold">
-              {{ t('task.form.inputs.priority.label') }}
-            </div>
-            <div class="row items-start q-gutter-x-sm">
-              <q-checkbox
-                :label="t('task.form.inputs.hasPriority.label')"
-                v-model="priority.checkboxModel"
-              />
-              <q-input
-                :disable="!priority.checkboxModel"
-                v-model.number="priority.inputModel"
-                type="number"
-                outlined
-                min="1"
-                max="10"
-                step="0.1"
-                dense
-                :hint="t('task.form.inputs.priority.hint')"
-                class="col"
-              />
-            </div>
-          </div>
+    <!-- Priority -->
+    <div class="q-gutter-y-sm">
+      <!-- TODO do proper a11y support for labels -->
+      <div class="text-weight-bold">
+        {{ t('task.form.inputs.priority.label') }}
+      </div>
+      <div class="row items-start q-gutter-x-sm">
+        <q-checkbox
+          :label="t('task.form.inputs.hasPriority.label')"
+          v-model="priority.checkboxModel"
+        />
+        <q-input
+          :disable="!priority.checkboxModel"
+          v-model.number="priority.inputModel"
+          type="number"
+          outlined
+          min="1"
+          max="10"
+          step="0.1"
+          dense
+          :hint="t('task.form.inputs.priority.hint')"
+          class="col"
+        />
+      </div>
+    </div>
 
-          <!-- Carry-over -->
-          <div class="q-gutter-y-sm">
-            <!-- TODO do proper a11y support for labels -->
-            <div class="text-weight-bold">
-              {{ t('task.form.inputs.carryOver.label') }}
-            </div>
-            <div class="column">
-              <!-- No carry over -->
-              <q-radio
-                v-model="carryOver.radioModel"
-                val="NO_CARRY_OVER"
-                :label="t('task.form.inputs.carryOver.options.no')"
-              />
+    <!-- Carry-over -->
+    <div class="q-gutter-y-sm">
+      <!-- TODO do proper a11y support for labels -->
+      <div class="text-weight-bold">
+        {{ t('task.form.inputs.carryOver.label') }}
+      </div>
+      <div class="column">
+        <!-- No carry over -->
+        <q-radio
+          v-model="carryOver.radioModel"
+          val="NO_CARRY_OVER"
+          :label="t('task.form.inputs.carryOver.options.no')"
+        />
 
-              <!-- Carry over until date (if not yet completed) -->
-              <q-radio v-model="carryOver.radioModel" val="DEFINITE">
-                <!--
+        <!-- Carry over until date (if not yet completed) -->
+        <q-radio v-model="carryOver.radioModel" val="DEFINITE">
+          <!--
               The use of `preformatted` here is requried for HTML to honor the space between
               "...over until {date}"
             -->
-                <i18n-t
-                  keypath="task.form.inputs.carryOver.options.untilDate"
-                  tag="div"
-                  class="row items-center preformatted"
-                  scope="global"
-                >
-                  <template #date>
-                    <CDateInput
-                      outlined
-                      dense
-                      v-model="carryOver.dateModel"
-                      :disable="carryOver.radioModel !== 'DEFINITE'"
-                      :bottom-slots="false"
-                      hide-clear
-                    />
-                  </template>
-                </i18n-t>
-              </q-radio>
-            </div>
-          </div>
-        </q-card-section>
-        <q-separator />
-        <q-card-actions align="right">
-          <q-btn
-            color="primary"
-            noCaps
-            unelevated
-            :label="t('task.form.buttons.create')"
-            type="submit"
-          />
-
-          <q-btn
-            noCaps
-            outline
-            :label="t('task.form.buttons.discard')"
-            @click="onDialogCancel"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+          <i18n-t
+            keypath="task.form.inputs.carryOver.options.untilDate"
+            tag="div"
+            class="row items-center preformatted"
+            scope="global"
+          >
+            <template #date>
+              <CDateInput
+                outlined
+                dense
+                v-model="carryOver.dateModel"
+                :disable="carryOver.radioModel !== 'DEFINITE'"
+                :bottom-slots="false"
+                hide-clear
+              />
+            </template>
+          </i18n-t>
+        </q-radio>
+      </div>
+    </div>
   </q-form>
 </template>
 
 <script lang="ts">
-import { useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
-import { computed, defineComponent, reactive, toRef, PropType } from 'vue'
+import { computed, defineComponent, reactive, toRef, PropType, ref } from 'vue'
 import { DraftTaskData } from 'src/typings/task.interface'
 import { useCarryOverInputHelper } from 'components/dialogs/carry-over-input-helper'
 import { usePriorityInputHelper } from 'components/dialogs/priority-input-helper'
 import CDateInput from 'components/common/CDateInput.vue'
 import { DateTime } from 'luxon'
+import { QForm } from 'quasar'
 
 interface TaskDraftModel {
   title: string | null
@@ -172,14 +138,11 @@ function createTaskData(dueDt: DateTime, initialData?: TaskCreateInitialData) {
 }
 
 export default defineComponent({
-  emits: [...useDialogPluginComponent.emits],
-
   components: {
     CDateInput,
   },
 
   props: {
-    persistent: Boolean,
     dueDt: {
       type: DateTime,
       required: true,
@@ -188,10 +151,10 @@ export default defineComponent({
     initialData: Object as PropType<TaskCreateInitialData>,
   },
 
+  emits: ['submit'],
+
   setup(props) {
     const { t } = useI18n()
-    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
-      useDialogPluginComponent()
 
     const task = createTaskData(props.dueDt, props.initialData)
 
@@ -199,11 +162,17 @@ export default defineComponent({
       props.dueDt.toLocaleString(DateTime.DATE_MED)
     )
 
+    const formRef = ref<QForm | null>(null)
+
+    function submit() {
+      if (!formRef.value) {
+        return
+      }
+
+      formRef.value.submit()
+    }
+
     return {
-      dialogRef,
-      onDialogHide,
-      onSubmit: () => onDialogOK(task),
-      onDialogCancel,
       t,
       task,
       formattedDueDt,
@@ -212,6 +181,8 @@ export default defineComponent({
         toRef(props, 'dueDt')
       ),
       priority: usePriorityInputHelper(toRef(task, 'priority')),
+      submit,
+      formRef,
     }
   },
 })
