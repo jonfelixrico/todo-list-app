@@ -80,7 +80,7 @@ import { useI18n } from 'vue-i18n'
 import { computed, defineComponent, PropType } from 'vue'
 import { DateTime } from 'luxon'
 
-interface TaskDraftModel {
+export interface TaskFieldValues {
   title?: string
   notes?: string
   priority?: number
@@ -94,7 +94,7 @@ export default defineComponent({
       required: true,
     },
 
-    modelValue: Object as PropType<TaskDraftModel>,
+    modelValue: Object as PropType<TaskFieldValues>,
   },
 
   emits: ['updated:modelValue'],
@@ -102,9 +102,9 @@ export default defineComponent({
   setup(props, { emit }) {
     const { t } = useI18n()
 
-    function emitValue<K extends keyof TaskDraftModel>(
+    function emitValue<K extends keyof TaskFieldValues>(
       key: K,
-      value: TaskDraftModel[K]
+      value: TaskFieldValues[K]
     ) {
       emit('updated:modelValue', {
         ...props.modelValue,
