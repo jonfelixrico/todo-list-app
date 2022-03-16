@@ -5,6 +5,7 @@
     <div class="text-weight-bold">
       {{ t('task.form.inputs.title.label') }}
     </div>
+
     <q-input
       v-model="title"
       type="textarea"
@@ -22,6 +23,7 @@
     <div class="text-weight-bold">
       {{ t('task.form.inputs.notes.label') }}
     </div>
+
     <q-input
       v-model="notes"
       type="textarea"
@@ -35,7 +37,11 @@
 
   <!-- Priority -->
   <div class="q-gutter-y-sm">
-    <!-- TODO add label and use proper layout -->
+    <!-- TODO do proper a11y support for labels -->
+    <div class="text-weight-bold">
+      {{ t('task.form.inputs.priority.label') }}
+    </div>
+
     <q-input
       v-model.number="priority"
       type="number"
@@ -51,7 +57,11 @@
 
   <!-- Carry-over -->
   <div class="q-gutter-y-sm">
-    <!-- TODO add label and use proper layout -->
+    <!-- TODO do proper a11y support for labels -->
+    <div class="text-weight-bold">
+      {{ t('task.form.inputs.carryOverDays.label') }}
+    </div>
+
     <q-input
       v-model.number="carryOverDays"
       type="number"
