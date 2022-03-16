@@ -10,24 +10,14 @@ export default {
     hint: 'Optional. Place additional details of your task here',
   },
 
-  hasPriority: {
-    label: 'Has priority?',
-  },
-
   priority: {
     label: 'Priority',
-    hint: '1 for least priority, 10 for most priority',
+    hint: '0 for no priority, 10 for top priority',
   },
 
   carryOver: {
-    label: 'Carry-over',
-    options: {
-      no: 'Do not carry over',
-      untilDate: 'Carry over until {date}',
-    },
-
-    date: {
-      ariaLabel: 'Carry over until...',
-    },
+    label: 'Carry-over days',
+    hint: 'How many days to show the task even if the due date has lapsed',
+    carriedOverUntil: 'Carried-over until {date}',
   },
 }
