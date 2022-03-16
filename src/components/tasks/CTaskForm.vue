@@ -3,10 +3,10 @@
     <q-dialog ref="dialogRef" @hide="onDialogHide" :persistent="persistent">
       <q-card class="q-dialog-plugin">
         <q-card-section>
-          <h6 class="text-h6 q-my-none">{{ t('dialogs.taskCreate.title') }}</h6>
+          <h6 class="text-h6 q-my-none">{{ t('task.form.title') }}</h6>
           <div class="text-caption text-grey-6">
             {{
-              t('dialogs.taskCreate.dueDtLbl', {
+              t('task.form.dueDtLbl', {
                 dueDt: formattedDueDt,
               })
             }}
@@ -18,7 +18,7 @@
           <div class="q-gutter-y-sm">
             <!-- TODO do proper a11y support for labels -->
             <div class="text-weight-bold">
-              {{ t('dialogs.taskCreate.inputs.title.label') }}
+              {{ t('task.form.inputs.title.label') }}
             </div>
             <q-input
               v-model="task.title"
@@ -26,10 +26,8 @@
               outlined
               autogrow
               dense
-              :hint="t('dialogs.taskCreate.inputs.title.hint')"
-              :rules="[
-                (val) => !!val || t('dialogs.taskCreate.inputs.title.error'),
-              ]"
+              :hint="t('task.form.inputs.title.hint')"
+              :rules="[(val) => !!val || t('task.form.inputs.title.error')]"
             />
           </div>
 
@@ -37,7 +35,7 @@
           <div class="q-gutter-y-sm">
             <!-- TODO do proper a11y support for labels -->
             <div class="text-weight-bold">
-              {{ t('dialogs.taskCreate.inputs.notes.label') }}
+              {{ t('task.form.inputs.notes.label') }}
             </div>
             <q-input
               v-model="task.notes"
@@ -46,7 +44,7 @@
               autogrow
               dense
               class="notes-input"
-              :hint="t('dialogs.taskCreate.inputs.notes.hint')"
+              :hint="t('task.form.inputs.notes.hint')"
             />
           </div>
 
@@ -54,11 +52,11 @@
           <div class="q-gutter-y-sm">
             <!-- TODO do proper a11y support for labels -->
             <div class="text-weight-bold">
-              {{ t('dialogs.taskCreate.inputs.priority.label') }}
+              {{ t('task.form.inputs.priority.label') }}
             </div>
             <div class="row items-start q-gutter-x-sm">
               <q-checkbox
-                :label="t('dialogs.taskCreate.inputs.hasPriority.label')"
+                :label="t('task.form.inputs.hasPriority.label')"
                 v-model="priority.checkboxModel"
               />
               <q-input
@@ -70,7 +68,7 @@
                 max="10"
                 step="0.1"
                 dense
-                :hint="t('dialogs.taskCreate.inputs.priority.hint')"
+                :hint="t('task.form.inputs.priority.hint')"
                 class="col"
               />
             </div>
@@ -80,14 +78,14 @@
           <div class="q-gutter-y-sm">
             <!-- TODO do proper a11y support for labels -->
             <div class="text-weight-bold">
-              {{ t('dialogs.taskCreate.inputs.carryOver.label') }}
+              {{ t('task.form.inputs.carryOver.label') }}
             </div>
             <div class="column">
               <!-- No carry over -->
               <q-radio
                 v-model="carryOver.radioModel"
                 val="NO_CARRY_OVER"
-                :label="t('dialogs.taskCreate.inputs.carryOver.options.no')"
+                :label="t('task.form.inputs.carryOver.options.no')"
               />
 
               <!-- Carry over until date (if not yet completed) -->
@@ -97,7 +95,7 @@
               "...over until {date}"
             -->
                 <i18n-t
-                  keypath="dialogs.taskCreate.inputs.carryOver.options.untilDate"
+                  keypath="task.form.inputs.carryOver.options.untilDate"
                   tag="div"
                   class="row items-center preformatted"
                   scope="global"
@@ -123,14 +121,14 @@
             color="primary"
             noCaps
             unelevated
-            :label="t('dialogs.taskCreate.buttons.create')"
+            :label="t('task.form.buttons.create')"
             type="submit"
           />
 
           <q-btn
             noCaps
             outline
-            :label="t('dialogs.taskCreate.buttons.discard')"
+            :label="t('task.form.buttons.discard')"
             @click="onDialogCancel"
           />
         </q-card-actions>
