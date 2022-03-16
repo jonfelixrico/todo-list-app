@@ -102,7 +102,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const { t } = useI18n()
 
-    function emitValue<K extends keyof TaskFieldValues>(
+    function emitHelper<K extends keyof TaskFieldValues>(
       key: K,
       value: TaskFieldValues[K]
     ) {
@@ -115,28 +115,28 @@ export default defineComponent({
     const title = computed({
       get: () => props.modelValue?.title,
       set: (title) => {
-        emitValue('title', title)
+        emitHelper('title', title)
       },
     })
 
     const notes = computed({
       get: () => props.modelValue?.notes,
       set: (notes) => {
-        emitValue('notes', notes)
+        emitHelper('notes', notes)
       },
     })
 
     const priority = computed({
       get: () => props.modelValue?.priority ?? 0,
       set: (priority) => {
-        emitValue('priority', priority)
+        emitHelper('priority', priority)
       },
     })
 
     const carryOverDays = computed({
       get: () => props.modelValue?.carryOverDays ?? 0,
       set: (carryOverDays) => {
-        emitValue('carryOverDays', carryOverDays)
+        emitHelper('carryOverDays', carryOverDays)
       },
     })
 
