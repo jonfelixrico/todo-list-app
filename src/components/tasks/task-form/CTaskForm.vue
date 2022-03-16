@@ -29,7 +29,6 @@
       outlined
       autogrow
       dense
-      class="notes-input"
       :hint="t('task.form.inputs.notes.hint')"
       id="notes"
     />
@@ -153,7 +152,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.notes-input ::v-deep(.q-field__control-container) {
+#notes ::v-deep(.q-field__control-container) {
   min-height: 10vh;
 }
 </style>
