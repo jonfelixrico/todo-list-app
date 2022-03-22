@@ -1,6 +1,6 @@
 <template>
-  <q-form @submit="onSubmit" autofocus>
-    <q-card>
+  <q-form @submit="onSubmit" autofocus class="no-pointer-events">
+    <q-card class="all-pointer-events">
       <q-card-section>
         <div>
           <h1 class="q-my-none text-h6">
