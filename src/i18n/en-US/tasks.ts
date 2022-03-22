@@ -19,6 +19,12 @@ export default {
       message:
         'Something wrong happened while deleting task "{title}": {errorMessage}',
     },
+
+    create: {
+      title: 'Create Task',
+      submit: 'Submit',
+      discard: 'Discard',
+    },
   },
 
   form,
