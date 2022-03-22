@@ -30,9 +30,9 @@ import { useCreateTask } from 'src/hooks/task.hooks'
 import { DateTime } from 'luxon'
 import { DraftTaskData } from 'src/typings/task.interface'
 import { useTaskListDateNavigator } from 'src/composables/task-list-date-navigator.composable'
-import CTaskCreateDialogV2, {
+import CTaskCreateDialog, {
   DraftTask,
-} from 'src/components/dialogs/CTaskCreateDialogV2.vue'
+} from 'src/components/dialogs/CTaskCreateDialog.vue'
 
 function useHeightObserverUtils() {
   const heightRef = ref(0)
@@ -65,7 +65,7 @@ function useTaskCreate() {
   const onWriteBtnClick = () => {
     const dueDt = DateTime.now().startOf('day')
     $q.dialog({
-      component: CTaskCreateDialogV2,
+      component: CTaskCreateDialog,
       componentProps: {
         dueDt,
       },
