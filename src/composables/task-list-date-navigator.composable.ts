@@ -5,7 +5,7 @@ import { useRouter, Router } from 'vue-router'
 
 const DATE_FORMAT = 'yyyy-MM-dd'
 
-function fallbackTaskListNavigation() {
+function fallbackTaskListNavigation(): TaskListDateNavigator {
   const router = useRouter()
 
   const routeDate = computed(() => {
@@ -40,16 +40,10 @@ export const TaskListDateNavigatorKey: InjectionKey<TaskListDateNavigator> =
   Symbol('task list date navigation')
 
 export interface TaskListDateNavigator {
-  routeDate: Ref<DateTime>
+  routeDate: Ref<DateTime | null>
   setRouteDate(toDate: DateTime): ReturnType<Router['push']>
 }
 
 export function useTaskListDateNavigator() {
-  const abstractComposable = inject(TaskListDateNavigatorKey)
-
-  if (abstractComposable) {
-    return abstractComposable
-  }
-
-  return fallbackTaskListNavigation()
+  return inject(TaskListDateNavigatorKey, fallbackTaskListNavigation, true)
 }
