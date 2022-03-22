@@ -2,7 +2,7 @@
   <!-- Title -->
   <div class="q-gutter-y-sm">
     <label for="title" class="text-weight-bold">
-      {{ t('task.form.inputs.title.label') }}
+      {{ t('tasks.form.title.label') }}
     </label>
 
     <q-input
@@ -11,8 +11,8 @@
       outlined
       autogrow
       dense
-      :hint="t('task.form.inputs.title.hint')"
-      :rules="[(val) => !!val || t('task.form.inputs.title.error')]"
+      :hint="t('tasks.form.title.hint')"
+      :rules="[(val) => !!val || t('tasks.form.title.error')]"
       id="title"
     />
   </div>
@@ -20,7 +20,7 @@
   <!-- Notes -->
   <div class="q-gutter-y-sm">
     <label for="notes" class="text-weight-bold">
-      {{ t('task.form.inputs.notes.label') }}
+      {{ t('tasks.form.notes.label') }}
     </label>
 
     <q-input
@@ -29,7 +29,7 @@
       outlined
       autogrow
       dense
-      :hint="t('task.form.inputs.notes.hint')"
+      :hint="t('tasks.form.notes.hint')"
       id="notes"
     />
   </div>
@@ -37,7 +37,7 @@
   <!-- Priority -->
   <div class="q-gutter-y-sm">
     <label for="priority" class="text-weight-bold">
-      {{ t('task.form.inputs.priority.label') }}
+      {{ t('tasks.form.priority.label') }}
     </label>
 
     <q-input
@@ -48,7 +48,7 @@
       max="10"
       step="0.1"
       dense
-      :hint="t('task.form.inputs.priority.hint')"
+      :hint="t('tasks.form.priority.hint')"
       class="col"
       id="priority"
     />
@@ -57,7 +57,7 @@
   <!-- Carry-over -->
   <div class="q-gutter-y-sm">
     <label for="carryOverDays" class="text-weight-bold">
-      {{ t('task.form.inputs.carryOverDays.label') }}
+      {{ t('tasks.form.carryOver.label') }}
     </label>
 
     <q-input
@@ -68,7 +68,7 @@
       max="31"
       step="1"
       dense
-      :hint="t('task.form.inputs.carryOverDays.hint')"
+      :hint="t('tasks.form.carryOver.hint')"
       class="col"
       id="carryOverDays"
     />
