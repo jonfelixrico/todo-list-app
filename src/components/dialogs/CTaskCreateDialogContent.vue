@@ -41,7 +41,7 @@
 import { useI18n } from 'vue-i18n'
 import { defineComponent, reactive } from 'vue'
 import { DateTime } from 'luxon'
-import CTaskFields from 'src/components/tasks/CTaskFields.vue'
+import CTaskFields from 'src/components/dialogs/CTaskFields.vue'
 
 export interface DraftTask {
   title: string
