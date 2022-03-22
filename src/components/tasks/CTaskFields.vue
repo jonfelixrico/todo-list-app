@@ -44,7 +44,7 @@
       v-model.number="priorityModel"
       type="number"
       outlined
-      min="1"
+      min="0"
       max="10"
       step="0.1"
       dense
