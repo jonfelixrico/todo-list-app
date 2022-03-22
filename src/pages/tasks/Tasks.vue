@@ -26,13 +26,13 @@
 <script lang="ts">
 import { useQuasar } from 'quasar'
 import { defineComponent, ref } from 'vue'
-import CTaskCreateDialog, {
-  TaskDraft,
-} from 'src/components/dialogs/CTaskCreateDialog.vue'
 import { useCreateTask } from 'src/hooks/task.hooks'
 import { DateTime } from 'luxon'
 import { DraftTaskData } from 'src/typings/task.interface'
 import { useTaskListDateNavigator } from 'src/composables/task-list-date-navigator.composable'
+import CTaskCreateDialogV2, {
+  DraftTask,
+} from 'src/components/dialogs/CTaskCreateDialogV2.vue'
 
 function useHeightObserverUtils() {
   const heightRef = ref(0)
@@ -50,20 +50,26 @@ function useTaskCreate() {
   const $q = useQuasar()
   const createTask = useCreateTask()
 
-  const doCreate = async (task: TaskDraft, dueDt: DateTime) => {
-    const { id } = await createTask({ dueDt, ...task } as DraftTaskData)
+  const doCreate = async (
+    { carryOverDays, ...task }: DraftTask,
+    dueDt: DateTime
+  ) => {
+    const { id } = await createTask({
+      dueDt,
+      ...task,
+      carryOverUntil: dueDt.plus({ day: carryOverDays as number }), // TS seems to see `carryOverDays` as `any`...
+    } as DraftTaskData)
     console.debug('Created task %s.', id)
   }
 
   const onWriteBtnClick = () => {
     const dueDt = DateTime.now().startOf('day')
     $q.dialog({
-      component: CTaskCreateDialog,
+      component: CTaskCreateDialogV2,
       componentProps: {
-        persistent: true,
         dueDt,
       },
-    }).onOk((task: TaskDraft) => {
+    }).onOk((task: DraftTask) => {
       void doCreate(task, dueDt)
     })
   }
