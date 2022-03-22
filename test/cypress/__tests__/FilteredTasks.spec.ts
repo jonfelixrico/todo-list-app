@@ -70,7 +70,7 @@ describe('FilteredTasks', () => {
   it('should display the current date', () => {
     cy.dataCy('current-date').should(
       'contain.text',
-      navigator.routeDate.value.toLocaleString(DateTime.DATE_MED)
+      navigator.routeDate.value?.toLocaleString(DateTime.DATE_MED)
     )
   })
 })
