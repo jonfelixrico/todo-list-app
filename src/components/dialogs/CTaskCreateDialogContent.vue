@@ -39,7 +39,7 @@ import { defineComponent, reactive } from 'vue'
 import { DateTime } from 'luxon'
 import CTaskFields from 'src/components/tasks/CTaskFields.vue'
 
-interface DraftTask {
+export interface DraftTask {
   title: string
   notes: string
   priority: number

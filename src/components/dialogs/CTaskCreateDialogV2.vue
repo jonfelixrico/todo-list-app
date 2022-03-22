@@ -14,6 +14,8 @@ import { defineComponent } from 'vue'
 import { DateTime } from 'luxon'
 import CTaskCreateDialogContent from 'src/components/dialogs/CTaskCreateDialogContent.vue'
 
+export { DraftTask } from 'src/components/dialogs/CTaskCreateDialogContent.vue'
+
 export default defineComponent({
   emits: [...useDialogPluginComponent.emits],
 
