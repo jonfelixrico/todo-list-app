@@ -6,7 +6,7 @@
     </label>
 
     <q-input
-      v-model="title"
+      v-model="titleModel"
       type="textarea"
       outlined
       autogrow
@@ -24,7 +24,7 @@
     </label>
 
     <q-input
-      v-model="notes"
+      v-model="notesModel"
       type="textarea"
       outlined
       autogrow
@@ -41,7 +41,7 @@
     </label>
 
     <q-input
-      v-model.number="priority"
+      v-model.number="priorityModel"
       type="number"
       outlined
       min="1"
@@ -61,7 +61,7 @@
     </label>
 
     <q-input
-      v-model.number="carryOverDays"
+      v-model.number="carryOverDaysModel"
       type="number"
       outlined
       min="0"
@@ -77,15 +77,8 @@
 
 <script lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, defineComponent, PropType } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { DateTime } from 'luxon'
-
-export interface TaskFieldValues {
-  title?: string
-  notes?: string
-  priority?: number
-  carryOverDays?: number
-}
 
 export default defineComponent({
   props: {
@@ -94,58 +87,56 @@ export default defineComponent({
       required: true,
     },
 
-    modelValue: Object as PropType<TaskFieldValues>,
+    title: String,
+    notes: String,
+    priority: Number,
+    carryOverDays: Number,
   },
 
-  emits: ['updated:modelValue'],
+  emits: [
+    'update:title',
+    'update:notes',
+    'update:priority',
+    'update:carryOverDays',
+  ],
 
   setup(props, { emit }) {
     const { t } = useI18n()
 
-    function emitHelper<K extends keyof TaskFieldValues>(
-      key: K,
-      value: TaskFieldValues[K]
-    ) {
-      emit('updated:modelValue', {
-        ...props.modelValue,
-        [key]: value,
-      })
-    }
-
-    const title = computed({
-      get: () => props.modelValue?.title,
+    const titleModel = computed({
+      get: () => props.title,
       set: (title) => {
-        emitHelper('title', title)
+        emit('update:title', title)
       },
     })
 
-    const notes = computed({
-      get: () => props.modelValue?.notes,
+    const notesModel = computed({
+      get: () => props.notes,
       set: (notes) => {
-        emitHelper('notes', notes)
+        emit('update:notes', notes)
       },
     })
 
-    const priority = computed({
-      get: () => props.modelValue?.priority ?? 0,
+    const priorityModel = computed({
+      get: () => props.priority ?? 0,
       set: (priority) => {
-        emitHelper('priority', priority)
+        emit('update:priority', priority)
       },
     })
 
-    const carryOverDays = computed({
-      get: () => props.modelValue?.carryOverDays ?? 0,
+    const carryOverDaysModel = computed({
+      get: () => props.carryOverDays ?? 0,
       set: (carryOverDays) => {
-        emitHelper('carryOverDays', carryOverDays)
+        emit('update:carryOverDays', carryOverDays)
       },
     })
 
     return {
       t,
-      title,
-      notes,
-      priority,
-      carryOverDays,
+      titleModel,
+      notesModel,
+      priorityModel,
+      carryOverDaysModel,
     }
   },
 })
