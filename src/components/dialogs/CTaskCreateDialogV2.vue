@@ -4,6 +4,7 @@
       @discard="onDialogCancel"
       @submit="onDialogOK"
       :dueDt="dueDt"
+      class="content"
     />
   </q-dialog>
 </template>
@@ -43,3 +44,18 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.content {
+  width: 25vw;
+
+  body.screen--md & {
+    width: 50vw;
+  }
+
+  body.screen--xs &,
+  body.screen--sm & {
+    width: 100vw;
+  }
+}
+</style>

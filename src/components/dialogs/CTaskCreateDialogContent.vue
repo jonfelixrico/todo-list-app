@@ -11,7 +11,8 @@
 
       <q-separator />
 
-      <q-card-section>
+      <q-card-section class="q-gutter-y-lg">
+        <!-- multi-root component so q-gutter-y-sm will take effect -->
         <CTaskFields
           v-model:title="draft.title"
           v-model:priority="draft.priority"
@@ -23,10 +24,13 @@
 
       <q-separator />
 
-      <q-card-actions>
-        <q-btn type="submit">{{ t('tasks.dialogs.create.submit') }}</q-btn>
-        <q-btn @click="$emit('discard')">{{
+      <q-card-actions align="right">
+        <q-btn flat no-caps @click="$emit('discard')">{{
           t('tasks.dialogs.create.discard')
+        }}</q-btn>
+
+        <q-btn type="submit" color="primary" unelevated no-caps>{{
+          t('tasks.dialogs.create.submit')
         }}</q-btn>
       </q-card-actions>
     </q-card>
