@@ -32,7 +32,7 @@ import { DraftTaskData } from 'src/typings/task.interface'
 import { useTaskListDateNavigator } from 'src/composables/task-list-date-navigator.composable'
 import CTaskCreateDialog, {
   DraftTask,
-} from 'src/components/dialogs/CTaskCreateDialog.vue'
+} from 'src/components/dialogs/create/CTaskCreateDialog.vue'
 
 function useHeightObserverUtils() {
   const heightRef = ref(0)

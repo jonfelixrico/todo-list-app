@@ -13,9 +13,9 @@
 import { useDialogPluginComponent } from 'quasar'
 import { defineComponent } from 'vue'
 import { DateTime } from 'luxon'
-import CTaskCreateDialogContent from 'src/components/dialogs/CTaskCreateDialogContent.vue'
+import CTaskCreateDialogContent from 'src/components/dialogs/create/CTaskCreateDialogContent.vue'
 
-export type { DraftTask } from 'src/components/dialogs/CTaskCreateDialogContent.vue'
+export type { DraftTask } from 'src/components/dialogs/create/CTaskCreateDialogContent.vue'
 
 export default defineComponent({
   emits: [...useDialogPluginComponent.emits],
